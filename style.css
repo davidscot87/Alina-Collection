@@ -1778,7 +1778,7 @@ body.dark-mode #search-popup {
 }
 
 .flash-text {
-    width: 35%;
+    width: 25%;
     z-index: 2;
 }
 
@@ -1819,7 +1819,7 @@ body.dark-mode #search-popup {
 }
 
 .flash-products-mini {
-    width: 65%;
+    width: 75%;
     display: flex;
     gap: 15px;
     overflow-x: auto;
