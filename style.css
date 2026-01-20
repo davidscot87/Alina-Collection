@@ -1731,7 +1731,7 @@ body.dark-mode #search-popup {
 }
 
 .flash-text {
-    width: 40%;
+    width: 35%;
     z-index: 2;
 }
 
@@ -1772,25 +1772,37 @@ body.dark-mode #search-popup {
 }
 
 .flash-products-mini {
-    width: 60%;
+    width: 65%;
     display: flex;
-    gap: 20px;
+    gap: 15px;
     overflow-x: auto;
-    padding: 20px 0;
+    padding: 10px 0;
     scrollbar-width: none;
+    align-items: center;
 }
 
 .flash-products-mini::-webkit-scrollbar { display: none; }
 
 .flash-products-mini .pro {
-    min-width: 200px;
+    min-width: 180px;
+    padding: 10px;
     background: rgba(255,255,255,0.6);
     border: 1px solid rgba(255,255,255,0.8);
     backdrop-filter: blur(10px);
+    transform: scale(0.9);
+    margin: 0;
+}
+
+.flash-products-mini .pro .pro-img-wrapper {
+    aspect-ratio: 1 / 1;
 }
 
 .flash-products-mini .pro h5, 
-.flash-products-mini .pro h4 { color: var(--secondary-color); }
+.flash-products-mini .pro h4 { color: var(--secondary-color); font-size: 13px; }
+
+.flash-products-mini .pro .des {
+    padding: 5px 0;
+}
 
 /* Small Countdown */
 .small-countdown {
