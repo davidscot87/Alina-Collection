@@ -554,6 +554,53 @@ body.dark-mode .custom-option.selected {
     color: var(--white);
 }
 
+button.white:active {
+    background-color: var(--primary-color);
+}
+
+/* Back Button Component */
+.back-btn-container {
+    padding: 40px 80px 0 80px;
+}
+
+.back-btn {
+    text-decoration: none;
+    color: var(--secondary-color);
+    font-weight: 700;
+    font-size: 14px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: var(--transition);
+    padding: 12px 25px;
+    border-radius: 50px;
+    background: var(--white);
+    box-shadow: var(--shadow-soft);
+    border: 1px solid rgba(0,0,0,0.05);
+}
+
+.back-btn:hover {
+    color: var(--primary-color);
+    transform: translateX(-5px);
+    box-shadow: var(--shadow-strong);
+    border-color: var(--primary-light);
+}
+
+.back-btn i {
+    font-size: 12px;
+}
+
+body.dark-mode .back-btn {
+    background: var(--bg-card);
+    color: var(--white);
+    border-color: rgba(255,255,255,0.1);
+}
+
+body.dark-mode .back-btn:hover {
+    color: var(--primary-color);
+    border-color: var(--primary-color);
+}
+
 /* Hero Section */
 #hero {
     background-image: url("image/Hero/hero.png");

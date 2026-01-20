@@ -2,6 +2,7 @@
     #header { padding: 8px 40px; }
     #header.shrink { padding: 4px 40px; }
     .section-p1 { padding: 60px 40px; }
+    .back-btn-container { padding: 30px 40px 0 40px; }
     .header-search { width: 220px; }
 }
 
@@ -55,6 +56,7 @@
     #header { padding: 8px 20px; }
     #header.shrink { padding: 4px 20px; }
     .section-p1 { padding: 40px 20px; }
+    .back-btn-container { padding: 20px 20px 0 20px; }
     
     #navbar { width: 100%; right: -100%; padding: 80px 0 0 30px; }
 
