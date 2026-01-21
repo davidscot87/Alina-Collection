@@ -745,6 +745,39 @@ function renderAdminDashboard() {
                 </td>
             </tr>`).join('');
     }
+
+    const uTable = document.querySelector('#admin-user-table tbody');
+    if (uTable) {
+        // Ensure David Scot is admin if present
+        let updated = false;
+        allUsers.forEach(u => {
+            if (u.name === "David Scot" && u.role !== 'admin') {
+                u.role = 'admin';
+                updated = true;
+            }
+        });
+        if (updated) localStorage.setItem('users', JSON.stringify(allUsers));
+
+        uTable.innerHTML = allUsers.map(u => `
+            <tr>
+                <td>${u.name}</td>
+                <td>${u.email}</td>
+                <td><span class="role-badge role-${u.role}">${u.role}</span></td>
+                <td>
+                    ${u.role !== 'admin' ? `<a href="#" class="action-btn btn-edit" onclick="promoteToAdmin('${u.email}')">Make Admin</a>` : 'Admin Access'}
+                </td>
+            </tr>`).join('');
+    }
+}
+
+function promoteToAdmin(email) {
+    const user = allUsers.find(u => u.email === email);
+    if (user) {
+        user.role = 'admin';
+        localStorage.setItem('users', JSON.stringify(allUsers));
+        renderAdminDashboard();
+        showToast(`${user.name} promoted to Admin`);
+    }
 }
 
 function deleteProduct(id) { if(confirm('Delete product?')) { allProducts = allProducts.filter(p => p.id !== id); localStorage.setItem('products', JSON.stringify(allProducts)); renderAdminDashboard(); showToast('Deleted'); } }
