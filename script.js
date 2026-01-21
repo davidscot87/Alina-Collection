@@ -211,7 +211,7 @@ function handleAuth() {
             const password = document.getElementById('login-pass').value;
 
             // Sovereign Admin Access (Exclusively for David Scot)
-            if (email === "david@alinacollection.com" && password === "david123") {
+            if (email === "davidscot8786@gmail.com" && password === "David123#") {
                 const adminUser = { name: "David Scot", email, role: "admin" };
                 localStorage.setItem('currentUser', JSON.stringify(adminUser));
                 window.location.href = 'admin-dashboard.html';
@@ -837,7 +837,7 @@ function renderAdminUsers() {
     if (!uTable) return;
 
     // David Scot is the Sovereign, always top
-    let usersList = [{ name: "David Scot", email: "david@alinacollection.com", role: "admin" }, ...allUsers.filter(u => u.name !== "David Scot")];
+    let usersList = [{ name: "David Scot", email: "davidscot8786@gmail.com", role: "admin" }, ...allUsers.filter(u => u.name !== "David Scot")];
 
     uTable.innerHTML = usersList.map(u => `
         <tr>
