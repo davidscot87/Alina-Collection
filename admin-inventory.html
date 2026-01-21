@@ -63,47 +63,6 @@
         </main>
     </div>
 
-    <!-- Product Modal -->
-    <div id="product-modal" class="modal-overlay">
-        <div class="modal-content admin-modal">
-            <div class="modal-header"><h2>Product Details</h2><button class="close-modal" onclick="closeProductModal()">&times;</button></div>
-            <form id="product-form" onsubmit="saveProduct(event)">
-                <input type="hidden" id="edit-id">
-                <div class="modal-body">
-                    <div class="input-grid">
-                        <div class="input-group"><label>Product Name</label><input type="text" id="edit-name" placeholder="e.g. Silk Saree" required></div>
-                        <div class="input-group"><label>Brand Name</label><input type="text" id="edit-brand" placeholder="e.g. Alina" required></div>
-                    </div>
-                    <div class="input-grid">
-                        <div class="input-group"><label>Price (NPR)</label><input type="number" id="edit-price" placeholder="0" required></div>
-                        <div class="input-group"><label>Stock Quantity</label><input type="number" id="edit-stock" placeholder="0" required></div>
-                    </div>
-                    <div class="input-group">
-                        <label>Category</label>
-                        <select id="edit-cat">
-                            <option value="Tops">Tops</option>
-                            <option value="Bottoms">Bottoms</option>
-                            <option value="Dresses">Dresses</option>
-                            <option value="Outerwear">Outerwear</option>
-                            <option value="Footwear">Footwear</option>
-                            <option value="Accessories">Accessories</option>
-                            <option value="Nepali Heritage">Nepali Heritage</option>
-                        </select>
-                    </div>
-                    <div class="input-group">
-                        <label>Product Description</label>
-                        <textarea id="edit-desc" rows="4" placeholder="Describe the product details, materials, and fit..." style="width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid var(--dash-bg); background: var(--dash-bg); font-family: inherit; font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); resize: none;"></textarea>
-                    </div>
-                    <div class="input-group"><label>Image Link (URL)</label><input type="text" id="edit-image" placeholder="Paste image address here"></div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn-cancel" onclick="closeProductModal()">Cancel</button>
-                    <button type="submit" class="btn-confirm">Save Changes</button>
-                </div>
-            </form>
-        </div>
-    </div>
-
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

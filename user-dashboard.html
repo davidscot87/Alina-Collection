@@ -354,33 +354,6 @@
         </main>
     </div>
 
-    <!-- Product Modal (Admin Only) -->
-    <div id="product-modal" class="modal-overlay">
-        <div class="modal-content admin-modal">
-            <div class="modal-header"><h2>Product Configuration</h2><button class="close-modal" onclick="closeProductModal()">&times;</button></div>
-            <form id="product-form" onsubmit="saveProduct(event)">
-                <input type="hidden" id="edit-id">
-                <div class="modal-body">
-                    <div class="input-grid">
-                        <div class="input-group"><label>Designation</label><input type="text" id="edit-name" required></div>
-                        <div class="input-group"><label>House / Brand</label><input type="text" id="edit-brand" required></div>
-                    </div>
-                    <div class="input-grid">
-                        <div class="input-group"><label>Price (NPR)</label><input type="number" id="edit-price" required></div>
-                        <div class="input-group"><label>Reserves</label><input type="number" id="edit-stock" required></div>
-                    </div>
-                    <div class="input-group"><label>Category</label><select id="edit-cat"><option value="Tops">Tops</option><option value="Bottoms">Bottoms</option><option value="Dresses">Dresses</option><option value="Outerwear">Outerwear</option><option value="Footwear">Footwear</option><option value="Accessories">Accessories</option><option value="Nepali Heritage">Nepali Heritage</option></select></div>
-                    <div class="input-group">
-                        <label>Product Description</label>
-                        <textarea id="edit-desc" rows="4" placeholder="Describe the product details, materials, and fit..." style="width: 100%; padding: 15px 20px; border-radius: 15px; border: 2px solid var(--dash-bg); background: var(--dash-bg); font-family: inherit; font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); resize: none;"></textarea>
-                    </div>
-                    <div class="input-group"><label>Imagery URL</label><input type="text" id="edit-image"></div>
-                </div>
-                <div class="modal-footer"><button type="button" class="btn-cancel" onclick="closeProductModal()">Discard</button><button type="submit" class="btn-confirm">Authorize Changes</button></div>
-            </form>
-        </div>
-    </div>
-
     <script src="script.js"></script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {

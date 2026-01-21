@@ -918,29 +918,20 @@ function deleteProduct(id) {
 }
 
 function openProductModal(id = null) {
-    const modal = document.getElementById('product-modal');
-    if (!modal) return;
-    modal.classList.add('active');
-    
     if (id) {
-        const p = allProducts.find(prod => prod.id == id);
-        document.getElementById('modal-title').innerText = "Edit Product Details";
-        document.getElementById('edit-id').value = p.id;
-        document.getElementById('edit-name').value = p.name;
-        document.getElementById('edit-brand').value = p.brand || "";
-        document.getElementById('edit-price').value = p.price;
-        document.getElementById('edit-cat').value = p.cat;
-        document.getElementById('edit-stock').value = p.stock;
-        document.getElementById('edit-desc').value = p.description || "";
-        document.getElementById('edit-image').value = p.image;
+        window.location.href = `admin-product-config.html?id=${id}`;
     } else {
-        document.getElementById('modal-title').innerText = "Add New Product";
-        document.getElementById('product-form').reset();
-        document.getElementById('edit-id').value = "";
+        window.location.href = `admin-product-config.html`;
     }
 }
 
-function closeProductModal() { document.getElementById('product-modal').classList.remove('active'); }
+function closeProductModal() { 
+    if (document.getElementById('product-modal')) {
+        document.getElementById('product-modal').classList.remove('active'); 
+    } else {
+        window.location.href = 'admin-inventory.html';
+    }
+}
 
 function saveProduct(e) {
     e.preventDefault();
@@ -962,8 +953,6 @@ function saveProduct(e) {
     }
     
     localStorage.setItem('products', JSON.stringify(allProducts));
-    renderAdminDashboard(); 
-    closeProductModal(); 
     showToast('Vault Updated Successfully!');
 }
 

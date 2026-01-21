@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Product Configuration - Sovereign Admin</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body class="dashboard-body">
+    <!-- Premium Navigation -->
+    <section id="header">
+      <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Alina Collection"/></a>
+      <div class="header-search">
+        <input type="text" placeholder="Search..." id="header-search-input">
+        <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
+      </div>
+      <div>
+        <ul id="navbar">
+          <li><a href="index.html">Home</a></li>
+          <li><a href="user-dashboard.html">My Account</a></li>
+          <li><a href="#" onclick="logoutUser()">Logout <i class="fa-solid fa-sign-out-alt"></i></a></li>
+        </ul>
+      </div>
+    </section>
+
+    <div class="dashboard-container">
+        <div class="back-btn-container" style="margin-bottom: 30px;">
+            <a href="admin-inventory.html" class="admin-back-btn">
+                <i class="fa-solid fa-arrow-left"></i> Back to Inventory
+            </a>
+        </div>
+
+        <main class="main-content fade-in">
+            <div class="section-header-modern" style="margin-bottom: 40px;">
+                <h1 id="config-page-title">Add New Product</h1>
+                <p>Authorized access to the Alina Collection product configuration terminal.</p>
+            </div>
+
+            <div class="dash-card">
+                <form id="config-product-form">
+                    <input type="hidden" id="edit-id">
+                    
+                    <div class="settings-section">
+                        <h4 class="section-title">Product Details</h4>
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Product Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-tag"></i>
+                                    <input type="text" id="edit-name" placeholder="e.g. Silk Saree" required>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Brand Name</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-copyright"></i>
+                                    <input type="text" id="edit-brand" placeholder="e.g. Alina Boutique" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-grid">
+                            <div class="input-group">
+                                <label>Price (NPR)</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                    <input type="number" id="edit-price" placeholder="0" required>
+                                </div>
+                            </div>
+                            <div class="input-group">
+                                <label>Initial Stock</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-boxes-stacked"></i>
+                                    <input type="number" id="edit-stock" placeholder="0" required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="input-group">
+                            <label>Category</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <select id="edit-cat" required>
+                                    <option value="Tops">Tops & Shirts</option>
+                                    <option value="Bottoms">Pants & Bottoms</option>
+                                    <option value="Dresses">Dresses</option>
+                                    <option value="Outerwear">Outerwear</option>
+                                    <option value="Footwear">Footwear</option>
+                                    <option value="Accessories">Accessories</option>
+                                    <option value="Nepali Heritage">Nepali Heritage</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="settings-section">
+                        <h4 class="section-title">Visuals & Content</h4>
+                        <div class="input-group">
+                            <label>Product Description</label>
+                            <textarea id="edit-desc" rows="6" placeholder="Describe the materials, fit, and elegance of this piece..." style="width: 100%; padding: 20px; border-radius: 20px; border: 2px solid var(--dash-bg); background: var(--dash-bg); font-family: inherit; font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); resize: vertical;"></textarea>
+                        </div>
+                        <div class="input-group">
+                            <label>Image URL</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-image"></i>
+                                <input type="text" id="edit-image" placeholder="Paste image address here (e.g. Unsplash or local path)">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-actions-modern" style="justify-content: flex-end; gap: 20px;">
+                        <button type="button" class="btn-cancel" onclick="window.location.href='admin-inventory.html'">Discard Changes</button>
+                        <button type="submit" class="premium-btn" style="padding: 16px 50px;">
+                            <span>Authorize & Save</span>
+                            <i class="fa-solid fa-check"></i>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user || user.role !== 'admin') { window.location.href = 'index.html'; return; }
+
+            const params = new URLSearchParams(window.location.search);
+            const productId = params.get('id');
+
+            if (productId) {
+                const p = allProducts.find(prod => prod.id == productId);
+                if (p) {
+                    document.getElementById('config-page-title').innerText = "Edit Product: " + p.name;
+                    document.getElementById('edit-id').value = p.id;
+                    document.getElementById('edit-name').value = p.name;
+                    document.getElementById('edit-brand').value = p.brand || "";
+                    document.getElementById('edit-price').value = p.price;
+                    document.getElementById('edit-cat').value = p.cat;
+                    document.getElementById('edit-stock').value = p.stock;
+                    document.getElementById('edit-desc').value = p.description || "";
+                    document.getElementById('edit-image').value = p.image;
+                }
+            }
+
+            document.getElementById('config-product-form').addEventListener('submit', (e) => {
+                e.preventDefault();
+                saveProduct(e);
+                setTimeout(() => {
+                    window.location.href = 'admin-inventory.html';
+                }, 1500);
+            });
+        });
+    </script>
+</body>
+</html>
