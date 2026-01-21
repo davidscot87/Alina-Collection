@@ -425,7 +425,7 @@
 
             container.innerHTML = cartItems.slice(0, 3).map(item => `
                 <div class="mini-item">
-                    <img src="${item.image}" alt="">
+                    <img src="${item.image || 'image/product/f1.jpg'}" alt="${item.name}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
                     <div class="mini-item-info">
                         <h4>${item.name}</h4>
                         <p>${item.quantity} x NPR ${item.price}</p>
@@ -452,7 +452,7 @@
 
             container.innerHTML = wishlistItems.slice(0, 3).map(item => `
                 <div class="mini-item">
-                    <img src="${item.image}" alt="">
+                    <img src="${item.image || 'image/product/f1.jpg'}" alt="${item.name}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
                     <div class="mini-item-info">
                         <h4>${item.name}</h4>
                         <p>${item.brand}</p>
