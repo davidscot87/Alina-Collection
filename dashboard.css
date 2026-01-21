@@ -654,3 +654,140 @@ td:last-child { border-radius: 0 12px 12px 0; }
     .profile-text h2 { font-size: 28px; }
     .summary-item { width: 45%; }
 }
+
+/* --- Premium Administrative Modals --- */
+.admin-modal { 
+    width: 100%;
+    max-width: 700px !important; 
+    border-radius: 30px !important; 
+    padding: 0 !important; 
+    background: var(--dash-card-bg) !important;
+    overflow: hidden;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25) !important;
+    transform: translateY(30px);
+    transition: all 0.5s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+.modal-overlay.active .admin-modal {
+    transform: translateY(0);
+}
+
+.modal-header { 
+    padding: 35px 40px; 
+    border-bottom: 1px solid var(--dash-border); 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    background: var(--dash-bg);
+}
+
+.modal-header h2 { 
+    font-size: 24px; 
+    font-weight: 800;
+    color: var(--dash-text);
+    letter-spacing: -0.5px;
+    margin: 0;
+}
+
+.close-modal { 
+    background: var(--dash-border); 
+    border: none; 
+    font-size: 20px; 
+    cursor: pointer; 
+    color: var(--dash-text-muted); 
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: var(--transition);
+}
+
+.close-modal:hover {
+    background: var(--dash-primary);
+    color: #fff;
+    transform: rotate(90deg);
+}
+
+.modal-body { padding: 40px; }
+
+.input-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 30px; 
+    margin-bottom: 30px; 
+}
+
+.admin-modal .input-group label {
+    font-size: 12px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--dash-text-muted);
+    font-weight: 800;
+    margin-bottom: 12px;
+    display: block;
+}
+
+.admin-modal input, 
+.admin-modal select {
+    width: 100%;
+    padding: 15px 20px;
+    border-radius: 15px;
+    border: 2px solid var(--dash-bg);
+    background: var(--dash-bg);
+    font-size: 15px;
+    font-weight: 600;
+    color: var(--dash-text);
+    transition: var(--transition);
+    outline: none;
+}
+
+.admin-modal input:focus,
+.admin-modal select:focus {
+    border-color: var(--dash-primary);
+    background: var(--dash-card-bg);
+    box-shadow: 0 0 0 4px rgba(221, 45, 74, 0.1);
+}
+
+.modal-footer { 
+    padding: 30px 40px; 
+    background: var(--dash-bg); 
+    display: flex; 
+    justify-content: flex-end; 
+    gap: 20px; 
+}
+
+.btn-cancel { 
+    background: transparent; 
+    border: 1px solid var(--dash-border); 
+    padding: 14px 30px; 
+    border-radius: 50px; 
+    font-weight: 700; 
+    color: var(--dash-text-muted);
+    cursor: pointer; 
+    transition: var(--transition);
+}
+
+.btn-cancel:hover {
+    background: #fff;
+    color: var(--dash-text);
+}
+
+.btn-confirm { 
+    background: var(--dash-primary); 
+    color: #fff; 
+    border: none; 
+    padding: 14px 40px; 
+    border-radius: 50px; 
+    font-weight: 700; 
+    cursor: pointer; 
+    transition: var(--transition); 
+    box-shadow: 0 10px 20px rgba(221, 45, 74, 0.2);
+}
+
+.btn-confirm:hover { 
+    background: var(--dash-primary-dark); 
+    transform: translateY(-2px); 
+    box-shadow: 0 15px 25px rgba(221, 45, 74, 0.3);
+}
