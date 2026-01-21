@@ -596,6 +596,40 @@ td:last-child { border-radius: 0 12px 12px 0; }
     box-shadow: 0 5px 15px rgba(221, 45, 74, 0.2);
 }
 
+/* Admin Premium Back Button */
+.admin-back-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 25px;
+    background: var(--white);
+    color: var(--dash-text);
+    text-decoration: none;
+    font-weight: 700;
+    font-size: 14px;
+    border-radius: 50px;
+    border: 1px solid var(--dash-border);
+    box-shadow: var(--dash-shadow-soft);
+    transition: var(--transition);
+}
+
+.admin-back-btn i {
+    font-size: 16px;
+    transition: transform 0.3s ease;
+}
+
+.admin-back-btn:hover {
+    background: var(--dash-primary);
+    color: #fff;
+    border-color: var(--dash-primary);
+    transform: translateX(-5px);
+    box-shadow: 0 10px 20px rgba(221, 45, 74, 0.2);
+}
+
+.admin-back-btn:hover i {
+    transform: translateX(-3px);
+}
+
 /* Helper Classes */
 .premium-btn { background: var(--dash-primary); color: #fff; border: none; padding: 10px 20px; border-radius: 50px; font-weight: 700; cursor: pointer; transition: 0.3s; }
 .premium-btn:hover { transform: translateY(-2px); box-shadow: 0 5px 15px rgba(221, 45, 74, 0.3); }
