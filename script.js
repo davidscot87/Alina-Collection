@@ -332,27 +332,66 @@ function handleAuth() {
 function updateNavbarAuth() {
     const navbar = document.getElementById('navbar');
     if (!navbar) return;
-    let authLi = document.getElementById('auth-btn');
+    
+    // Remove existing auth related buttons if they exist
+    const existingAuthBtn = document.getElementById('auth-btn');
+    if (existingAuthBtn) existingAuthBtn.remove();
+    const existingLogoutBtn = document.getElementById('logout-nav-btn');
+    if (existingLogoutBtn) existingLogoutBtn.remove();
+
     const currentUser = JSON.parse(localStorage.getItem('currentUser'));
-    if (authLi) authLi.remove();
-    authLi = document.createElement('li');
-    authLi.id = 'auth-btn';
+    const closeBtn = document.getElementById('close');
+
     if (currentUser) {
-        const a = document.createElement('a');
-        a.href = currentUser.role === 'admin' ? 'admin-dashboard.html' : 'user-dashboard.html';
-        a.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.name}`;
-        authLi.appendChild(a);
+        // 1. Dashboard Link
+        const authLi = document.createElement('li');
+        authLi.id = 'auth-btn';
+        const aDashboard = document.createElement('a');
+        aDashboard.href = 'user-dashboard.html';
+        aDashboard.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.name}`;
+        authLi.appendChild(aDashboard);
+        
+        // 2. Logout Link
+        const logoutLi = document.createElement('li');
+        logoutLi.id = 'logout-nav-btn';
+        const aLogout = document.createElement('a');
+        aLogout.href = '#';
+        aLogout.innerHTML = `Logout <i class="fa-solid fa-sign-out-alt"></i>`;
+        aLogout.onclick = (e) => { e.preventDefault(); logoutUser(); };
+        logoutLi.appendChild(aLogout);
+
+        if (closeBtn && closeBtn.parentNode === navbar) {
+            navbar.insertBefore(authLi, closeBtn);
+            navbar.insertBefore(logoutLi, closeBtn);
+        } else {
+            navbar.appendChild(authLi);
+            navbar.appendChild(logoutLi);
+        }
         document.body.classList.remove('guest-mode');
     } else {
-        const a = document.createElement('a');
-        a.href = 'login.html';
-        a.innerHTML = `<i class="fa-solid fa-user"></i> Login`;
-        authLi.appendChild(a);
+        const authLi = document.createElement('li');
+        authLi.id = 'auth-btn';
+        const aLogin = document.createElement('a');
+        aLogin.href = 'login.html';
+        aLogin.innerHTML = `<i class="fa-solid fa-user"></i> Login`;
+        authLi.appendChild(aLogin);
+
+        if (closeBtn && closeBtn.parentNode === navbar) {
+            navbar.insertBefore(authLi, closeBtn);
+        } else {
+            navbar.appendChild(authLi);
+        }
         document.body.classList.add('guest-mode');
     }
-    const closeBtn = document.getElementById('close');
-    if (closeBtn && closeBtn.parentNode === navbar) { navbar.insertBefore(authLi, closeBtn); } 
-    else { navbar.appendChild(authLi); }
+}
+
+function logoutUser() {
+    localStorage.removeItem('currentUser');
+    localStorage.removeItem('isLoggedIn');
+    showToast('Logged out successfully');
+    setTimeout(() => {
+        window.location.href = 'index.html';
+    }, 1000);
 }
 
 // === 4. Product Rendering & Search ===

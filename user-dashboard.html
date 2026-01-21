@@ -32,7 +32,6 @@
           </li>
           <li><a href="about.html">Our Story</a></li>
           <li><a href="contact.html">Contact</a></li>
-          <li><a href="#" onclick="logoutUser()">Logout <i class="fa-solid fa-sign-out-alt"></i></a></li>
         </ul>
       </div>
     </section>
@@ -414,14 +413,9 @@
              document.getElementById('count-spent').innerText = `NPR ${totalSpent}`;
              const points = Math.floor(totalSpent / 100);
              document.getElementById('loyalty-points').innerText = points;
-             document.getElementById('points-progress').style.width = ((points % 500) / 5) + "%";
-             document.getElementById('points-needed').innerText = `Earn ${500 - (points % 500)} more points for next tier!`;
-        });
-
-        function logoutUser() {
-            localStorage.removeItem('currentUser');
-            window.location.href = 'index.html';
-        }
-    </script>
-</body>
-</html>
+                          document.getElementById('points-progress').style.width = ((points % 500) / 5) + "%";
+                          document.getElementById('points-needed').innerText = `Earn ${500 - (points % 500)} more points for next tier!`;      
+                     });
+                 </script>
+             </body>
+             </html>
