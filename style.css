@@ -1450,22 +1450,7 @@ footer .footer-contact i {
     font-weight: 500;
 }
 
-.payment-methods {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-}
 
-.payment-methods img {
-    height: 32px;
-    filter: grayscale(1) brightness(1.5) opacity(0.5);
-    transition: 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
-}
-
-.payment-methods img:hover {
-    filter: grayscale(0) brightness(1) opacity(1);
-    transform: scale(1.1);
-}
 
 /* Utilities */
 .toast {
