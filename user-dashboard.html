@@ -351,9 +351,104 @@
              document.getElementById('count-spent').innerText = `NPR ${totalSpent}`;
              const points = Math.floor(totalSpent / 100);
              document.getElementById('loyalty-points').innerText = points;
-                          document.getElementById('points-progress').style.width = ((points % 500) / 5) + "%";
-                          document.getElementById('points-needed').innerText = `Earn ${500 - (points % 500)} more points for next tier!`;      
-                     });
-                 </script>
-             </body>
+                                       document.getElementById('points-progress').style.width = ((points % 500) / 5) + "%";
+                                       document.getElementById('points-needed').innerText = `Earn ${500 - (points % 500)} more points for next tier!`;      
+                                  });
+                          
+                                  function renderDashboardCart() {
+                                      const cartItems = JSON.parse(localStorage.getItem('cart')) || [];
+                                      const container = document.getElementById('mini-cart-list');
+                                      if (!container) return;
+                          
+                                      if (cartItems.length === 0) {
+                                          container.innerHTML = '<p style="padding: 10px; color: #999; font-size: 13px;">Your cart is empty.</p>';
+                                          return;
+                                      }
+                          
+                                      container.innerHTML = cartItems.slice(0, 3).map(item => `
+                                          <div class="mini-item">
+                                              <img src="${item.image || 'image/product/f1.jpg'}" alt="${item.name}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
+                                              <div class="mini-item-info">
+                                                  <h4>${item.name}</h4>
+                                                  <p>${item.quantity} x NPR ${item.price}</p>
+                                              </div>
+                                          </div>
+                                      `).join('');
+                                      if (cartItems.length > 3) {
+                                          container.innerHTML += `<p style="font-size: 11px; margin-top: 10px; color: var(--primary-color);">+ ${cartItems.length - 3} more items</p>`;
+                                      }
+                                  }
+                          
+                                  function renderDashboardWishlist() {
+                                      const wishlistIds = JSON.parse(localStorage.getItem('wishlist')) || [];
+                                      const container = document.getElementById('mini-wishlist-list');
+                                      if (!container) return;
+                          
+                                      if (wishlistIds.length === 0) {
+                                          container.innerHTML = '<p style="padding: 10px; color: #999; font-size: 13px;">Your wishlist is empty.</p>';
+                                          return;
+                                      }
+                          
+                                      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+                                      const wishlistItems = wishlistIds.map(id => allProducts.find(p => p.id === id)).filter(p => p);
+                          
+                                      container.innerHTML = wishlistItems.slice(0, 3).map(item => `
+                                          <div class="mini-item">
+                                              <img src="${item.image || 'image/product/f1.jpg'}" alt="${item.name}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
+                                              <div class="mini-item-info">
+                                                  <h4>${item.name}</h4>
+                                                  <p>${item.brand}</p>
+                                              </div>
+                                          </div>
+                                      `).join('');
+                                      if (wishlistItems.length > 3) {
+                                          container.innerHTML += `<p style="font-size: 11px; margin-top: 10px; color: var(--primary-color);">+ ${wishlistItems.length - 3} more items</p>`;
+                                      }
+                                  }
+                          
+                                  function trackOrder() {
+                                      const trackId = document.getElementById('track-id-input').value.trim().replace('#', '');
+                                      const resultArea = document.getElementById('track-result');
+                                      const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                                      const order = allOrders.find(o => o.id.toString() === trackId);
+                          
+                                      if (!order) {
+                                          resultArea.innerHTML = '<p style="color: #ef4444; font-size: 13px; margin-top: 15px;">Order ID not found.</p>';
+                                          return;
+                                      }
+                          
+                                      const steps = ['placed', 'shipped', 'completed'];
+                                      const currentIdx = steps.indexOf(order.status.toLowerCase());
+                          
+                                      resultArea.innerHTML = `
+                                          <div class="tracking-visual">
+                                              <div class="track-step ${currentIdx >= 0 ? 'active' : ''}">Placed</div>
+                                              <div class="track-step ${currentIdx >= 1 ? 'active' : ''}">Shipped</div>
+                                              <div class="track-step ${currentIdx >= 2 ? 'active' : ''}">Delivered</div>
+                                          </div>
+                                          <p style="font-size: 13px; margin-top: 15px; font-weight: 600;">Status: ${order.status.toUpperCase()}</p>
+                                      `;
+                                  }
+                          
+                                  function renderUserOrders(userEmail) {
+                                      const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                                      const userOrders = allOrders.filter(o => o.userEmail === userEmail);
+                                      const tableBody = document.querySelector('#user-order-table tbody');
+                          
+                                      if (userOrders.length === 0) {
+                                          if (tableBody) tableBody.innerHTML = '<tr><td colspan="5" style="text-align:center; padding: 40px; color: #999;">You haven\'t placed any orders yet.</td></tr>';
+                                          return;
+                                      }
+                          
+                                      tableBody.innerHTML = userOrders.map(o => `
+                                          <tr>
+                                              <td><strong>#${o.id}</strong></td>
+                                              <td>${o.date}</td>
+                                              <td>${o.items.length} Product(s)</td>
+                                              <td><span class="price-text">NPR ${o.total}</span></td>
+                                              <td><span class="status-badge status-${o.status}">${o.status}</span></td>
+                                          </tr>
+                                      `).join('');
+                                  }
+                              </script>             </body>
              </html>
