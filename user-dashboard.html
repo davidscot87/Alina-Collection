@@ -240,18 +240,27 @@
                             <div class="settings-section">
                                 <h4 class="section-title">Delivery Address</h4>
                                 <div class="input-row">
-                                    <div class="input-group" style="flex: 1;">
-                                        <label>House / Flat No.</label>
+                                    <div class="input-group" style="flex: 2;">
+                                        <label>Municipality</label>
                                         <div class="input-wrapper">
-                                            <i class="fa-solid fa-house-user"></i>
-                                            <input type="text" id="set-house" placeholder="#101">
+                                            <i class="fa-solid fa-building"></i>
+                                            <input type="text" id="set-municipality" placeholder="Municipality Name">
                                         </div>
                                     </div>
-                                    <div class="input-group" style="flex: 2;">
+                                    <div class="input-group" style="flex: 1;">
+                                        <label>Ward No.</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa-solid fa-map-pin"></i>
+                                            <input type="number" id="set-ward" placeholder="Ward No.">
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="input-row">
+                                    <div class="input-group">
                                         <label>Street Address</label>
                                         <div class="input-wrapper">
                                             <i class="fa-solid fa-road"></i>
-                                            <input type="text" id="set-address" placeholder="e.g. Main Street, Ward 4">
+                                            <input type="text" id="set-address" placeholder="e.g. Main Street, Tole">
                                         </div>
                                     </div>
                                 </div>
@@ -381,16 +390,17 @@
              if (user.profilePic) document.getElementById('avatar-preview').innerHTML = `<img src="${user.profilePic}" alt="Profile">`;
              
              // Fill form
-             document.getElementById('set-name').value = user.name || "";
-             document.getElementById('set-email').value = user.email || "";
-             document.getElementById('set-phone').value = user.phone || "";
-             document.getElementById('set-dob').value = user.dob || "";
-             document.getElementById('set-gender').value = user.gender || "";
-             document.getElementById('set-house').value = user.house || "";
-             document.getElementById('set-address').value = user.address || "";
-             document.getElementById('set-city').value = user.city || "";
-             document.getElementById('set-province').value = user.province || "";
-             document.getElementById('set-country').value = user.country || "Nepal";
+             if(document.getElementById('set-name')) document.getElementById('set-name').value = user.name || "";
+             if(document.getElementById('set-email')) document.getElementById('set-email').value = user.email || "";
+             if(document.getElementById('set-phone')) document.getElementById('set-phone').value = user.phone || "";
+             if(document.getElementById('set-dob')) document.getElementById('set-dob').value = user.dob || "";
+             if(document.getElementById('set-gender')) document.getElementById('set-gender').value = user.gender || "";
+             if(document.getElementById('set-municipality')) document.getElementById('set-municipality').value = user.municipality || "";
+             if(document.getElementById('set-ward')) document.getElementById('set-ward').value = user.ward || "";
+             if(document.getElementById('set-address')) document.getElementById('set-address').value = user.address || "";
+             if(document.getElementById('set-city')) document.getElementById('set-city').value = user.city || "";
+             if(document.getElementById('set-province')) document.getElementById('set-province').value = user.province || "";
+             if(document.getElementById('set-country')) document.getElementById('set-country').value = user.country || "Nepal";
 
              // Form Submission
              document.getElementById('profile-form').addEventListener('submit', (e) => {
@@ -400,7 +410,8 @@
                     phone: document.getElementById('set-phone').value,
                     dob: document.getElementById('set-dob').value,
                     gender: document.getElementById('set-gender').value,
-                    house: document.getElementById('set-house').value,
+                    municipality: document.getElementById('set-municipality').value,
+                    ward: document.getElementById('set-ward').value,
                     address: document.getElementById('set-address').value,
                     city: document.getElementById('set-city').value,
                     province: document.getElementById('set-province').value,

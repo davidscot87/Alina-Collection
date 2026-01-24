@@ -599,13 +599,8 @@ function buyNow(productId, qty = 1) {
     const product = allProducts.find(p => p.id === productId);
     if (!product || product.stock <= 0) { showToast('Out of Stock!'); return; }
     
-    // Add to cart (keeping existing items)
-    const existing = cart.find(item => item.id === productId);
-    if (existing) existing.quantity += parseInt(qty); else cart.push({ ...product, quantity: parseInt(qty) });
-    localStorage.setItem('cart', JSON.stringify(cart));
-    
-    // Redirect to checkout
-    window.location.href = 'checkout.html';
+    // Direct redirect with parameters for immediate purchase isolation
+    window.location.href = `checkout.html?buy_now=true&id=${productId}&qty=${qty}`;
 }
 
 // Shop Filters
@@ -1358,7 +1353,7 @@ function showMockNotification(method, target, otp) {
 }
 
 function showToast(m) {
-    const t = document.createElement('div'); t.className = 'toast'; t.innerText = m; document.body.appendChild(t);
+    const t = document.createElement('div'); t.className = 'toast'; t.innerHTML = m; document.body.appendChild(t);
     setTimeout(() => t.classList.add('show'), 100);
     setTimeout(() => { t.classList.remove('show'); if(t.parentNode) document.body.removeChild(t); }, 8000);
 }// Filter Portal Logic
