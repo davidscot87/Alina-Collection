@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Orders - Alina Collection</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="dashboard.css">
+</head>
+<body>
+    <!-- Navigation -->
+    <section id="header">
+        <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Alina Collection"/></a>
+        <div class="header-search">
+            <input type="text" placeholder="Search premium fashion..." id="header-search-input">
+            <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
+        </div>
+        <div>
+            <ul id="navbar">
+                <li><a href="index.html">Home</a></li>
+                <li>
+                    <a href="shop.html">Shop <i class="fas fa-angle-down"></i></a>
+                    <ul class="dropdown-menu">
+                        <li><a href="shop.html?cat=Tops">Tops & Shirts</a></li>
+                        <li><a href="shop.html?cat=Bottoms">Pants & Bottoms</a></li>
+                        <li><a href="shop.html?cat=Dresses">Dresses</a></li>
+                        <li><a href="shop.html?cat=Outerwear">Outerwear</a></li>
+                        <li><a href="shop.html?cat=Footwear">Footwear</a></li>
+                        <li><a href="shop.html?cat=Accessories">Accessories</a></li>
+                    </ul>
+                </li>
+                <li><a href="about.html">Our Story</a></li>
+                <li><a href="contact.html">Contact</a></li>
+            </ul>
+        </div>
+    </section>
+
+    <!-- Back Button -->
+    <div class="back-btn-container">
+        <a href="user-dashboard.html" class="back-btn">
+            <i class="fas fa-arrow-left"></i> Back to Dashboard
+        </a>
+    </div>
+
+    <!-- My Orders Content -->
+    <div class="dashboard-container">
+        <div class="dash-card">
+            <div class="dash-header-modern">
+                <h2><i class="fa-solid fa-receipt"></i> My Orders</h2>
+                <p>Track and manage all your orders in one place.</p>
+            </div>
+
+            <!-- Orders Summary Stats -->
+            <div class="dashboard-grid-3" style="margin-bottom: 30px;">
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #eff6ff; color: #3b82f6;">
+                        <i class="fas fa-shopping-bag"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-orders-count">0</h3>
+                        <p>Total Orders</p>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #f0fdf4; color: #22c55e;">
+                        <i class="fas fa-check-circle"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="completed-orders-count">0</h3>
+                        <p>Completed</p>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #fff7ed; color: #f97316;">
+                        <i class="fas fa-clock"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="pending-orders-count">0</h3>
+                        <p>In Progress</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Orders List -->
+            <div class="orders-list" id="orders-list">
+                <div class="empty-state" style="text-align: center; padding: 60px 20px; color: var(--dash-text-muted);">
+                    <i class="fas fa-shopping-bag" style="font-size: 48px; margin-bottom: 20px; opacity: 0.3;"></i>
+                    <h3>No Orders Yet</h3>
+                    <p>You haven't placed any orders yet. Start shopping to see your orders here!</p>
+                    <a href="shop.html" class="normal" style="margin-top: 20px; display: inline-block;">Start Shopping</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const user = JSON.parse(localStorage.getItem('currentUser'));
+            if (!user) {
+                window.location.href = 'login.html';
+                return;
+            }
+
+            renderMyOrders(user.email);
+        });
+
+        function renderMyOrders(userEmail) {
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const userOrders = allOrders.filter(o => o.userEmail === userEmail);
+            const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+            
+            // Update summary stats
+            const totalOrders = userOrders.length;
+            const completedOrders = userOrders.filter(o => o.status === 'delivered').length;
+            const pendingOrders = userOrders.filter(o => o.status === 'placed' || o.status === 'shipped').length;
+            
+            document.getElementById('total-orders-count').textContent = totalOrders;
+            document.getElementById('completed-orders-count').textContent = completedOrders;
+            document.getElementById('pending-orders-count').textContent = pendingOrders;
+
+            const container = document.getElementById('orders-list');
+            
+            if (userOrders.length === 0) {
+                return; // Keep empty state
+            }
+
+            // Sort orders by date (newest first)
+            const sortedOrders = userOrders.sort((a, b) => new Date(b.date) - new Date(a.date));
+
+            container.innerHTML = sortedOrders.map(order => {
+                const orderProducts = order.items.map(item => {
+                    const product = allProducts.find(p => p.id === item.id);
+                    return { ...item, ...product };
+                });
+
+                return `
+                    <div class="order-card">
+                        <div class="order-header">
+                            <div class="order-info">
+                                <h3>Order #${order.id}</h3>
+                                <p>Placed on ${order.date}</p>
+                            </div>
+                            <div class="order-status">
+                                <span class="status-badge status-${order.status}">${order.status}</span>
+                                <p class="order-total">NPR ${order.total}</p>
+                            </div>
+                        </div>
+                        <div class="order-products">
+                            ${orderProducts.map((product, index) => `
+                                <div class="order-product-item">
+                                    <div class="product-checkbox">
+                                        <input type="checkbox" id="product-${order.id}-${product.id}" class="product-select" data-order-id="${order.id}" data-product-id="${product.id}" data-product-index="${index}">
+                                        <label for="product-${order.id}-${product.id}"></label>
+                                    </div>
+                                    <img src="${product.image || 'image/product/f1.jpg'}" alt="${product.name}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
+                                    <div class="product-details">
+                                        <h4>${product.name}</h4>
+                                        <p>Quantity: ${product.quantity} • NPR ${product.price}</p>
+                                        <p class="product-subtotal">Subtotal: NPR ${product.quantity * product.price}</p>
+                                    </div>
+                                    <div class="product-actions">
+                                        <button class="btn-mini btn-track" onclick="trackSingleProduct(${order.id}, ${product.id})" title="Track this item">
+                                            <i class="fas fa-truck"></i>
+                                        </button>
+                                        ${order.status === 'placed' || order.status === 'shipped' ? 
+                                            `<button class="btn-mini btn-cancel" onclick="cancelSingleProduct(${order.id}, ${product.id})" title="Cancel this item">
+                                                <i class="fas fa-times"></i>
+                                            </button>` : ''
+                                        }
+                                        <button class="btn-mini btn-reorder" onclick="reorderSingleProduct(${order.id}, ${product.id})" title="Reorder this item">
+                                            <i class="fas fa-redo"></i>
+                                        </button>
+                                    </div>
+                                </div>
+                            `).join('')}
+                        </div>
+                        <div class="order-actions">
+                            <div class="bulk-actions">
+                                <button class="btn-secondary" onclick="selectAllProducts(${order.id})">
+                                    <i class="fas fa-check-square"></i> Select All
+                                </button>
+                                <button class="btn-secondary" onclick="deselectAllProducts(${order.id})">
+                                    <i class="fas fa-square"></i> Deselect All
+                                </button>
+                            </div>
+                            <div class="selected-actions">
+                                <button class="btn-secondary" onclick="trackSelectedProducts(${order.id})" disabled>
+                                    <i class="fas fa-truck"></i> Track Selected
+                                </button>
+                                ${order.status === 'placed' || order.status === 'shipped' ? 
+                                    `<button class="btn-danger" onclick="cancelSelectedProducts(${order.id})" disabled>
+                                        <i class="fas fa-times"></i> Cancel Selected
+                                    </button>` : ''
+                                }
+                                <button class="btn-primary" onclick="reorderSelectedProducts(${order.id})" disabled>
+                                    <i class="fas fa-redo"></i> Reorder Selected
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function trackOrderDetails(orderId) {
+            // Redirect to dashboard with tracking
+            window.location.href = `user-dashboard.html#track-${orderId}`;
+        }
+
+        function trackSingleProduct(orderId, productId) {
+            showToast(`Tracking product ID ${productId} from order #${orderId}`);
+            // You can implement specific product tracking logic here
+        }
+
+        function trackSelectedProducts(orderId) {
+            const selectedProducts = getSelectedProducts(orderId);
+            if (selectedProducts.length === 0) {
+                showToast('Please select at least one product to track');
+                return;
+            }
+            showToast(`Tracking ${selectedProducts.length} selected product(s) from order #${orderId}`);
+        }
+
+        function cancelOrder(orderId) {
+            if (confirm('Are you sure you want to cancel this entire order?')) {
+                const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                const orderIndex = allOrders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex !== -1) {
+                    allOrders[orderIndex].status = 'cancelled';
+                    allOrders[orderIndex].cancelledDate = new Date().toLocaleDateString();
+                    localStorage.setItem('orders', JSON.stringify(allOrders));
+                    
+                    showToast('Order cancelled successfully');
+                    
+                    // Refresh the page
+                    const user = JSON.parse(localStorage.getItem('currentUser'));
+                    renderMyOrders(user.email);
+                }
+            }
+        }
+
+        function cancelSingleProduct(orderId, productId) {
+            if (confirm('Are you sure you want to cancel this item?')) {
+                const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                const orderIndex = allOrders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex !== -1) {
+                    const order = allOrders[orderIndex];
+                    const productIndex = order.items.findIndex(item => item.id === productId);
+                    
+                    if (productIndex !== -1) {
+                        // Remove the product from the order
+                        const cancelledProduct = order.items.splice(productIndex, 1)[0];
+                        
+                        // Update order total
+                        order.total -= (cancelledProduct.quantity * cancelledProduct.price);
+                        
+                        // If no items left, cancel entire order
+                        if (order.items.length === 0) {
+                            order.status = 'cancelled';
+                            order.cancelledDate = new Date().toLocaleDateString();
+                        }
+                        
+                        localStorage.setItem('orders', JSON.stringify(allOrders));
+                        showToast('Item cancelled successfully');
+                        
+                        // Refresh the page
+                        const user = JSON.parse(localStorage.getItem('currentUser'));
+                        renderMyOrders(user.email);
+                    }
+                }
+            }
+        }
+
+        function cancelSelectedProducts(orderId) {
+            const selectedProducts = getSelectedProducts(orderId);
+            if (selectedProducts.length === 0) {
+                showToast('Please select at least one product to cancel');
+                return;
+            }
+
+            if (confirm(`Are you sure you want to cancel ${selectedProducts.length} selected item(s)?`)) {
+                const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                const orderIndex = allOrders.findIndex(o => o.id === orderId);
+                
+                if (orderIndex !== -1) {
+                    const order = allOrders[orderIndex];
+                    let totalReduction = 0;
+                    
+                    // Remove selected products from order (in reverse order to maintain indices)
+                    selectedProducts.reverse().forEach(productId => {
+                        const productIndex = order.items.findIndex(item => item.id === productId);
+                        if (productIndex !== -1) {
+                            const cancelledProduct = order.items.splice(productIndex, 1)[0];
+                            totalReduction += (cancelledProduct.quantity * cancelledProduct.price);
+                        }
+                    });
+                    
+                    // Update order total
+                    order.total -= totalReduction;
+                    
+                    // If no items left, cancel entire order
+                    if (order.items.length === 0) {
+                        order.status = 'cancelled';
+                        order.cancelledDate = new Date().toLocaleDateString();
+                    }
+                    
+                    localStorage.setItem('orders', JSON.stringify(allOrders));
+                    showToast(`${selectedProducts.length} item(s) cancelled successfully`);
+                    
+                    // Refresh the page
+                    const user = JSON.parse(localStorage.getItem('currentUser'));
+                    renderMyOrders(user.email);
+                }
+            }
+        }
+
+        function reorderItems(orderId) {
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = allOrders.find(o => o.id === orderId);
+            
+            if (order) {
+                // Add all items from this order to cart
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                
+                order.items.forEach(item => {
+                    const existingItem = cart.find(cartItem => cartItem.id === item.id);
+                    if (existingItem) {
+                        existingItem.quantity += item.quantity;
+                    } else {
+                        cart.push({ ...item });
+                    }
+                });
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                showToast('All items added to cart successfully!');
+                
+                // Redirect to cart
+                setTimeout(() => {
+                    window.location.href = 'cart.html';
+                }, 1500);
+            }
+        }
+
+        function reorderSingleProduct(orderId, productId) {
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = allOrders.find(o => o.id === orderId);
+            
+            if (order) {
+                const product = order.items.find(item => item.id === productId);
+                if (product) {
+                    let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                    
+                    const existingItem = cart.find(cartItem => cartItem.id === product.id);
+                    if (existingItem) {
+                        existingItem.quantity += product.quantity;
+                    } else {
+                        cart.push({ ...product });
+                    }
+                    
+                    localStorage.setItem('cart', JSON.stringify(cart));
+                    showToast(`${product.name} added to cart!`);
+                }
+            }
+        }
+
+        function reorderSelectedProducts(orderId) {
+            const selectedProducts = getSelectedProducts(orderId);
+            if (selectedProducts.length === 0) {
+                showToast('Please select at least one product to reorder');
+                return;
+            }
+
+            const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+            const order = allOrders.find(o => o.id === orderId);
+            
+            if (order) {
+                let cart = JSON.parse(localStorage.getItem('cart')) || [];
+                let addedCount = 0;
+                
+                selectedProducts.forEach(productId => {
+                    const product = order.items.find(item => item.id === productId);
+                    if (product) {
+                        const existingItem = cart.find(cartItem => cartItem.id === product.id);
+                        if (existingItem) {
+                            existingItem.quantity += product.quantity;
+                        } else {
+                            cart.push({ ...product });
+                        }
+                        addedCount++;
+                    }
+                });
+                
+                localStorage.setItem('cart', JSON.stringify(cart));
+                showToast(`${addedCount} selected item(s) added to cart!`);
+                
+                // Redirect to cart if multiple items
+                if (addedCount > 1) {
+                    setTimeout(() => {
+                        window.location.href = 'cart.html';
+                    }, 1500);
+                }
+            }
+        }
+
+        function selectAllProducts(orderId) {
+            const checkboxes = document.querySelectorAll(`input[data-order-id="${orderId}"]`);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = true;
+            });
+            updateActionButtons(orderId);
+        }
+
+        function deselectAllProducts(orderId) {
+            const checkboxes = document.querySelectorAll(`input[data-order-id="${orderId}"]`);
+            checkboxes.forEach(checkbox => {
+                checkbox.checked = false;
+            });
+            updateActionButtons(orderId);
+        }
+
+        function getSelectedProducts(orderId) {
+            const checkboxes = document.querySelectorAll(`input[data-order-id="${orderId}"]:checked`);
+            return Array.from(checkboxes).map(checkbox => parseInt(checkbox.dataset.productId));
+        }
+
+        function updateActionButtons(orderId) {
+            const selectedCount = getSelectedProducts(orderId).length;
+            const actionButtons = document.querySelectorAll(`[onclick*="${orderId}"][onclick*="Selected"]`);
+            
+            actionButtons.forEach(button => {
+                button.disabled = selectedCount === 0;
+                if (selectedCount > 0) {
+                    button.classList.remove('disabled');
+                } else {
+                    button.classList.add('disabled');
+                }
+            });
+        }
+
+        // Add event listeners for checkboxes after rendering
+        document.addEventListener('change', function(e) {
+            if (e.target.classList.contains('product-select')) {
+                const orderId = e.target.dataset.orderId;
+                updateActionButtons(orderId);
+            }
+        });
+    </script>
+</body>
+</html>

@@ -323,26 +323,60 @@
                 </div>
             </div>
 
-            <!-- Dashboard Overview Sections (My Cart, My Wishlist, Track Order) -->
-            <div class="dashboard-grid-3">
+            <!-- Dashboard Overview Sections - Row 1: Orders & Cart -->
+            <div class="dashboard-grid-2">
+                <div id="orders-section-mini" class="section-wrapper-mini">
+                    <div class="dash-card">
+                        <div class="dash-header-modern">
+                            <h3><i class="fa-solid fa-receipt"></i> My Orders</h3>
+                            <a href="my-orders.html" class="view-link">View All Orders</a>
+                        </div>
+                        <div class="mini-list" id="mini-orders-list">
+                            <p style="padding: 10px; color: #999; font-size: 13px;">No recent orders.</p>
+                        </div>
+                    </div>
+                </div>
                 <div id="cart-section" class="section-wrapper-mini">
                     <div class="dash-card">
                         <div class="dash-header-modern">
                             <h3><i class="fa-solid fa-cart-shopping"></i> My Cart</h3>
                             <a href="cart.html" class="view-link">View Full Cart</a>
                         </div>
-                        <div class="mini-list" id="mini-cart-list"></div>
+                        <div class="mini-list" id="mini-cart-list">
+                            <p style="padding: 10px; color: #999; font-size: 13px;">Your cart is empty.</p>
+                        </div>
                     </div>
                 </div>
+            </div>
+
+            <!-- Dashboard Overview Sections - Row 2: Wishlist & Cancellations -->
+            <div class="dashboard-grid-2">
                 <div id="wishlist-section" class="section-wrapper-mini">
                     <div class="dash-card">
                         <div class="dash-header-modern">
                             <h3><i class="fa-solid fa-heart"></i> My Wishlist</h3>
                             <a href="shop.html" class="view-link">Add More</a>
                         </div>
-                        <div class="mini-list" id="mini-wishlist-list"></div>
+                        <div class="mini-list" id="mini-wishlist-list">
+                            <p style="padding: 10px; color: #999; font-size: 13px;">Your wishlist is empty.</p>
+                        </div>
                     </div>
                 </div>
+                <div id="cancellations-section" class="section-wrapper-mini">
+                    <div class="dash-card">
+                        <div class="dash-header-modern">
+                            <h3><i class="fa-solid fa-times-circle"></i> My Cancellations</h3>
+                            <a href="my-cancellations.html" class="view-link">View All</a>
+                        </div>
+                        <div class="mini-list" id="mini-cancellations-list">
+                            <p style="padding: 10px; color: #999; font-size: 13px;">No cancellations.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Dashboard Overview Sections - Row 3: Track Order (Full Width) -->
+            <div class="dashboard-grid-1">
                 <div id="track-section" class="section-wrapper-mini">
                     <div class="dash-card">
                         <div class="dash-header-modern">
@@ -448,6 +482,8 @@
              renderUserOrders(user.email);
              renderDashboardCart();
              renderDashboardWishlist();
+             renderDashboardOrders(user.email);
+             renderDashboardCancellations(user.email);
              
              // Update Stats
              const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
@@ -557,6 +593,64 @@
                                               <td><span class="status-badge status-${o.status}">${o.status}</span></td>
                                           </tr>
                                       `).join('');
+                                  }
+
+                                  function renderDashboardOrders(userEmail) {
+                                      const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                                      const userOrders = allOrders.filter(o => o.userEmail === userEmail);
+                                      const container = document.getElementById('mini-orders-list');
+                                      if (!container) return;
+                          
+                                      if (userOrders.length === 0) {
+                                          container.innerHTML = '<p style="padding: 10px; color: #999; font-size: 13px;">No recent orders.</p>';
+                                          return;
+                                      }
+                          
+                                      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+                                      container.innerHTML = userOrders.slice(0, 3).map(order => {
+                                          const firstProduct = allProducts.find(p => p.id === order.items[0]?.id);
+                                          return `
+                                              <div class="mini-item">
+                                                  <img src="${firstProduct?.image || 'image/product/f1.jpg'}" alt="Order #${order.id}" onerror="this.onerror=null;this.src='image/product/f1.jpg';">
+                                                  <div class="mini-item-info">
+                                                      <h4>Order #${order.id}</h4>
+                                                      <p>${order.items.length} item(s) • NPR ${order.total}</p>
+                                                  </div>
+                                              </div>
+                                          `;
+                                      }).join('');
+                                      if (userOrders.length > 3) {
+                                          container.innerHTML += `<p style="font-size: 11px; margin-top: 10px; color: var(--primary-color);">+ ${userOrders.length - 3} more orders</p>`;
+                                      }
+                                  }
+
+                                  function renderDashboardCancellations(userEmail) {
+                                      const allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+                                      const cancelledOrders = allOrders.filter(o => o.userEmail === userEmail && o.status === 'cancelled');
+                                      const container = document.getElementById('mini-cancellations-list');
+                                      if (!container) return;
+                          
+                                      if (cancelledOrders.length === 0) {
+                                          container.innerHTML = '<p style="padding: 10px; color: #999; font-size: 13px;">No cancellations.</p>';
+                                          return;
+                                      }
+                          
+                                      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+                                      container.innerHTML = cancelledOrders.slice(0, 3).map(order => {
+                                          const firstProduct = allProducts.find(p => p.id === order.items[0]?.id);
+                                          return `
+                                              <div class="mini-item" style="opacity: 0.7;">
+                                                  <img src="${firstProduct?.image || 'image/product/f1.jpg'}" alt="Cancelled Order #${order.id}" onerror="this.onerror=null;this.src='image/product/f1.jpg';" style="filter: grayscale(100%);">
+                                                  <div class="mini-item-info">
+                                                      <h4>Order #${order.id}</h4>
+                                                      <p>Cancelled • NPR ${order.total}</p>
+                                                  </div>
+                                              </div>
+                                          `;
+                                      }).join('');
+                                      if (cancelledOrders.length > 3) {
+                                          container.innerHTML += `<p style="font-size: 11px; margin-top: 10px; color: var(--primary-color);">+ ${cancelledOrders.length - 3} more cancellations</p>`;
+                                      }
                                   }
                               </script>             </body>
              </html>
