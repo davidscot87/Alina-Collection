@@ -1,9 +1,10 @@
-// Mobile Navigation Toggle
+// Mobile Navigation Toggle (legacy navbar — kept for other pages)
 const bar = document.getElementById('bar');
 const close = document.getElementById('close');
 const nav = document.getElementById('navbar');
 
-if (bar) {
+// Only use old navbar toggle if new mobile drawer is NOT present
+if (bar && !document.getElementById('mobile-drawer')) {
     bar.addEventListener('click', () => {
         nav.classList.add('active');
     });
@@ -14,6 +15,90 @@ if (close) {
         nav.classList.remove('active');
     });
 }
+
+// ====== Premium Mobile Drawer System ======
+(function initMobileDrawer() {
+    const hamburger = document.getElementById('bar');
+    const drawer = document.getElementById('mobile-drawer');
+    const overlay = document.getElementById('mobile-nav-overlay');
+    const drawerClose = document.getElementById('mob-drawer-close');
+
+    if (!hamburger || !drawer || !overlay) return;
+
+    function openDrawer() {
+        drawer.classList.add('open');
+        overlay.classList.add('active');
+        hamburger.classList.add('is-active');
+        document.body.classList.add('mob-nav-open');
+    }
+
+    function closeDrawer() {
+        drawer.classList.remove('open');
+        overlay.classList.remove('active');
+        hamburger.classList.remove('is-active');
+        document.body.classList.remove('mob-nav-open');
+        // Close any open sub-menus
+        document.querySelectorAll('.mob-has-sub.sub-open').forEach(el => el.classList.remove('sub-open'));
+    }
+
+    hamburger.addEventListener('click', (e) => {
+        e.stopPropagation();
+        if (drawer.classList.contains('open')) {
+            closeDrawer();
+        } else {
+            openDrawer();
+        }
+    });
+
+    if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
+    overlay.addEventListener('click', closeDrawer);
+
+    // Close on Escape key
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
+    });
+
+    // Shop sub-menu accordion toggle
+    document.querySelectorAll('.mob-sub-toggle').forEach(toggle => {
+        toggle.addEventListener('click', (e) => {
+            e.preventDefault();
+            const parent = toggle.closest('.mob-has-sub');
+            if (parent) parent.classList.toggle('sub-open');
+        });
+    });
+
+    // Sync the mobile drawer currency selector with the main one
+    const mobCurrencySelect = document.getElementById('mob-currency-select');
+    const mainCurrencySelect = document.getElementById('currency-select');
+    if (mobCurrencySelect && mainCurrencySelect) {
+        // Sync on load
+        mobCurrencySelect.value = localStorage.getItem('selectedCurrency') || 'NPR';
+        mobCurrencySelect.addEventListener('change', () => {
+            localStorage.setItem('selectedCurrency', mobCurrencySelect.value);
+            if (mainCurrencySelect) mainCurrencySelect.value = mobCurrencySelect.value;
+            // Trigger re-render if on a product page
+            if (typeof renderProducts === 'function') {
+                const params = new URLSearchParams(window.location.search);
+                const containers = ['dynamic-featured-pro', 'dynamic-new-pro', 'dynamic-all-pro', 'dynamic-flash-mini'];
+                containers.forEach(c => {
+                    if (document.getElementById(c)) renderProducts(c, c.includes('featured') || c.includes('new') ? 8 : null, params.get('cat'), params.get('search'));
+                });
+            }
+            closeDrawer();
+        });
+    }
+
+    // Close drawer on window resize to desktop
+    let resizeTimer;
+    window.addEventListener('resize', () => {
+        clearTimeout(resizeTimer);
+        resizeTimer = setTimeout(() => {
+            if (window.innerWidth > 900 && drawer.classList.contains('open')) {
+                closeDrawer();
+            }
+        }, 150);
+    });
+})();
 
 // === 1. State Management & Data ===
 const PRODUCT_VERSION = "3.9"; // Granular "Name-Wise" Visual Accuracy Overhaul
@@ -394,6 +479,44 @@ function updateNavbarAuth() {
             navbar.appendChild(authLi);
         }
         document.body.classList.add('guest-mode');
+    }
+
+    // --- Also update Mobile Drawer auth links ---
+    const drawerLinks = document.querySelector('.mob-drawer-links');
+    if (drawerLinks) {
+        // Remove existing drawer auth items
+        const existingDrawerAuth = document.getElementById('mob-auth-item');
+        if (existingDrawerAuth) existingDrawerAuth.remove();
+        const existingDrawerLogout = document.getElementById('mob-logout-item');
+        if (existingDrawerLogout) existingDrawerLogout.remove();
+        // Find the static Account link (last item at --i:6) and update it
+        const accountItems = drawerLinks.querySelectorAll('.mob-link-item');
+        accountItems.forEach(item => {
+            const link = item.querySelector('a');
+            if (link && link.href && link.href.includes('login.html')) {
+                if (currentUser) {
+                    link.href = 'user-dashboard.html';
+                    link.innerHTML = `<i class="fas fa-user"></i> ${currentUser.name}`;
+                    // Add logout item after
+                    const logoutLi = document.createElement('li');
+                    logoutLi.className = 'mob-link-item';
+                    logoutLi.id = 'mob-logout-item';
+                    logoutLi.style.setProperty('--i', '7');
+                    logoutLi.innerHTML = `<a href="#" id="mob-logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>`;
+                    item.insertAdjacentElement('afterend', logoutLi);
+                    const logoutLink = document.getElementById('mob-logout-link');
+                    if (logoutLink) {
+                        logoutLink.addEventListener('click', (e) => {
+                            e.preventDefault();
+                            logoutUser();
+                        });
+                    }
+                }
+            } else if (link && link.href && link.href.includes('user-dashboard.html') && !currentUser) {
+                link.href = 'login.html';
+                link.innerHTML = `<i class="fas fa-user"></i> Account`;
+            }
+        });
     }
 }
 

@@ -56,9 +56,72 @@
     <div id="mobile">
       <i class="fas fa-search" id="mobile-search-btn"></i>
       <a href="cart.html" class="cart-link"><i class="fa-solid fa-bag-shopping"></i> <span>My Cart</span></a>
-      <i id="bar" class="fas fa-bars"></i>
+      <div id="bar" class="hamburger-btn" aria-label="Toggle Menu">
+        <span class="ham-line ham-line-1"></span>
+        <span class="ham-line ham-line-2"></span>
+        <span class="ham-line ham-line-3"></span>
+      </div>
     </div>
   </section>
+
+  <!-- Mobile Nav Overlay -->
+  <div id="mobile-nav-overlay" class="mob-overlay"></div>
+
+  <!-- ====== Premium Mobile Drawer ====== -->
+  <nav id="mobile-drawer" class="mob-drawer">
+    <div class="mob-drawer-header">
+      <a href="index.html"><img src="image/Logo/logo.png" class="mob-drawer-logo" alt="Alina Collection" /></a>
+      <button id="mob-drawer-close" class="mob-drawer-close-btn" aria-label="Close Menu">
+        <i class="fas fa-times"></i>
+      </button>
+    </div>
+    <div class="mob-drawer-tagline">Premium Fashion &bull; Curated Style</div>
+
+    <ul class="mob-drawer-links">
+      <li class="mob-link-item" style="--i:1"><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
+      </li>
+      <li class="mob-link-item mob-has-sub" style="--i:2">
+        <a href="#" class="mob-sub-toggle"><i class="fas fa-shopping-bag"></i> Shop <i
+            class="fas fa-chevron-down mob-chevron"></i></a>
+        <ul class="mob-sub-menu">
+          <li><a href="shop.html?cat=Tops"><i class="fas fa-tshirt"></i> Tops & Shirts</a></li>
+          <li><a href="shop.html?cat=Bottoms"><i class="fas fa-socks"></i> Pants & Bottoms</a></li>
+          <li><a href="shop.html?cat=Dresses"><i class="fas fa-vest"></i> Dresses</a></li>
+          <li><a href="shop.html?cat=Outerwear"><i class="fas fa-mitten"></i> Outerwear</a></li>
+          <li><a href="shop.html?cat=Footwear"><i class="fas fa-shoe-prints"></i> Footwear</a></li>
+          <li><a href="shop.html?cat=Accessories"><i class="fas fa-gem"></i> Accessories</a></li>
+        </ul>
+      </li>
+      <li class="mob-link-item" style="--i:3"><a href="about.html"><i class="fas fa-book-open"></i> Our Story</a></li>
+      <li class="mob-link-item" style="--i:4"><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+      <li class="mob-link-item" style="--i:5"><a href="cart.html"><i class="fas fa-bag-shopping"></i> My Cart</a></li>
+      <li class="mob-link-item" style="--i:6"><a href="login.html"><i class="fas fa-user"></i> Account</a></li>
+    </ul>
+
+    <div class="mob-drawer-divider"></div>
+
+    <div class="mob-drawer-currency">
+      <label for="mob-currency-select"><i class="fas fa-globe"></i> Currency</label>
+      <select id="mob-currency-select">
+        <option value="NPR">NPR</option>
+        <option value="USD">USD</option>
+        <option value="EUR">EUR</option>
+      </select>
+    </div>
+
+    <div class="mob-drawer-footer">
+      <div class="mob-drawer-social">
+        <a href="#" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+      </div>
+      <div class="mob-drawer-contact">
+        <p><i class="fas fa-phone-alt"></i> +977 970-5978322</p>
+        <p><i class="fas fa-envelope"></i> hello@alinacollection.com</p>
+      </div>
+    </div>
+  </nav>
   <div id="search-popup">
     <div class="search-box">
       <input type="text" placeholder="Search here...">
