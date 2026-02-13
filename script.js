@@ -67,6 +67,18 @@ if (close) {
         });
     });
 
+    // Sync the mobile drawer dark mode toggle with main
+    function updateMobileDarkModeIcon(isDark) {
+        const mobToggle = document.getElementById('mob-dark-mode-toggle');
+        if (mobToggle) {
+            const icon = mobToggle.querySelector('i');
+            if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+        }
+    }
+
+    // Export for use in initDarkMode
+    window.updateMobileDarkModeIcon = updateMobileDarkModeIcon;
+
     // Sync the mobile drawer currency selector with the main one
     const mobCurrencySelect = document.getElementById('mob-currency-select');
     const mainCurrencySelect = document.getElementById('currency-select');
@@ -1677,25 +1689,70 @@ function initNewsletterPopup() {
 }
 
 function initDarkMode() {
-    const isDark = localStorage.getItem('darkMode') === 'true';
-    if (isDark) document.body.classList.add('dark-mode');
+    const darkModeStorage = localStorage.getItem('darkMode');
+    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
 
-    const toggle = document.createElement('li');
-    toggle.innerHTML = `<a href="#" id="dark-mode-toggle"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i></a>`;
+    // Logic: Use stored preference if exists, otherwise follow system
+    let isDark = darkModeStorage === null ? prefersDark.matches : darkModeStorage === 'true';
+
+    const updateTheme = (dark, save = true) => {
+        document.body.classList.toggle('dark-mode', dark);
+        if (save) localStorage.setItem('darkMode', dark);
+
+        // Update Desktop Icon
+        const desktopIcon = document.querySelector('#dark-mode-toggle i');
+        if (desktopIcon) desktopIcon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
+
+        // Update Mobile Icon (via exported function)
+        if (window.updateMobileDarkModeIcon) window.updateMobileDarkModeIcon(dark);
+    };
+
+    // Initial setup
+    updateTheme(isDark, false);
+
+    // Desktop Toggle
+    const desktopToggle = document.createElement('li');
+    desktopToggle.innerHTML = `<a href="#" id="dark-mode-toggle" title="Toggle Dark Mode"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i></a>`;
     const navbar = document.getElementById('navbar');
     if (navbar) {
         const closeBtn = document.getElementById('close');
-        if (closeBtn) navbar.insertBefore(toggle, closeBtn);
-        else navbar.appendChild(toggle);
+        if (closeBtn) navbar.insertBefore(desktopToggle, closeBtn);
+        else navbar.appendChild(desktopToggle);
     }
 
-    document.getElementById('dark-mode-toggle').onclick = (e) => {
-        e.preventDefault();
-        const active = document.body.classList.toggle('dark-mode');
-        localStorage.setItem('darkMode', active);
-        const icon = document.querySelector('#dark-mode-toggle i');
-        icon.className = active ? 'fas fa-sun' : 'fas fa-moon';
-    };
+    // Mobile Toggle Injection
+    const drawerLinks = document.querySelector('.mob-drawer-links');
+    if (drawerLinks && !document.getElementById('mob-dark-mode-toggle')) {
+        const mobToggleLi = document.createElement('li');
+        mobToggleLi.className = 'mob-link-item';
+        mobToggleLi.id = 'mob-dark-mode-item';
+        mobToggleLi.style.setProperty('--i', '8');
+        mobToggleLi.innerHTML = `<a href="#" id="mob-dark-mode-toggle"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i> Dark Mode</a>`;
+        drawerLinks.appendChild(mobToggleLi);
+
+        document.getElementById('mob-dark-mode-toggle').onclick = (e) => {
+            e.preventDefault();
+            const nowDark = !document.body.classList.contains('dark-mode');
+            updateTheme(nowDark);
+        };
+    }
+
+    // Click hander for desktop
+    const desktopBtn = document.getElementById('dark-mode-toggle');
+    if (desktopBtn) {
+        desktopBtn.onclick = (e) => {
+            e.preventDefault();
+            const nowDark = !document.body.classList.contains('dark-mode');
+            updateTheme(nowDark);
+        };
+    }
+
+    // Listener for system changes (only if no manual override in this session)
+    prefersDark.addEventListener('change', (e) => {
+        if (localStorage.getItem('darkMode') === null) {
+            updateTheme(e.matches, false);
+        }
+    });
 }
 
 function initCustomDropdowns() {

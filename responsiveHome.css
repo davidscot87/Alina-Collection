@@ -392,7 +392,7 @@
     }
 
     #hero::before {
-        background: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 100%);
+        background: var(--hero-overlay-mobile);
     }
 
     #hero h1 {

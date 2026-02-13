@@ -45,6 +45,8 @@ select {
     --transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     --glass: rgba(255, 255, 255, 0.7);
     --glass-border: rgba(255, 255, 255, 0.2);
+    --hero-overlay: linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+    --hero-overlay-mobile: radial-gradient(circle, rgba(255, 255, 255, 0.9) 0%, rgba(255, 255, 255, 0.2) 100%);
 }
 
 /* Scroll Progress Bar */
@@ -62,6 +64,8 @@ select {
 body.dark-mode {
     --text-color: #f1f5f9;
     --text-muted: #94a3b8;
+    --secondary-color: #cbd5e1;
+    /* Lighter secondary for dark mode text */
     --white: #0F172A;
     /* Deep Navy Background */
     --bg-light: #020617;
@@ -72,8 +76,48 @@ body.dark-mode {
     --shadow-strong: 0 10px 25px rgba(0, 0, 0, 0.6);
     --glass: rgba(30, 41, 59, 0.7);
     --glass-border: rgba(255, 255, 255, 0.05);
+    --hero-overlay: linear-gradient(90deg, rgba(2, 6, 23, 0.7) 0%, rgba(2, 6, 23, 0) 60%);
+    --hero-overlay-mobile: radial-gradient(circle, rgba(2, 6, 23, 0.8) 0%, rgba(2, 6, 23, 0.4) 100%);
     background: linear-gradient(135deg, var(--white) 0%, var(--bg-light) 100%);
     background-attachment: fixed;
+}
+
+/* Global Dark Mode Text Fix */
+body.dark-mode h1:not(#hero h1),
+body.dark-mode h2,
+body.dark-mode h3,
+body.dark-mode h4,
+body.dark-mode h5,
+body.dark-mode h6,
+body.dark-mode p,
+body.dark-mode span:not(.badge-sale):not(.old-price),
+body.dark-mode li,
+body.dark-mode label,
+body.dark-mode strong,
+body.dark-mode b,
+body.dark-mode i,
+body.dark-mode td,
+body.dark-mode th,
+body.dark-mode a:not(.normal):not(.active):not(.buy-now-btn):not(.add-cart-btn) {
+    color: var(--text-color) !important;
+}
+
+body.dark-mode marquee {
+    background-color: var(--secondary-light) !important;
+    color: var(--text-color) !important;
+}
+
+body.dark-mode .des h4 {
+    color: var(--primary-color) !important;
+    /* Keep price readable */
+}
+
+body.dark-mode input,
+body.dark-mode textarea,
+body.dark-mode select {
+    color: var(--text-color) !important;
+    background-color: var(--bg-card) !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
 }
 
 body.dark-mode #header {
@@ -91,19 +135,15 @@ body.dark-mode #sub-total,
 body.dark-mode #coupon,
 body.dark-mode #form-details {
     background-color: var(--bg-card);
-    border-color: #333;
+    border-color: rgba(255, 255, 255, 0.1);
 }
 
 body.dark-mode .header-search {
     background: #3a3b3c;
 }
 
-body.dark-mode .header-search input {
-    color: #fff;
-}
-
 body.dark-mode #navbar li a {
-    color: #f1f1f1;
+    color: var(--text-color) !important;
 }
 
 * {
@@ -177,7 +217,7 @@ button.normal {
     font-size: 14px;
     font-weight: 600;
     padding: 15px 30px;
-    color: #000;
+    color: var(--secondary-color);
     background-color: var(--white);
     border-radius: 4px;
     cursor: pointer;
@@ -185,6 +225,14 @@ button.normal {
     outline: none;
     transition: var(--transition);
     box-shadow: var(--shadow-soft);
+}
+
+body.dark-mode button.normal {
+    color: var(--white);
+    /* White is Navy in dark mode, wait no */
+    /* Let's be explicit */
+    color: #f1f5f9;
+    background-color: var(--secondary-light);
 }
 
 button.normal:hover {
@@ -208,7 +256,7 @@ button.white {
 
 button.white:hover {
     background-color: var(--white);
-    color: #000;
+    color: var(--secondary-color);
 }
 
 button.outline-dark {
@@ -364,7 +412,7 @@ button.outline-dark:hover {
 
 .dropdown-menu li a {
     font-size: 14px !important;
-    color: #333 !important;
+    color: var(--text-color) !important;
     display: block;
 }
 
@@ -403,14 +451,14 @@ button.outline-dark:hover {
     padding: 6px 8px;
     width: 100%;
     font-size: 13px;
-    color: #333;
+    color: var(--text-color);
 }
 
 .header-search button {
     background: transparent;
     border: none;
     cursor: pointer;
-    color: #555;
+    color: var(--text-muted);
     font-size: 14px;
     transition: var(--transition);
 }
@@ -426,7 +474,7 @@ button.outline-dark:hover {
 }
 
 #mobile i {
-    color: #1a1a1a;
+    color: var(--secondary-color);
     font-size: 24px;
     padding-left: 20px;
     cursor: pointer;
@@ -734,7 +782,7 @@ body.dark-mode .back-btn:hover {
     left: 0;
     width: 100%;
     height: 100%;
-    background: linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0) 100%);
+    background: var(--hero-overlay);
     z-index: 1;
 }
 
@@ -754,7 +802,7 @@ body.dark-mode .back-btn:hover {
     padding-bottom: 15px;
     letter-spacing: 2px;
     text-transform: uppercase;
-    color: #222;
+    color: var(--text-color);
 }
 
 #hero h1 {
@@ -764,12 +812,12 @@ body.dark-mode .back-btn:hover {
 }
 
 #hero h2 {
-    color: #222;
+    color: var(--text-color);
     font-size: 46px;
 }
 
 #hero p {
-    color: #555;
+    color: var(--text-muted);
     margin-bottom: 30px;
     font-size: 18px;
 }
@@ -805,6 +853,33 @@ body.dark-mode .back-btn:hover {
 
 #hero button:hover i {
     transform: translateX(8px);
+}
+
+/* Dark Mode Hero Enhancements */
+body.dark-mode #hero {
+    background-color: transparent;
+    background-blend-mode: normal;
+    /* Restore default image view */
+}
+
+body.dark-mode #hero h4 {
+    color: var(--primary-color) !important;
+    font-weight: 700;
+}
+
+body.dark-mode #hero h1 {
+    color: var(--primary-color) !important;
+    text-shadow: 0 0 30px rgba(221, 45, 74, 0.3);
+}
+
+body.dark-mode #hero button {
+    background: var(--primary-color);
+    color: #fff;
+    box-shadow: 0 10px 30px rgba(221, 45, 74, 0.4);
+}
+
+body.dark-mode #hero button:hover {
+    background: var(--primary-dark);
 }
 
 /* Category Sub-Navbar */
@@ -962,6 +1037,30 @@ body.dark-mode #sub-navbar ul li a:hover {
     background: #ecfdf5;
 }
 
+body.dark-mode #feature .fe-box i {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode #feature .fe-box:nth-child(3) i {
+    background: rgba(14, 165, 233, 0.15) !important;
+}
+
+body.dark-mode #feature .fe-box:nth-child(4) i {
+    background: rgba(139, 92, 246, 0.15) !important;
+}
+
+body.dark-mode #feature .fe-box:nth-child(5) i {
+    background: rgba(245, 158, 11, 0.15) !important;
+}
+
+body.dark-mode #feature .fe-box:nth-child(6) i {
+    background: rgba(16, 185, 129, 0.15) !important;
+}
+
+body.dark-mode #feature .fe-box:nth-child(7) i {
+    background: rgba(236, 72, 153, 0.15) !important;
+}
+
 #feature .fe-box:nth-child(7) i {
     color: #ec4899;
     background: #fdf2f8;
@@ -1029,7 +1128,7 @@ body.dark-mode #feature .fe-box h6 {
     width: 23%;
     min-width: 250px;
     padding: 15px;
-    border: 1px solid #f0f0f0;
+    border: 1px solid rgba(0, 0, 0, 0.05);
     border-radius: 24px;
     cursor: pointer;
     box-shadow: var(--shadow-soft);
@@ -1038,6 +1137,10 @@ body.dark-mode #feature .fe-box h6 {
     position: relative;
     background: var(--white);
     overflow: hidden;
+}
+
+body.dark-mode .pro {
+    border-color: rgba(255, 255, 255, 0.08);
 }
 
 .pro:hover {
@@ -1052,8 +1155,12 @@ body.dark-mode #feature .fe-box h6 {
     width: 100%;
     aspect-ratio: 3 / 4;
     /* Fixed professional fashion frame */
-    background-color: #f8fafc;
+    background-color: var(--bg-light);
     border: 1px solid rgba(0, 0, 0, 0.03);
+}
+
+body.dark-mode .pro-img-wrapper {
+    border-color: rgba(255, 255, 255, 0.05);
 }
 
 .pro img {
@@ -1257,6 +1364,25 @@ body.dark-mode .stock-amount {
     color: #34d399;
 }
 
+/* Component Specific Dark Mode Overrides */
+body.dark-mode #cart table,
+body.dark-mode #cart table tr,
+body.dark-mode #cart table td,
+body.dark-mode #coupon,
+body.dark-mode #sub-total {
+    background-color: var(--white) !important;
+    /* var(--white) is Navy in dark mode */
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
+body.dark-mode #cart table tbody tr:hover {
+    background-color: var(--secondary-light) !important;
+}
+
+body.dark-mode #sub-total table td {
+    border-color: rgba(255, 255, 255, 0.1) !important;
+}
+
 .pro .des i {
     font-size: 12px;
     color: rgb(243, 181, 25);
@@ -1267,7 +1393,10 @@ body.dark-mode .stock-amount {
     position: absolute;
     top: 15px;
     right: 15px;
-    background: rgba(255, 255, 255, 0.8);
+    background: var(--glass);
+    backdrop-filter: blur(4px);
+    -webkit-backdrop-filter: blur(4px);
+    border: 1px solid var(--glass-border);
     border-radius: 50%;
     width: 35px;
     height: 35px;
@@ -1280,7 +1409,7 @@ body.dark-mode .stock-amount {
 }
 
 .wishlist-icon i {
-    color: #ccc;
+    color: var(--text-muted);
     font-size: 18px;
     transition: 0.3s;
 }
@@ -1329,6 +1458,11 @@ body.dark-mode .stock-amount {
     border-radius: 30px;
     box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
     border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+body.dark-mode #banner {
+    background-color: #020617;
+    background-blend-mode: overlay;
 }
 
 #banner::before {
@@ -2071,7 +2205,7 @@ body.dark-mode #search-popup {
 }
 
 #newsletter-popup .popup-content {
-    background: #fff;
+    background: var(--white);
     width: 800px;
     display: flex;
     position: relative;
@@ -2079,6 +2213,11 @@ body.dark-mode #search-popup {
     overflow: hidden;
     transform: scale(0.8);
     transition: 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    border: 1px solid var(--glass-border);
+}
+
+body.dark-mode #newsletter-popup .popup-content {
+    box-shadow: 0 0 50px rgba(0, 0, 0, 0.5);
 }
 
 #newsletter-popup.active .popup-content {
@@ -2092,7 +2231,7 @@ body.dark-mode #search-popup {
     font-size: 20px;
     cursor: pointer;
     z-index: 10;
-    color: #333;
+    color: var(--text-color);
 }
 
 .popup-img {
@@ -2118,7 +2257,7 @@ body.dark-mode #search-popup {
 }
 
 .popup-text p {
-    color: #666;
+    color: var(--text-muted);
     margin-bottom: 30px;
 }
 
