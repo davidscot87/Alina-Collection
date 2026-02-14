@@ -7,7 +7,11 @@
   },
   "auth": {
     "providers": {
-      "emailPassword": {}
+      "emailPassword": true,
+      "googleSignIn": {
+        "oAuthBrandDisplayName": "Alina Collection",
+        "supportEmail": "imserv67@gmail.com"
+      }
     }
   }
 }

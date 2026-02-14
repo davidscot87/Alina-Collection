@@ -243,202 +243,9 @@ function convertPrice(nprPrice) {
 
 // === 3. Authentication & Dashboards ===
 function handleAuth() {
-    // Note: Firebase handleAuth now managed via auth.js module
-    // Legacy logic preserved below for UI interactions but login/reg moved to auth.js
-
-    const regForm = document.getElementById('registerForm');
-    const loginForm = document.getElementById('loginForm');
-    const regMethod = document.getElementById('reg-method');
-    const regEmail = document.getElementById('reg-email');
-    const regPhone = document.getElementById('reg-phone');
-    const regHint = document.getElementById('reg-hint');
-
-    // Dynamic Field Toggling
-    if (regMethod) {
-        regMethod.addEventListener('change', () => {
-            const method = regMethod.value;
-            if (method === 'email') {
-                regEmail.style.display = 'block';
-                regEmail.required = true;
-                regPhone.style.display = 'none';
-                regPhone.required = false;
-                regHint.innerText = "or use your email for registration";
-            } else {
-                regEmail.style.display = 'none';
-                regEmail.required = false;
-                regPhone.style.display = 'block';
-                regPhone.required = true;
-                regPhone.placeholder = method === 'sms' ? "Phone Number for SMS" : "WhatsApp Number";
-                regHint.innerText = `or use your ${method} for registration`;
-            }
-        });
-    }
-
-    if (regForm) {
-        regForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const name = document.getElementById('reg-name').value;
-            const email = regEmail.value;
-            const phone = regPhone.value;
-            const password = document.getElementById('reg-pass').value;
-            const method = regMethod.value;
-
-            const identifier = method === 'email' ? email : phone;
-
-            if (method === 'email' && allUsers.find(u => u.email === email)) {
-                showToast('Email already registered!');
-                return;
-            }
-
-            // Generate random 6-digit OTP
-            const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            window.generatedOTP = otp;
-
-            // Update Modal UI
-            const modal = document.getElementById('verify-modal');
-            const title = document.getElementById('verify-title');
-            const desc = document.getElementById('verify-desc');
-
-            if (modal) {
-                title.innerText = "Sending Code...";
-                desc.innerText = `Please wait while we send the code to ${identifier}...`;
-                modal.classList.add('active');
-
-                // Simulation: Delay arrival
-                setTimeout(() => {
-                    title.innerText = `Verify via ${method.toUpperCase()}`;
-                    desc.innerText = `We've sent a 6-digit verification code to ${identifier}.`;
-                    showMockNotification(method, identifier, otp);
-                }, 2000);
-            }
-
-            window.pendingUser = { name, email, phone, password, method, role: 'user' };
-        });
-    }
-
-    if (loginForm) {
-        loginForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const email = document.getElementById('login-email').value;
-            const password = document.getElementById('login-pass').value;
-
-            // Sovereign Admin Access (Exclusively for David Scot)
-            if (email === "davidscot8786@gmail.com" && password === "David123#") {
-                const adminUser = { name: "David Scot", email, role: "admin" };
-                localStorage.setItem('currentUser', JSON.stringify(adminUser));
-                window.location.href = 'user-dashboard.html';
-                return;
-            }
-
-            const user = allUsers.find(u => u.email === email && u.password === password);
-            if (user) {
-                localStorage.setItem('currentUser', JSON.stringify(user));
-                window.location.href = 'user-dashboard.html';
-            } else {
-                showToast('Invalid Email or Password');
-            }
-        });
-    }
-
-    // OTP Verification Logic
-    const confirmVerify = document.getElementById('confirm-verify');
-    if (confirmVerify) {
-        confirmVerify.onclick = () => {
-            const enteredOTP = Array.from(document.querySelectorAll('.otp-field')).map(i => i.value).join('');
-
-            if (enteredOTP === window.generatedOTP) {
-                if (window.pendingUser) {
-                    allUsers.push(window.pendingUser);
-                    localStorage.setItem('users', JSON.stringify(allUsers));
-                    localStorage.setItem('currentUser', JSON.stringify(window.pendingUser));
-                    showToast('Registration Successful!');
-                    setTimeout(() => window.location.href = 'user-dashboard.html', 1500);
-                }
-            } else {
-                showToast('Invalid Verification Code!');
-            }
-        };
-    }
-
-    const closeVerify = document.getElementById('close-verify');
-    if (closeVerify) {
-        closeVerify.onclick = () => {
-            document.getElementById('verify-modal').classList.remove('active');
-        };
-    }
-
-    // Resend OTP Logic
-    const resendOtp = document.getElementById('resend-otp');
-    if (resendOtp) {
-        resendOtp.onclick = (e) => {
-            e.preventDefault();
-            const otp = Math.floor(100000 + Math.random() * 900000).toString();
-            window.generatedOTP = otp;
-            const method = regMethod.value || 'email';
-            const identifier = method === 'email' ? regEmail.value : regPhone.value;
-
-            const title = document.getElementById('verify-title');
-            const desc = document.getElementById('verify-desc');
-
-            if (title) title.innerText = "Resending Code...";
-            if (desc) desc.innerText = `Please wait while we resend the code to ${identifier}...`;
-
-            setTimeout(() => {
-                if (title) title.innerText = `Verify via ${method.toUpperCase()}`;
-                if (desc) desc.innerText = `We've sent a new 6-digit verification code to ${identifier}.`;
-                showMockNotification(method, identifier, otp);
-            }, 2000);
-        };
-    }
-
-    // OTP Auto-focus
-    const otpInputs = document.querySelectorAll('.otp-field');
-    otpInputs.forEach((input, index) => {
-        input.addEventListener('keyup', (e) => {
-            if (e.target.value.length === 1 && index < otpInputs.length - 1) {
-                otpInputs[index + 1].focus();
-            }
-        });
-        input.addEventListener('keydown', (e) => {
-            if (e.key === 'Backspace' && e.target.value.length === 0 && index > 0) {
-                otpInputs[index - 1].focus();
-            }
-        });
-    });
-
-    // Social Auth Simulation
-    document.querySelectorAll('.social').forEach(btn => {
-        btn.addEventListener('click', (e) => {
-            e.preventDefault();
-            const modal = document.getElementById('social-auth-modal');
-            const header = document.getElementById('social-header');
-            if (modal && header) {
-                const type = btn.querySelector('i').classList.contains('fa-google-plus-g') ? 'Google' :
-                    btn.querySelector('i').classList.contains('fa-facebook-f') ? 'Facebook' : 'LinkedIn';
-                header.innerText = `Sign in with ${type}`;
-                modal.classList.add('active');
-            }
-        });
-    });
-
-    const socialLoginBtn = document.getElementById('social-login-btn');
-    if (socialLoginBtn) {
-        socialLoginBtn.onclick = () => {
-            const email = document.getElementById('social-email').value || "social@user.com";
-            const name = email.split('@')[0];
-            const user = { name, email, role: 'user' };
-            localStorage.setItem('currentUser', JSON.stringify(user));
-            showToast('Social Login Successful!');
-            setTimeout(() => window.location.href = 'user-dashboard.html', 1500);
-        };
-    }
-
-    const socialModal = document.getElementById('social-auth-modal');
-    if (socialModal) {
-        socialModal.onclick = (e) => {
-            if (e.target === socialModal) socialModal.classList.remove('active');
-        };
-    }
+    // Note: Authentication is now strictly managed by auth.js using Firebase.
+    // This function is kept for any UI-specific toggles that might still be needed.
+    console.log("Firebase Auth system active.");
 }
 
 function updateNavbarAuth() {
@@ -459,7 +266,7 @@ function updateNavbarAuth() {
         const authLi = document.createElement('li');
         authLi.id = 'auth-btn';
         const aDashboard = document.createElement('a');
-        aDashboard.href = 'user-dashboard.html';
+        aDashboard.href = currentUser.role === 'admin' ? 'admin-product-config.html' : 'user-dashboard.html';
         aDashboard.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.name}`;
         authLi.appendChild(aDashboard);
 
@@ -538,6 +345,10 @@ function updateNavbarAuth() {
 function logoutUser() {
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isLoggedIn');
+    // Global bridge for auth.js to call firebase signOut
+    if (window.firebaseSignOut) {
+        window.firebaseSignOut();
+    }
     showToast('Logged out successfully');
     setTimeout(() => {
         window.location.href = 'index.html';
