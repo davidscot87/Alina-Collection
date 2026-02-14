@@ -3,41 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>My Cancellations - Alina Collection</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsiveHome.css">
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="responsiveHome.css">
+
 </head>
 
 <body>
     <!-- Navigation -->
-    <section id="header">
-        <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Alina Collection" /></a>
-        <div class="header-search">
-            <input type="text" placeholder="Search premium fashion..." id="header-search-input">
-            <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
-        </div>
-        <div>
-            <ul id="navbar">
-                <li><a href="index.html">Home</a></li>
-                <li>
-                    <a href="shop.html">Shop <i class="fas fa-angle-down"></i></a>
-                    <ul class="dropdown-menu">
-                        <li><a href="shop.html?cat=Tops">Tops & Shirts</a></li>
-                        <li><a href="shop.html?cat=Bottoms">Pants & Bottoms</a></li>
-                        <li><a href="shop.html?cat=Dresses">Dresses</a></li>
-                        <li><a href="shop.html?cat=Outerwear">Outerwear</a></li>
-                        <li><a href="shop.html?cat=Footwear">Footwear</a></li>
-                        <li><a href="shop.html?cat=Accessories">Accessories</a></li>
-                    </ul>
-                </li>
-                <li><a href="about.html">Our Story</a></li>
-                <li><a href="contact.html">Contact</a></li>
-            </ul>
-        </div>
-    </section>
+    <section id="header"></section>
 
     <!-- Back Button -->
     <div class="back-btn-container">
@@ -98,6 +77,8 @@
             </div>
         </div>
     </div>
+
+    <footer></footer>
 
     <script src="script.js"></script>
     <script>
@@ -233,7 +214,9 @@
         function downloadCancellationReceipt(orderId) {
             showToast('Cancellation receipt download feature coming soon!');
         }
-    </script>
+    <footer></footer>
+    <script src="script.js"></script>
 </body>
+
 
 </html>

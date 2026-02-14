@@ -14,120 +14,8 @@
 
 <body>
   <!--  ====== Navigation Bar ======-->
-  <section id="header">
-    <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Vanji" /></a>
+  <section id="header"></section>
 
-    <div class="header-search">
-      <input type="text" placeholder="Search premium fashion..." id="header-search-input" autocomplete="off">
-      <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
-    </div>
-
-    <div>
-      <ul id="navbar">
-        <li><a class="active" href="index.html">Home</a></li>
-        <li>
-          <a href="shop.html">Shop <i class="fas fa-angle-down"></i></a>
-          <ul class="dropdown-menu">
-            <li><a href="shop.html?cat=Tops">Tops & Shirts</a></li>
-            <li><a href="shop.html?cat=Bottoms">Pants & Bottoms</a></li>
-            <li><a href="shop.html?cat=Dresses">Dresses</a></li>
-            <li><a href="shop.html?cat=Outerwear">Outerwear</a></li>
-            <li><a href="shop.html?cat=Footwear">Footwear</a></li>
-            <li><a href="shop.html?cat=Accessories">Accessories</a></li>
-          </ul>
-        </li>
-
-        <li><a href="about.html">Our Story</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li class="lg-bag">
-          <a href="cart.html" class="cart-link"><i class="fa-solid fa-bag-shopping"></i> <span>My Cart</span></a>
-        </li>
-        <li class="nav-select">
-          <select name="currency" id="currency-select">
-            <option value="NPR">NPR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-          </select>
-        </li>
-        <a href="#" id="close"><i class="far fa-times"></i></a>
-      </ul>
-    </div>
-
-    <div id="mobile">
-      <i class="fas fa-search" id="mobile-search-btn"></i>
-      <a href="cart.html" class="cart-link"><i class="fa-solid fa-bag-shopping"></i> <span>My Cart</span></a>
-      <div id="bar" class="hamburger-btn" aria-label="Toggle Menu">
-        <span class="ham-line ham-line-1"></span>
-        <span class="ham-line ham-line-2"></span>
-        <span class="ham-line ham-line-3"></span>
-      </div>
-    </div>
-  </section>
-
-  <!-- Mobile Nav Overlay -->
-  <div id="mobile-nav-overlay" class="mob-overlay"></div>
-
-  <!-- ====== Premium Mobile Drawer ====== -->
-  <nav id="mobile-drawer" class="mob-drawer">
-    <div class="mob-drawer-header">
-      <a href="index.html"><img src="image/Logo/logo.png" class="mob-drawer-logo" alt="Alina Collection" /></a>
-      <button id="mob-drawer-close" class="mob-drawer-close-btn" aria-label="Close Menu">
-        <i class="fas fa-times"></i>
-      </button>
-    </div>
-    <div class="mob-drawer-tagline">Premium Fashion &bull; Curated Style</div>
-
-    <ul class="mob-drawer-links">
-      <li class="mob-link-item" style="--i:1"><a href="index.html" class="active"><i class="fas fa-home"></i> Home</a>
-      </li>
-      <li class="mob-link-item mob-has-sub" style="--i:2">
-        <a href="#" class="mob-sub-toggle"><i class="fas fa-shopping-bag"></i> Shop <i
-            class="fas fa-chevron-down mob-chevron"></i></a>
-        <ul class="mob-sub-menu">
-          <li><a href="shop.html?cat=Tops"><i class="fas fa-tshirt"></i> Tops & Shirts</a></li>
-          <li><a href="shop.html?cat=Bottoms"><i class="fas fa-socks"></i> Pants & Bottoms</a></li>
-          <li><a href="shop.html?cat=Dresses"><i class="fas fa-vest"></i> Dresses</a></li>
-          <li><a href="shop.html?cat=Outerwear"><i class="fas fa-mitten"></i> Outerwear</a></li>
-          <li><a href="shop.html?cat=Footwear"><i class="fas fa-shoe-prints"></i> Footwear</a></li>
-          <li><a href="shop.html?cat=Accessories"><i class="fas fa-gem"></i> Accessories</a></li>
-        </ul>
-      </li>
-      <li class="mob-link-item" style="--i:3"><a href="about.html"><i class="fas fa-book-open"></i> Our Story</a></li>
-      <li class="mob-link-item" style="--i:4"><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-      <li class="mob-link-item" style="--i:5"><a href="cart.html"><i class="fas fa-bag-shopping"></i> My Cart</a></li>
-      <li class="mob-link-item" style="--i:6"><a href="login.html"><i class="fas fa-user"></i> Account</a></li>
-    </ul>
-
-    <div class="mob-drawer-divider"></div>
-
-    <div class="mob-drawer-currency">
-      <label for="mob-currency-select"><i class="fas fa-globe"></i> Currency</label>
-      <select id="mob-currency-select">
-        <option value="NPR">NPR</option>
-        <option value="USD">USD</option>
-        <option value="EUR">EUR</option>
-      </select>
-    </div>
-
-    <div class="mob-drawer-footer">
-      <div class="mob-drawer-social">
-        <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-        <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-        <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-      </div>
-      <div class="mob-drawer-contact">
-        <p><i class="fas fa-phone-alt"></i> +977 970-5978322</p>
-        <p><i class="fas fa-envelope"></i> hello@alinacollection.com</p>
-      </div>
-    </div>
-  </nav>
-  <div id="search-popup">
-    <div class="search-box">
-      <input type="text" placeholder="Search here...">
-      <button><i class="fas fa-search"></i></button>
-      <i class="fas fa-times" id="close-search"></i>
-    </div>
-  </div>
 
   <!-- == For hero section == -->
   <section id="hero">
@@ -272,67 +160,11 @@
     </div>
   </section>
   <!-- == Footer == -->
-  <footer class="section-p1">
-    <div class="footer-container">
-      <div class="col footer-brand">
-        <img src="image/Logo/logo.png" class="logo" alt="Alina Collection" />
-        <p>Elevating everyday style with curated premium fashion. Experience the blend of tradition and contemporary
-          elegance.</p>
-        <div class="follow">
-          <h4>Connect With Us</h4>
-          <div class="icon">
-            <a href="#"><i class="fab fa-instagram"></i></a>
-            <a href="#"><i class="fab fa-youtube"></i></a>
-            <a href="#"><i class="fab fa-tiktok"></i></a>
-            <a href="#"><i class="fab fa-twitter"></i></a>
-          </div>
-        </div>
-      </div>
-
-      <div class="col">
-        <h4>The Company</h4>
-        <a href="about.html">Our Story</a>
-        <a href="shop.html">The Collection</a>
-        <a href="flash-sale.html">Exclusive Deals</a>
-        <a href="contact.html">Contact Us</a>
-      </div>
-
-      <div class="col">
-        <h4>Customer Care</h4>
-        <a href="support.html">Help Center</a>
-        <a href="shipping.html">Shipping Info</a>
-        <a href="returns.html">Returns & Exchanges</a>
-        <a href="support.html#faq">FAQs</a>
-      </div>
-
-      <div class="col">
-        <h4>My Account</h4>
-        <a href="login.html">Sign In / Register</a>
-        <a href="cart.html">View My Cart</a>
-        <a href="user-dashboard.html">Order History</a>
-        <a href="shop.html?cat=nepali">Nepali Heritage</a>
-      </div>
-
-      <div class="col footer-contact">
-        <h4>Get In Touch</h4>
-        <p><i class="fas fa-map-marker-alt"></i> Ithari BP Chowk, Nepal</p>
-        <p><i class="fas fa-phone-alt"></i> +977 970-5978322</p>
-        <p><i class="fas fa-envelope"></i> hello@alinacollection.com</p>
-        <p><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM, Sun-Fri</p>
-      </div>
-    </div>
-
-    <div class="footer-bottom">
-      <div class="divider"></div>
-      <div class="footer-bottom-content">
-        <p>© 2026 Alina Collection. Crafted for Elegance.</p>
-      </div>
-    </div>
-  </footer>
+  <footer></footer>
   <script src="script.js"></script>
   <script type="module" src="firebase-init.js"></script>
   <script type="module" src="auth.js"></script>
-  <script type="module" src="migrate-products.js"></script>
+
 
 </body>
 

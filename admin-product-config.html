@@ -3,30 +3,20 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0">
     <title>Product Configuration - Sovereign Admin</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+        integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+        crossorigin="anonymous" referrerpolicy="no-referrer" />
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="responsiveHome.css">
     <link rel="stylesheet" href="dashboard.css">
+    <link rel="stylesheet" href="responsiveHome.css">
+
 </head>
 
 <body class="dashboard-body">
     <!-- Premium Navigation -->
-    <section id="header">
-        <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Alina Collection" /></a>
-        <div class="header-search">
-            <input type="text" placeholder="Search..." id="header-search-input">
-            <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
-        </div>
-        <div>
-            <ul id="navbar">
-                <li><a href="index.html">Home</a></li>
-                <li><a href="user-dashboard.html">My Account</a></li>
-                <li><a href="#" onclick="logoutUser()">Logout <i class="fa-solid fa-sign-out-alt"></i></a></li>
-            </ul>
-        </div>
-    </section>
+    <section id="header"></section>
 
     <div class="dashboard-container">
         <div class="back-btn-container" style="margin-bottom: 30px;">
@@ -66,12 +56,21 @@
 
                         <div class="input-grid">
                             <div class="input-group">
-                                <label>Price (NPR)</label>
+                                <label>Sale Price (NPR)</label>
                                 <div class="input-wrapper">
-                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                    <i class="fa-solid fa-tag"></i>
                                     <input type="number" id="edit-price" placeholder="0" required>
                                 </div>
                             </div>
+                            <div class="input-group" id="old-price-group" style="display: none;">
+                                <label>Original Price (Strike-through)</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-money-bill-wave"></i>
+                                    <input type="number" id="edit-old-price" placeholder="0">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-grid">
                             <div class="input-group">
                                 <label>Initial Stock</label>
                                 <div class="input-wrapper">
@@ -79,87 +78,106 @@
                                     <input type="number" id="edit-stock" placeholder="0" required>
                                 </div>
                             </div>
-                        </div>
 
-                        <div class="input-group">
-                            <label>Category</label>
-                            <div class="input-wrapper">
-                                <i class="fa-solid fa-layer-group"></i>
-                                <select id="edit-cat" required>
-                                    <option value="Tops">Tops & Shirts</option>
-                                    <option value="Bottoms">Pants & Bottoms</option>
-                                    <option value="Dresses">Dresses</option>
-                                    <option value="Outerwear">Outerwear</option>
-                                    <option value="Footwear">Footwear</option>
-                                    <option value="Accessories">Accessories</option>
-                                    <option value="Nepali Heritage">Nepali Heritage</option>
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="settings-section">
-                        <h4 class="section-title">Visuals & Content</h4>
-
-                        <div class="product-image-config"
-                            style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
-                            <div class="image-preview-box" id="product-preview-container"
-                                style="width: 200px; height: 250px; background: var(--dash-bg); border-radius: 20px; border: 2px dashed var(--dash-border); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
-                                <img id="product-preview-img" src="" alt="Preview"
-                                    style="width: 100%; height: 100%; object-fit: cover; display: none;">
-                                <div id="preview-placeholder"
-                                    style="text-align: center; color: var(--dash-text-muted);">
-                                    <i class="fa-solid fa-cloud-arrow-up"
-                                        style="font-size: 40px; margin-bottom: 10px;"></i>
-                                    <p style="font-size: 12px; font-weight: 700;">No Image</p>
+                            <div class="input-group">
+                                <label>Category</label>
+                                <div class="input-wrapper">
+                                    <i class="fa-solid fa-layer-group"></i>
+                                    <select id="edit-cat" required>
+                                        <option value="Tops">Tops & Shirts</option>
+                                        <option value="Bottoms">Pants & Bottoms</option>
+                                        <option value="Dresses">Dresses</option>
+                                        <option value="Outerwear">Outerwear</option>
+                                        <option value="Footwear">Footwear</option>
+                                        <option value="Accessories">Accessories</option>
+                                        <option value="Nepali Heritage">Nepali Heritage</option>
+                                    </select>
                                 </div>
                             </div>
 
-                            <div class="image-upload-actions" style="flex: 1;">
-                                <label>Product Imagery</label>
-                                <p style="font-size: 13px; color: var(--dash-text-muted); margin-bottom: 15px;">Capture
-                                    a new photo using your camera or select an image from your device storage.</p>
+                            <div class="input-group">
+                                <label>Promotion Status</label>
+                                <div class="input-wrapper" style="background: transparent;">
+                                    <label class="switch-modern"
+                                        style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
+                                        <input type="checkbox" id="edit-flash" style="display: none;">
+                                        <div class="slider-round"
+                                            style="width: 50px; height: 26px; background: #e2e8f0; border-radius: 30px; position: relative; transition: .4s;">
+                                            <div class="slider-knob"
+                                                style="position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .4s;">
+                                            </div>
+                                        </div>
+                                        <span style="font-size: 14px; font-weight: 700;">Flash Sale Item</span>
+                                    </label>
+                                </div>
+                            </div>
+                        </div>
 
-                                <input type="file" id="product-image-upload" accept="image/*" capture="environment"
-                                    style="display: none;">
-                                <button type="button" class="normal"
-                                    onclick="document.getElementById('product-image-upload').click()"
-                                    style="padding: 12px 25px; border-radius: 12px; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px;">
-                                    <i class="fa-solid fa-camera"></i>
-                                    <span>Upload or Capture</span>
-                                </button>
+                        <div class="settings-section">
+                            <h4 class="section-title">Visuals & Content</h4>
 
-                                <div class="input-group">
-                                    <label>Or manually paste URL</label>
-                                    <div class="input-wrapper">
-                                        <i class="fa-solid fa-link"></i>
-                                        <input type="text" id="edit-image" placeholder="https://..."
-                                            oninput="updatePreviewFromUrl(this.value)">
+                            <div class="product-image-config"
+                                style="display: flex; gap: 30px; margin-bottom: 30px; align-items: flex-start;">
+                                <div class="image-preview-box" id="product-preview-container"
+                                    style="width: 200px; height: 250px; background: var(--dash-bg); border-radius: 20px; border: 2px dashed var(--dash-border); display: flex; align-items: center; justify-content: center; overflow: hidden; position: relative;">
+                                    <img id="product-preview-img" src="" alt="Preview"
+                                        style="width: 100%; height: 100%; object-fit: cover; display: none;">
+                                    <div id="preview-placeholder"
+                                        style="text-align: center; color: var(--dash-text-muted);">
+                                        <i class="fa-solid fa-cloud-arrow-up"
+                                            style="font-size: 40px; margin-bottom: 10px;"></i>
+                                        <p style="font-size: 12px; font-weight: 700;">No Image</p>
+                                    </div>
+                                </div>
+
+                                <div class="image-upload-actions" style="flex: 1;">
+                                    <label>Product Imagery</label>
+                                    <p style="font-size: 13px; color: var(--dash-text-muted); margin-bottom: 15px;">
+                                        Capture
+                                        a new photo using your camera or select an image from your device storage.</p>
+
+                                    <input type="file" id="product-image-upload" accept="image/*" capture="environment"
+                                        style="display: none;">
+                                    <button type="button" class="normal"
+                                        onclick="document.getElementById('product-image-upload').click()"
+                                        style="padding: 12px 25px; border-radius: 12px; display: inline-flex; align-items: center; gap: 10px; margin-bottom: 20px;">
+                                        <i class="fa-solid fa-camera"></i>
+                                        <span>Upload or Capture</span>
+                                    </button>
+
+                                    <div class="input-group">
+                                        <label>Or manually paste URL</label>
+                                        <div class="input-wrapper">
+                                            <i class="fa-solid fa-link"></i>
+                                            <input type="text" id="edit-image" placeholder="https://..."
+                                                oninput="updatePreviewFromUrl(this.value)">
+                                        </div>
                                     </div>
                                 </div>
                             </div>
+
+                            <div class="input-group">
+                                <label>Product Description</label>
+                                <textarea id="edit-desc" rows="6"
+                                    placeholder="Describe the materials, fit, and elegance of this piece..."
+                                    style="width: 100%; padding: 20px; border-radius: 20px; border: 2px solid var(--dash-bg); background: var(--dash-bg); font-family: inherit; font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); resize: vertical;"></textarea>
+                            </div>
                         </div>
 
-                        <div class="input-group">
-                            <label>Product Description</label>
-                            <textarea id="edit-desc" rows="6"
-                                placeholder="Describe the materials, fit, and elegance of this piece..."
-                                style="width: 100%; padding: 20px; border-radius: 20px; border: 2px solid var(--dash-bg); background: var(--dash-bg); font-family: inherit; font-size: 15px; font-weight: 600; outline: none; transition: var(--transition); resize: vertical;"></textarea>
+                        <div class="form-actions-modern" style="justify-content: flex-end; gap: 20px;">
+                            <button type="button" class="btn-cancel"
+                                onclick="window.location.href='admin-inventory.html'">Discard Changes</button>
+                            <button type="submit" class="premium-btn" style="padding: 16px 50px;">
+                                <span>Authorize & Save</span>
+                                <i class="fa-solid fa-check"></i>
+                            </button>
                         </div>
-                    </div>
-
-                    <div class="form-actions-modern" style="justify-content: flex-end; gap: 20px;">
-                        <button type="button" class="btn-cancel"
-                            onclick="window.location.href='admin-inventory.html'">Discard Changes</button>
-                        <button type="submit" class="premium-btn" style="padding: 16px 50px;">
-                            <span>Authorize & Save</span>
-                            <i class="fa-solid fa-check"></i>
-                        </button>
-                    </div>
                 </form>
             </div>
         </main>
     </div>
+
+    <footer></footer>
 
     <script src="script.js"></script>
     <script type="module" src="firebase-init.js"></script>
@@ -182,13 +200,26 @@
                     document.getElementById('edit-name').value = p.name;
                     document.getElementById('edit-brand').value = p.brand || "";
                     document.getElementById('edit-price').value = p.price;
+                    document.getElementById('edit-old-price').value = p.oldPrice || "";
                     document.getElementById('edit-cat').value = p.cat;
                     document.getElementById('edit-stock').value = p.stock;
                     document.getElementById('edit-desc').value = p.description || "";
                     document.getElementById('edit-image').value = p.image;
+                    document.getElementById('edit-flash').checked = !!p.isFlash;
+                    toggleOldPriceField();
                     updatePreviewFromUrl(p.image);
                 }
             }
+
+            // Toggle Logic for Original Price
+            const flashToggle = document.getElementById('edit-flash');
+            const oldPriceGroup = document.getElementById('old-price-group');
+
+            function toggleOldPriceField() {
+                oldPriceGroup.style.display = flashToggle.checked ? 'block' : 'none';
+            }
+
+            flashToggle.addEventListener('change', toggleOldPriceField);
 
             // Image Upload Handling
             const fileInput = document.getElementById('product-image-upload');

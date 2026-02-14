@@ -1,116 +1,473 @@
-// Mobile Navigation Toggle (legacy navbar — kept for other pages)
-const bar = document.getElementById('bar');
-const close = document.getElementById('close');
-const nav = document.getElementById('navbar');
+/**
+ * ALINA COLLECTION - SHARED LAYOUT SYSTEM
+ * Centralized Header, Footer, and Navigation components to avoid code duplication.
+ */
 
-// Only use old navbar toggle if new mobile drawer is NOT present
-if (bar && !document.getElementById('mobile-drawer')) {
-    bar.addEventListener('click', () => {
-        nav.classList.add('active');
-    });
-}
+const CONFIG = {
+    brandName: "Alina Collection",
+    logoPath: "image/Logo/logo.png",
+    phone: "+977 970-5978322",
+    email: "hello@alinacollection.com",
+    address: "Ithari BP Chowk, Nepal",
+};
 
-if (close) {
-    close.addEventListener('click', () => {
-        nav.classList.remove('active');
-    });
-}
+const LayoutManager = {
+    init() {
+        // 1. Core Layout Rendering
+        this.renderHeader();
+        this.renderFooter();
+        this.renderMobileDrawer();
+        this.renderSearchPopup();
+        this.setActiveLinks();
+        this.attachGlobalListeners();
 
-// ====== Premium Mobile Drawer System ======
-(function initMobileDrawer() {
-    const hamburger = document.getElementById('bar');
-    const drawer = document.getElementById('mobile-drawer');
-    const overlay = document.getElementById('mobile-nav-overlay');
-    const drawerClose = document.getElementById('mob-drawer-close');
+        // 2. Auth & Core State
+        if (typeof initLoader === 'function') initLoader();
+        if (typeof updateNavbarAuth === 'function') updateNavbarAuth();
+        if (typeof handleAuth === 'function') handleAuth();
 
-    if (!hamburger || !drawer || !overlay) return;
-
-    function openDrawer() {
-        drawer.classList.add('open');
-        overlay.classList.add('active');
-        hamburger.classList.add('is-active');
-        document.body.classList.add('mob-nav-open');
-    }
-
-    function closeDrawer() {
-        drawer.classList.remove('open');
-        overlay.classList.remove('active');
-        hamburger.classList.remove('is-active');
-        document.body.classList.remove('mob-nav-open');
-        // Close any open sub-menus
-        document.querySelectorAll('.mob-has-sub.sub-open').forEach(el => el.classList.remove('sub-open'));
-    }
-
-    hamburger.addEventListener('click', (e) => {
-        e.stopPropagation();
-        if (drawer.classList.contains('open')) {
-            closeDrawer();
-        } else {
-            openDrawer();
+        // 3. Page-Specific Dynamic Content
+        const params = new URLSearchParams(window.location.search);
+        if (typeof renderProducts === 'function') {
+            renderProducts('dynamic-featured-pro', 8);
+            renderProducts('dynamic-new-pro', 4);
+            renderProducts('dynamic-all-pro', null, params.get('cat'), params.get('search'));
+            renderProducts('dynamic-flash-mini', 6);
         }
-    });
+        if (typeof renderHomeCategories === 'function') renderHomeCategories();
+        if (typeof renderSProduct === 'function') renderSProduct();
+        if (typeof renderCart === 'function') renderCart();
+        if (typeof renderAdminDashboard === 'function') renderAdminDashboard();
 
-    if (drawerClose) drawerClose.addEventListener('click', closeDrawer);
-    overlay.addEventListener('click', closeDrawer);
+        // 4. Effects & Utilities
+        if (typeof startCountdown === 'function') startCountdown();
+        if (typeof initTiltEffect === 'function') initTiltEffect();
+        if (typeof initPremiumEffects === 'function') initPremiumEffects();
+        if (typeof initFAQ === 'function') initFAQ();
+        if (typeof initLiveSearch === 'function') initLiveSearch();
 
-    // Close on Escape key
-    document.addEventListener('keydown', (e) => {
-        if (e.key === 'Escape' && drawer.classList.contains('open')) closeDrawer();
-    });
+        // 5. Shared Features (Guarded against duplicates)
+        if (typeof initDarkMode === 'function') initDarkMode();
+        if (typeof initCustomDropdowns === 'function') initCustomDropdowns();
+        if (typeof initSideCart === 'function') initSideCart();
+        if (typeof initScrollTop === 'function') initScrollTop();
+        if (typeof initNewsletterPopup === 'function') initNewsletterPopup();
 
-    // Shop sub-menu accordion toggle
-    document.querySelectorAll('.mob-sub-toggle').forEach(toggle => {
-        toggle.addEventListener('click', (e) => {
-            e.preventDefault();
-            const parent = toggle.closest('.mob-has-sub');
-            if (parent) parent.classList.toggle('sub-open');
+        this.initContactForm();
+        this.updateCartBadge();
+        this.renderSupportWidget();
+    },
+
+    initContactForm() {
+        const contactForm = document.querySelector('#form-details form');
+        if (contactForm) {
+            contactForm.addEventListener('submit', (e) => {
+                e.preventDefault();
+                showToast('Message sent successfully! We will get back to you soon.');
+                contactForm.reset();
+            });
+        }
+    },
+
+
+    renderSupportWidget() {
+        if (document.querySelector('.whatsapp-float')) return;
+        const wa = document.createElement('a');
+        wa.href = "https://wa.me/9779705978322";
+        wa.className = "whatsapp-float";
+        wa.target = "_blank";
+        wa.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
+        document.body.appendChild(wa);
+    },
+
+
+
+    updateCartBadge() {
+        const cartData = JSON.parse(localStorage.getItem('cart')) || [];
+        const totalCount = cartData.reduce((acc, item) => acc + (parseInt(item.quantity) || 1), 0);
+        document.querySelectorAll('.cart-badge').forEach(badge => {
+            badge.innerText = totalCount;
+            badge.style.display = totalCount > 0 ? 'flex' : 'none';
         });
-    });
+    },
 
-    // Sync the mobile drawer dark mode toggle with main
-    function updateMobileDarkModeIcon(isDark) {
-        const mobToggle = document.getElementById('mob-dark-mode-toggle');
-        if (mobToggle) {
-            const icon = mobToggle.querySelector('i');
-            if (icon) icon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+
+
+    renderHeader() {
+        const header = document.getElementById('header');
+        if (!header) return;
+
+        header.innerHTML = `
+            <a href="index.html"><img src="${CONFIG.logoPath}" class="logo" alt="${CONFIG.brandName}" /></a>
+            <div class="header-search">
+                <input type="text" placeholder="Search premium fashion..." id="header-search-input">
+                <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
+            </div>
+            <div>
+                <ul id="navbar">
+                    <li><a href="index.html">Home</a></li>
+                    <li>
+                        <a href="shop.html">Shop <i class="fas fa-angle-down"></i></a>
+                        <ul class="dropdown-menu">
+                            <li><a href="shop.html?cat=Tops">Tops & Shirts</a></li>
+                            <li><a href="shop.html?cat=Bottoms">Pants & Bottoms</a></li>
+                            <li><a href="shop.html?cat=Dresses">Dresses</a></li>
+                            <li><a href="shop.html?cat=Outerwear">Outerwear</a></li>
+                            <li><a href="shop.html?cat=Footwear">Footwear</a></li>
+                            <li><a href="shop.html?cat=Accessories">Accessories</a></li>
+                        </ul>
+                    </li>
+                    <li><a href="about.html">Our Story</a></li>
+                    <li><a href="contact.html">Contact</a></li>
+                    <li>
+                    <a href="cart.html" class="cart-link">
+                        <i class="fa-solid fa-bag-shopping"></i> 
+                        <span class="cart-badge">0</span>
+                        <span>My Cart</span>
+                    </a>
+                    </li>
+                    <li class="nav-select">
+                        <select name="currency" id="currency-select">
+                            <option value="NPR">NPR</option>
+                            <option value="USD">USD</option>
+                            <option value="EUR">EUR</option>
+                        </select>
+                    </li>
+                    <a href="#" id="close"><i class="far fa-times"></i></a>
+                </ul>
+            </div>
+            <div id="mobile">
+                <i class="fas fa-search" id="mobile-search-btn"></i>
+                <a href="cart.html" class="cart-link">
+                    <i class="fa-solid fa-bag-shopping"></i> 
+                    <span class="cart-badge">0</span>
+                    <span>My Cart</span>
+                </a>
+                <div id="bar" class="hamburger-btn" aria-label="Toggle Menu">
+                    <span class="ham-line ham-line-1"></span>
+                    <span class="ham-line ham-line-2"></span>
+                    <span class="ham-line ham-line-3"></span>
+                </div>
+            </div>
+        `;
+    },
+
+    renderFooter() {
+        let footer = document.querySelector('footer');
+        if (!footer) return;
+
+        footer.className = 'section-p1';
+        footer.innerHTML = `
+            <div class="footer-container">
+                <div class="col footer-brand">
+                    <img src="${CONFIG.logoPath}" class="logo" alt="${CONFIG.brandName}" />
+                    <p>Elevating everyday style with curated premium fashion. Experience the blend of tradition and contemporary elegance.</p>
+                    <div class="follow">
+                        <h4>Connect With Us</h4>
+                        <div class="icon">
+                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="col">
+                    <h4>The Company</h4>
+                    <a href="about.html">Our Story</a>
+                    <a href="shop.html">The Collection</a>
+                    <a href="flash-sale.html">Exclusive Deals</a>
+                    <a href="contact.html">Contact Us</a>
+                </div>
+
+                <div class="col">
+                    <h4>Customer Care</h4>
+                    <a href="support.html">Help Center</a>
+                    <a href="shipping.html">Shipping Info</a>
+                    <a href="returns.html">Returns & Exchanges</a>
+                    <a href="support.html#faq">FAQs</a>
+                </div>
+
+                <div class="col">
+                    <h4>My Account</h4>
+                    <a href="login.html">Sign In / Register</a>
+                    <a href="cart.html">View My Cart</a>
+                    <a href="user-dashboard.html">Order History</a>
+                    <a href="shop.html?cat=nepali">Nepali Heritage</a>
+                </div>
+
+                <div class="col footer-contact">
+                    <h4>Get In Touch</h4>
+                    <p><i class="fas fa-map-marker-alt"></i> ${CONFIG.address}</p>
+                    <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
+                    <p><i class="fas fa-envelope"></i> ${CONFIG.email}</p>
+                    <p><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM, Sun-Fri</p>
+                </div>
+            </div>
+
+            <div class="footer-bottom">
+                <div class="divider"></div>
+                <div class="footer-bottom-content">
+                    <p>© ${new Date().getFullYear()} ${CONFIG.brandName}. Crafted for Elegance.</p>
+                </div>
+            </div>
+        `;
+    },
+
+    renderMobileDrawer() {
+        if (document.getElementById('mobile-drawer')) return;
+
+        const overlay = document.createElement('div');
+        overlay.id = 'mobile-nav-overlay';
+        overlay.className = 'mob-overlay';
+        document.body.appendChild(overlay);
+
+        const drawer = document.createElement('nav');
+        drawer.id = 'mobile-drawer';
+        drawer.className = 'mob-drawer';
+        drawer.innerHTML = `
+            <div class="mob-drawer-header">
+                <a href="index.html"><img src="${CONFIG.logoPath}" class="mob-drawer-logo" alt="${CONFIG.brandName}" /></a>
+                <button id="mob-drawer-close" class="mob-drawer-close-btn" aria-label="Close Menu">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="mob-drawer-tagline">Premium Fashion &bull; Curated Style</div>
+
+            <ul class="mob-drawer-links">
+                <li class="mob-link-item" style="--i:1"><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
+                <li class="mob-link-item mob-has-sub" style="--i:2">
+                    <a href="#" class="mob-sub-toggle"><i class="fas fa-shopping-bag"></i> Shop <i class="fas fa-chevron-down mob-chevron"></i></a>
+                    <ul class="mob-sub-menu">
+                        <li><a href="shop.html?cat=Tops"><i class="fas fa-tshirt"></i> Tops & Shirts</a></li>
+                        <li><a href="shop.html?cat=Bottoms"><i class="fas fa-socks"></i> Pants & Bottoms</a></li>
+                        <li><a href="shop.html?cat=Dresses"><i class="fas fa-vest"></i> Dresses</a></li>
+                        <li><a href="shop.html?cat=Outerwear"><i class="fas fa-mitten"></i> Outerwear</a></li>
+                        <li><a href="shop.html?cat=Footwear"><i class="fas fa-shoe-prints"></i> Footwear</a></li>
+                        <li><a href="shop.html?cat=Accessories"><i class="fas fa-gem"></i> Accessories</a></li>
+                    </ul>
+                </li>
+                <li class="mob-link-item" style="--i:3"><a href="about.html"><i class="fas fa-book-open"></i> Our Story</a></li>
+                <li class="mob-link-item" style="--i:4"><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
+                <li class="mob-link-item" style="--i:5">
+                    <a href="cart.html"><i class="fas fa-bag-shopping"></i> My Cart <span class="cart-badge" style="margin-left: 10px; position: static;">0</span></a>
+                </li>
+                <li class="mob-link-item" style="--i:6"><a href="login.html"><i class="fas fa-user"></i> Account</a></li>
+            </ul>
+
+            <div class="mob-drawer-divider"></div>
+
+            <div class="mob-drawer-currency">
+                <label for="mob-currency-select"><i class="fas fa-globe"></i> Currency</label>
+                <select id="mob-currency-select">
+                    <option value="NPR">NPR</option>
+                    <option value="USD">USD</option>
+                    <option value="EUR">EUR</option>
+                </select>
+            </div>
+
+            <div class="mob-drawer-footer">
+                <div class="mob-drawer-social">
+                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
+                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                </div>
+                <div class="mob-drawer-contact">
+                    <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
+                    <p><i class="fas fa-envelope"></i> ${CONFIG.email}</p>
+                </div>
+            </div>
+        `;
+        document.body.appendChild(drawer);
+    },
+
+    renderSearchPopup() {
+        if (document.getElementById('search-popup')) return;
+
+        const popup = document.createElement('div');
+        popup.id = 'search-popup';
+        popup.innerHTML = `
+            <div class="search-box">
+                <input type="text" placeholder="Search premium fashion..." id="popup-search-input">
+                <button type="button" id="popup-search-btn"><i class="fas fa-search"></i></button>
+                <i class="fas fa-times" id="close-search" aria-label="Close Search"></i>
+            </div>
+        `;
+        document.body.appendChild(popup);
+    },
+
+    setActiveLinks() {
+        const path = window.location.pathname.split("/").pop() || 'index.html';
+        const navLinks = document.querySelectorAll('#navbar li a, .mob-link-item a');
+
+        navLinks.forEach(link => {
+            const href = link.getAttribute('href');
+            if (href === path) {
+                link.classList.add('active');
+            } else {
+                link.classList.remove('active');
+            }
+        });
+    },
+
+    attachGlobalListeners() {
+        const hamburger = document.getElementById('bar');
+        const drawer = document.getElementById('mobile-drawer');
+        const overlay = document.getElementById('mobile-nav-overlay');
+        const mobClose = document.getElementById('mob-drawer-close');
+
+        const openDrawer = () => {
+            if (drawer) drawer.classList.add('open');
+            if (overlay) overlay.classList.add('active');
+            document.body.style.overflow = 'hidden';
+            if (hamburger) hamburger.classList.add('active');
+        };
+
+        const closeDrawer = () => {
+            if (drawer) drawer.classList.remove('open');
+            if (overlay) overlay.classList.remove('active');
+            document.body.style.overflow = '';
+            if (hamburger) hamburger.classList.remove('active');
+        };
+
+        if (hamburger) hamburger.addEventListener('click', openDrawer);
+        if (mobClose) mobClose.addEventListener('click', closeDrawer);
+        if (overlay) overlay.addEventListener('click', closeDrawer);
+
+        // Mobile accordion
+        document.querySelectorAll('.mob-sub-toggle').forEach(toggle => {
+            toggle.addEventListener('click', (e) => {
+                e.preventDefault();
+                const parent = toggle.closest('.mob-has-sub');
+                if (parent) parent.classList.toggle('sub-open');
+            });
+        });
+
+        // Search Popup
+        const searchBtns = document.querySelectorAll('#header-search-btn, #mobile-search-btn');
+        const searchPopup = document.getElementById('search-popup');
+        const closeSearch = document.getElementById('close-search');
+
+        searchBtns.forEach(btn => {
+            btn.addEventListener('click', () => {
+                if (searchPopup) {
+                    searchPopup.classList.add('active');
+                    const scrollY = window.scrollY;
+                    document.body.style.position = 'fixed';
+                    document.body.style.top = `-${scrollY}px`;
+                    document.body.style.width = '100%';
+                    const input = document.getElementById('popup-search-input');
+                    if (input) input.focus();
+                }
+            });
+        });
+
+        if (closeSearch) {
+            closeSearch.addEventListener('click', () => {
+                const scrollY = document.body.style.top;
+                document.body.style.position = '';
+                document.body.style.top = '';
+                window.scrollTo(0, parseInt(scrollY || '0') * -1);
+                if (searchPopup) searchPopup.classList.remove('active');
+            });
         }
-    }
 
-    // Export for use in initDarkMode
-    window.updateMobileDarkModeIcon = updateMobileDarkModeIcon;
+        // Search Execution
+        const executeSearch = (query) => {
+            if (query.trim()) {
+                window.location.href = `shop.html?search=${encodeURIComponent(query.trim())}`;
+            }
+        };
 
-    // Sync the mobile drawer currency selector with the main one
-    const mobCurrencySelect = document.getElementById('mob-currency-select');
-    const mainCurrencySelect = document.getElementById('currency-select');
-    if (mobCurrencySelect && mainCurrencySelect) {
-        // Sync on load
-        mobCurrencySelect.value = localStorage.getItem('selectedCurrency') || 'NPR';
-        mobCurrencySelect.addEventListener('change', () => {
-            localStorage.setItem('selectedCurrency', mobCurrencySelect.value);
-            if (mainCurrencySelect) mainCurrencySelect.value = mobCurrencySelect.value;
-            // Trigger re-render if on a product page
+        const popupSearchBtn = document.getElementById('popup-search-btn');
+        const popupSearchInput = document.getElementById('popup-search-input');
+        const headerSearchBtn = document.getElementById('header-search-btn');
+        const headerSearchInput = document.getElementById('header-search-input');
+
+        if (popupSearchBtn && popupSearchInput) {
+            popupSearchBtn.addEventListener('click', () => executeSearch(popupSearchInput.value));
+            popupSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') executeSearch(popupSearchInput.value);
+            });
+        }
+
+        if (headerSearchBtn && headerSearchInput) {
+            headerSearchBtn.addEventListener('click', () => executeSearch(headerSearchInput.value));
+            headerSearchInput.addEventListener('keypress', (e) => {
+                if (e.key === 'Enter') executeSearch(headerSearchInput.value);
+            });
+        }
+
+        // Currency Sync
+        const updateCurrency = (val) => {
+            localStorage.setItem('selectedCurrency', val);
+            const mainSelect = document.getElementById('currency-select');
+            const mobSelect = document.getElementById('mob-currency-select');
+            if (mainSelect) mainSelect.value = val;
+            if (mobSelect) mobSelect.value = val;
             if (typeof renderProducts === 'function') {
                 const params = new URLSearchParams(window.location.search);
                 const containers = ['dynamic-featured-pro', 'dynamic-new-pro', 'dynamic-all-pro', 'dynamic-flash-mini'];
                 containers.forEach(c => {
-                    if (document.getElementById(c)) renderProducts(c, c.includes('featured') || c.includes('new') ? 8 : null, params.get('cat'), params.get('search'));
+                    const el = document.getElementById(c);
+                    if (el) renderProducts(c, c.includes('featured') || c.includes('new') ? 8 : null, params.get('cat'), params.get('search'));
                 });
             }
-            closeDrawer();
+        };
+
+        const mainCurrSelect = document.getElementById('currency-select');
+        const mobCurrSelect = document.getElementById('mob-currency-select');
+
+        if (mainCurrSelect) {
+            mainCurrSelect.value = localStorage.getItem('selectedCurrency') || 'NPR';
+            mainCurrSelect.addEventListener('change', (e) => updateCurrency(e.target.value));
+        }
+        if (mobCurrSelect) {
+            mobCurrSelect.value = localStorage.getItem('selectedCurrency') || 'NPR';
+            mobCurrSelect.addEventListener('change', (e) => {
+                updateCurrency(e.target.value);
+                closeDrawer();
+            });
+        }
+
+        // Escape to close
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                if (drawer && drawer.classList.contains('open')) closeDrawer();
+                if (searchPopup && searchPopup.classList.contains('active')) closeSearch.click();
+            }
         });
+
+        // Product Page Handlers (Buy Now / Add to Cart)
+        const buyNowBtn = document.getElementById('buy-now-btn');
+        if (buyNowBtn) {
+            buyNowBtn.onclick = () => {
+                const params = new URLSearchParams(window.location.search);
+                const productId = parseInt(params.get('id'));
+                const qty = parseInt(document.getElementById('pro-quantity')?.value || 1);
+                if (productId && typeof buyNow === 'function') buyNow(productId, qty);
+            };
+        }
+
+        const addToCartBtn = document.getElementById('add-to-cart-btn');
+        if (addToCartBtn) {
+            addToCartBtn.onclick = () => {
+                const params = new URLSearchParams(window.location.search);
+                const productId = parseInt(params.get('id'));
+                const qty = parseInt(document.getElementById('pro-quantity')?.value || 1);
+                if (productId && typeof addToCart === 'function') addToCart(productId, qty);
+            };
+        }
     }
 
-    // Close drawer on window resize to desktop
-    let resizeTimer;
-    window.addEventListener('resize', () => {
-        clearTimeout(resizeTimer);
-        resizeTimer = setTimeout(() => {
-            if (window.innerWidth > 900 && drawer.classList.contains('open')) {
-                closeDrawer();
-            }
-        }, 150);
-    });
-})();
+};
+
+
+// Exit LayoutManager definition
+
+
+
 
 // === 1. State Management & Data ===
 const PRODUCT_VERSION = "3.9"; // Granular "Name-Wise" Visual Accuracy Overhaul
@@ -426,12 +783,12 @@ function renderProducts(containerId, limit = null, category = null, search = nul
     // Optimized Rendering using Map and Join
     const htmlBuffer = list.map(p => {
         const isWishlisted = wishlist.includes(p.id);
-        const showFlashBadge = isFlashContainer; // Only show flash styling in flash container
+        const showFlashBadge = !!p.isFlash;
 
         return `
             <div class="pro">
                 <div class="pro-img-wrapper">
-                    ${showFlashBadge ? `<span class="badge-sale">70% OFF</span>` : ''}
+                    ${showFlashBadge ? `<span class="badge-sale">FLASH SALE</span>` : ''}
                     <div class="wishlist-icon ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist(${p.id})">
                         <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                     </div>
@@ -452,15 +809,15 @@ function renderProducts(containerId, limit = null, category = null, search = nul
                         </div>
                         <span class="brand-tag">${p.brand.toUpperCase()}</span>
                         <h5>${p.name}</h5>
-                        ${showFlashBadge ? `
+                        ${showFlashBadge || p.oldPrice ? `
                             <div class="price-row">
-                                <h4 class="old-price">${convertPrice(p.price * 2.5)}</h4>
+                                <h4 class="old-price">${p.oldPrice ? convertPrice(p.oldPrice) : convertPrice(p.price * 1.5)}</h4>
                                 <h4>${convertPrice(p.price)}</h4>
                             </div>
                             <div class="stock-bar">
                                 <div class="progress" style="width: ${Math.max(20, (p.stock / 30) * 100)}%;"></div>
                             </div>
-                            <p class="stock-text">Only ${p.stock} units left!</p>
+                            <p class="stock-text">Limited Edition Sale</p>
                         ` : `<h4>${convertPrice(p.price)}</h4>`}
                     </div>
                     <div class="product-actions-text">
@@ -675,16 +1032,9 @@ function addToCart(productId, qty = 1) {
 }
 
 function updateCartIconCount() {
-    const count = cart.reduce((sum, item) => sum + item.quantity, 0);
-    document.querySelectorAll('.cart-link, .fa-cart-shopping, .fa-bag-shopping').forEach(el => {
-        const target = el.classList.contains('cart-link') ? el : el.parentElement;
-        if (!target || target.tagName !== 'A') return;
-
-        let b = target.querySelector('.cart-badge');
-        if (!b) { b = document.createElement('span'); b.className = 'cart-badge'; target.appendChild(b); }
-        b.innerText = count; b.style.display = count > 0 ? 'flex' : 'none';
-    });
+    LayoutManager.updateCartBadge();
 }
+
 
 function renderCart() {
     const tableBody = document.querySelector('#cart tbody');
@@ -746,10 +1096,13 @@ function renderAdminDashboard() {
                     <div style="font-size:11px; color:var(--text-muted);">Product ID: #${p.id}</div>
                 </td>
                 <td>
-                    <span class="badge-cat">${p.cat}</span>
-                    <div style="font-size:11px; margin-top:4px;">Brand: ${p.brand}</div>
+                    <span class="badge-cat" style="${p.isFlash ? 'background: var(--primary-color); color: white;' : ''}">${p.cat}</span>
+                    ${p.isFlash ? '<div style="font-size:10px; color:var(--primary-color); font-weight:800; text-transform:uppercase; margin-top:2px;"><i class="fa-solid fa-bolt"></i> Flash Sale</div>' : ''}
                 </td>
-                <td><span class="price-text">${convertPrice(p.price)}</span></td>
+                <td>
+                    <div style="font-size:11px; color:var(--text-muted); margin-bottom: 2px;">Brand: ${p.brand}</div>
+                    <span class="price-text">${convertPrice(p.price)}</span>
+                </td>
                 <td>
                     <div class="stock-status">
                         ${getStockStatus(p.stock)}
@@ -901,10 +1254,12 @@ function saveProduct(e) {
     const stock = parseInt(document.getElementById('edit-stock').value);
     const description = document.getElementById('edit-desc').value;
     const image = document.getElementById('edit-image').value || 'image/product/f1.jpg';
+    const isFlash = document.getElementById('edit-flash')?.checked || false;
+    const oldPrice = parseInt(document.getElementById('edit-old-price')?.value) || 0;
 
     const productData = id ?
-        { ...allProducts.find(p => p.id == id), name, brand, price, cat, stock, description, image } :
-        { id: allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0 };
+        { ...allProducts.find(p => p.id == id), name, brand, price, cat, stock, description, image, isFlash, oldPrice } :
+        { id: allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0, isFlash, oldPrice };
 
     if (id) {
         const idx = allProducts.findIndex(p => p.id == id);
@@ -980,104 +1335,8 @@ function startCountdown() {
     }, 1000);
 }
 
-// === 8. Global Initialization ===
-document.addEventListener('DOMContentLoaded', () => {
-    initLoader();
-    updateNavbarAuth();
-    handleAuth();
-    updateCartIconCount();
+// Feature initializations moved to LayoutManager.init()
 
-    const params = new URLSearchParams(window.location.search);
-    renderProducts('dynamic-featured-pro', 8);
-    renderProducts('dynamic-new-pro', 4);
-    renderProducts('dynamic-all-pro', null, params.get('cat'), params.get('search'));
-    renderProducts('dynamic-flash-mini', 6);
-
-    renderHomeCategories(); // Render category-specific sections on home page
-
-    renderSProduct();
-    renderCart();
-    renderAdminDashboard();
-    startCountdown();
-    initTiltEffect();
-    initPremiumEffects();
-    initFAQ();
-    initLiveSearch();
-    initScrollTop();
-    initNewsletterPopup();
-    initDarkMode();
-    initSideCart();
-
-    // Event Listeners
-    document.querySelectorAll('#currency-select').forEach(s => {
-        s.value = localStorage.getItem('selectedCurrency') || "NPR";
-        s.onchange = (e) => { localStorage.setItem('selectedCurrency', e.target.value); location.reload(); };
-    });
-
-    const sTrigger = document.getElementById('search-trigger');
-    const mSTrigger = document.getElementById('mobile-search-btn');
-    const sPopup = document.getElementById('search-popup');
-
-    if (sTrigger) sTrigger.onclick = (e) => { e.preventDefault(); sPopup.classList.add('active'); };
-    if (mSTrigger) mSTrigger.onclick = () => {
-        sPopup.classList.add('active');
-        document.querySelector('#search-popup input').focus();
-    };
-
-    const closeS = document.getElementById('close-search');
-    if (closeS) closeS.onclick = () => sPopup.classList.remove('active');
-
-    // Header Search Logic
-    const headerSearchBtn = document.getElementById('header-search-btn');
-    const headerSearchInput = document.getElementById('header-search-input');
-
-    const performSearch = () => {
-        const query = headerSearchInput.value.trim();
-        if (query) {
-            window.location.href = `shop.html?search=${encodeURIComponent(query)}`;
-        }
-    };
-
-    if (headerSearchBtn) headerSearchBtn.onclick = performSearch;
-    if (headerSearchInput) {
-        headerSearchInput.onkeypress = (e) => {
-            if (e.key === 'Enter') performSearch();
-        };
-    }
-
-    // Support Widget
-    const wa = document.createElement('a');
-    wa.href = "https://wa.me/9779705978322";
-    wa.className = "whatsapp-float";
-    wa.target = "_blank";
-    wa.innerHTML = '<i class="fa-brands fa-whatsapp"></i>';
-    document.body.appendChild(wa);
-
-    // Buy Now Button logic for sproduct.html
-    const buyNowBtn = document.getElementById('buy-now-btn');
-    if (buyNowBtn) {
-        buyNowBtn.onclick = () => {
-            const params = new URLSearchParams(window.location.search);
-            const productId = parseInt(params.get('id'));
-            const qty = parseInt(document.getElementById('pro-quantity')?.value || 1);
-            if (productId) buyNow(productId, qty);
-        };
-    }
-
-    const addToCartBtn = document.getElementById('add-to-cart-btn');
-    if (addToCartBtn) {
-        addToCartBtn.onclick = () => {
-            const params = new URLSearchParams(window.location.search);
-            const productId = parseInt(params.get('id'));
-            const qty = parseInt(document.getElementById('pro-quantity')?.value || 1);
-            if (productId) addToCart(productId, qty);
-        };
-    }
-});
-
-document.addEventListener('DOMContentLoaded', () => {
-    initCustomDropdowns();
-});
 
 function renderSProduct() {
     const params = new URLSearchParams(window.location.search);
@@ -1347,17 +1606,8 @@ function toggleFilterPortal() {
     }
 }
 
-// Contact Form Handling
-document.addEventListener('DOMContentLoaded', () => {
-    const contactForm = document.querySelector('#form-details form');
-    if (contactForm) {
-        contactForm.addEventListener('submit', (e) => {
-            e.preventDefault();
-            showToast('Message sent successfully! We will get back to you soon.');
-            contactForm.reset();
-        });
-    }
-});
+// Contact form logic moved to LayoutManager.initContactForm()
+
 
 function initFAQ() {
     const faqItems = document.querySelectorAll('.faq-item');
@@ -1396,7 +1646,9 @@ function initLoader() {
 }
 
 function initScrollTop() {
+    if (document.getElementById('scroll-top')) return;
     const btn = document.createElement('div');
+
     btn.id = 'scroll-top';
     btn.innerHTML = `<i class="fas fa-arrow-up"></i>`;
     document.body.appendChild(btn);
@@ -1415,7 +1667,9 @@ function initScrollTop() {
 }
 
 function initSideCart() {
+    if (document.getElementById('side-cart')) return;
     const sideCart = document.createElement('div');
+
     sideCart.id = 'side-cart';
     sideCart.innerHTML = `
         <div class="side-cart-overlay"></div>
@@ -1535,14 +1789,17 @@ function initDarkMode() {
     updateTheme(isDark, false);
 
     // Desktop Toggle
-    const desktopToggle = document.createElement('li');
-    desktopToggle.innerHTML = `<a href="#" id="dark-mode-toggle" title="Toggle Dark Mode"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i></a>`;
-    const navbar = document.getElementById('navbar');
-    if (navbar) {
-        const closeBtn = document.getElementById('close');
-        if (closeBtn) navbar.insertBefore(desktopToggle, closeBtn);
-        else navbar.appendChild(desktopToggle);
+    if (!document.getElementById('dark-mode-toggle')) {
+        const desktopToggle = document.createElement('li');
+        desktopToggle.innerHTML = `<a href="#" id="dark-mode-toggle" title="Toggle Dark Mode"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i></a>`;
+        const navbar = document.getElementById('navbar');
+        if (navbar) {
+            const closeBtn = document.getElementById('close');
+            if (closeBtn) navbar.insertBefore(desktopToggle, closeBtn);
+            else navbar.appendChild(desktopToggle);
+        }
     }
+
 
     // Mobile Toggle Injection
     const drawerLinks = document.querySelector('.mob-drawer-links');
@@ -1679,3 +1936,8 @@ function renderHomeCategories() {
         renderProducts(sectionId, 4, catName);
     });
 }
+
+// Global Initialization Trigger
+document.addEventListener('DOMContentLoaded', () => {
+    LayoutManager.init();
+});

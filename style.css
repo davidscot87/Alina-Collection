@@ -1333,6 +1333,23 @@ body.dark-mode .add-cart-btn:hover {
     margin-top: 4px;
 }
 
+/* Sale Badges & Indicators */
+.badge-sale {
+    position: absolute;
+    top: 15px;
+    left: 15px;
+    background: var(--primary-color);
+    color: var(--white);
+    padding: 6px 12px;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    z-index: 10;
+    box-shadow: 0 4px 10px rgba(221, 45, 74, 0.3);
+}
+
 /* Flash Sale Specific Stacking */
 .price-row {
     display: flex;
@@ -1345,6 +1362,21 @@ body.dark-mode .add-cart-btn:hover {
     color: #94a3b8;
     font-size: 13px;
     font-weight: 500;
+}
+
+.badge-cat {
+    padding: 4px 10px;
+    background: var(--bg-light);
+    color: var(--text-muted);
+    border-radius: 6px;
+    font-size: 11px;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+body.dark-mode .badge-cat {
+    background: var(--bg-card);
+    color: var(--text-color);
 }
 
 /* Dark Mode Adjustments */

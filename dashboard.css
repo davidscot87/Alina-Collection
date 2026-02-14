@@ -429,6 +429,19 @@ body {
     font-size: 14px !important;
 }
 
+/* Modern Switch Toggle */
+.switch-modern input:checked+.slider-round {
+    background: var(--dash-primary) !important;
+}
+
+.switch-modern input:checked+.slider-round .slider-knob {
+    transform: translateX(24px);
+}
+
+body.dark-mode .slider-round {
+    background: #334155 !important;
+}
+
 /* Save Button */
 .btn-save-modern {
     display: flex;

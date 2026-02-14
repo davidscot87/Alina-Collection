@@ -3,67 +3,22 @@
 
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
   <title>Flash Sale - Alina Collection</title>
   <link rel="shortcut icon" href="../assets/icon.png" type="image/.png" />
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <link rel="stylesheet" href="style.css" />
-  <link rel="stylesheet" href="responsiveHome.css" />
   <link rel="stylesheet" href="shop.css" />
+  <link rel="stylesheet" href="responsiveHome.css" />
+
 </head>
 
 <body>
   <!--  ====== Navigation Bar ======-->
-  <section id="header">
-    <a href="index.html"><img src="image/Logo/logo.png" class="logo" alt="Vanji" /></a>
-    <div class="header-search">
-      <input type="text" placeholder="Search premium deals..." id="header-search-input">
-      <button type="button" id="header-search-btn"><i class="fas fa-search"></i></button>
-    </div>
-    <div>
-      <ul id="navbar">
-        <li><a href="index.html">Home</a></li>
-        <li>
-          <a href="shop.html">Shop <i class="fas fa-angle-down"></i></a>
-          <ul class="dropdown-menu">
-            <li><a href="shop.html?cat=Tops">Tops & Shirts</a></li>
-            <li><a href="shop.html?cat=Bottoms">Pants & Bottoms</a></li>
-            <li><a href="shop.html?cat=Dresses">Dresses</a></li>
-            <li><a href="shop.html?cat=Outerwear">Outerwear</a></li>
-            <li><a href="shop.html?cat=Footwear">Footwear</a></li>
-            <li><a href="shop.html?cat=Accessories">Accessories</a></li>
-          </ul>
-        </li>
-        <li><a href="about.html">Our Story</a></li>
-        <li><a href="contact.html">Contact</a></li>
-        <li>
-          <a href="cart.html" class="cart-link"><i class="fa-solid fa-bag-shopping"></i> <span>My Cart</span></a>
-        </li>
-        <li class="nav-select">
-          <select name="currency" id="currency-select">
-            <option value="NPR">NPR</option>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-          </select>
-        </li>
-        <a href="#" id="close"><i class="far fa-times"></i></a>
-      </ul>
-    </div>
-    <div id="mobile">
-      <i class="fas fa-search" id="mobile-search-btn"></i>
-      <a href="cart.html" class="cart-link"><i class="fa-solid fa-bag-shopping"></i> <span>My Cart</span></a>
-      <i id="bar" class="fas fa-bars"></i>
-    </div>
-  </section>
+  <section id="header"></section>
 
-  <!-- Search Popup -->
-  <div id="search-popup">
-    <div class="search-box">
-      <input type="text" placeholder="Search here...">
-      <button><i class="fas fa-search"></i></button>
-      <i class="fas fa-times" id="close-search"></i>
-    </div>
-  </div>
 
   <!-- Flash Sale Hero -->
   <section id="flash-hero">
@@ -101,6 +56,8 @@
       <!-- Products injected by JS -->
     </div>
   </section>
+
+  <footer></footer>
 
   <script src="script.js"></script>
   <script>

@@ -1,3 +1,8 @@
+:root {
+    --crushed-berry: #880D1E;
+    --raspberry: #DD2D4A;
+}
+
 /* Filter Trigger Button */
 .filter-trigger-btn {
     background: var(--white);
@@ -118,6 +123,7 @@
         right: -100%;
     }
 }
+
 /* Portal Filter Content Tweaks */
 .filter-header {
     display: flex;
@@ -140,7 +146,7 @@
 .apply-selection-btn {
     width: 100%;
     background: var(--crushed-berry);
-    color: var(--white);
+    color: #ffffff !important;
     border: none;
     padding: 15px;
     border-radius: 12px;
