@@ -1,0 +1,40 @@
+# Created by Antigravity (Senior Dev / Principal Designer) 🚀
+
+# Dependencies and build artifacts
+node_modules/
+dist/
+dist-ssr/
+*.local
+
+# Firebase artifacts
+.firebase/
+firebase-debug.log*
+firestore-debug.log*
+ui-debug.log*
+
+# Secrets and local environment files
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+keys.env/
+service-account.json
+
+# Tooling and IDE
+.vscode/
+.idea/
+*.suo
+*.ntvs*
+*.njsproj
+*.sln
+*.sw?
+.DS_Store
+
+# Temporary / Legacy files
+test.txt
+index_raw.txt
+index_test.html
+recovered_style.css
+migrate-products.js
+rest-migrate.js

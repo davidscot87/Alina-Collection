@@ -243,6 +243,9 @@ function convertPrice(nprPrice) {
 
 // === 3. Authentication & Dashboards ===
 function handleAuth() {
+    // Note: Firebase handleAuth now managed via auth.js module
+    // Legacy logic preserved below for UI interactions but login/reg moved to auth.js
+
     const regForm = document.getElementById('registerForm');
     const loginForm = document.getElementById('loginForm');
     const regMethod = document.getElementById('reg-method');
@@ -1088,17 +1091,27 @@ function saveProduct(e) {
     const description = document.getElementById('edit-desc').value;
     const image = document.getElementById('edit-image').value || 'image/product/f1.jpg';
 
+    const productData = id ?
+        { ...allProducts.find(p => p.id == id), name, brand, price, cat, stock, description, image } :
+        { id: allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0 };
+
     if (id) {
         const idx = allProducts.findIndex(p => p.id == id);
-        allProducts[idx] = { ...allProducts[idx], name, brand, price, cat, stock, description, image };
+        allProducts[idx] = productData;
     } else {
-        const newId = allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1;
-        allProducts.push({ id: newId, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0 });
+        allProducts.push(productData);
     }
 
     localStorage.setItem('products', JSON.stringify(allProducts));
+
+    // 🔥 Firebase Sync
+    if (window.saveProductToFirebase) {
+        window.saveProductToFirebase(productData);
+    }
+
     showToast('Vault Updated Successfully!');
 }
+
 
 // === 7. Specialized Features ===
 function toggleWishlist(id) {
