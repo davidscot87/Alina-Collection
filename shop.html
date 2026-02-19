@@ -135,8 +135,9 @@
     <div class="shop-main">
       <div class="gallery-controls">
         <div class="results-info">
-          <button id="open-filter-btn" class="filter-trigger-btn" onclick="toggleFilterPortal()">
+          <button id="open-filter-btn" class="filter-trigger-btn" onclick="toggleFilterPortal()" style="position: relative;">
             <i class="fas fa-filter"></i> Filters
+            <span class="coming-soon-badge">Coming Soon</span>
           </button>
           <span id="product-count" class="count-pill">Calculating...</span>
           <span class="status-indicator"></span>
@@ -154,6 +155,9 @@
       <div class="pro-container" id="dynamic-all-pro">
         <!-- Advanced Product Cards Injected by script.js -->
       </div>
+      
+      <!-- Pagination -->
+      <div id="pagination" class="pagination"></div>
     </div>
   </section>
   <footer></footer>

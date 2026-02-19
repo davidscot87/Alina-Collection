@@ -23,9 +23,45 @@
         </div>
 
         <main class="main-content fade-in">
-            <div class="section-header-modern" style="margin-bottom: 40px;">
-                <h1>Users & Members</h1>
-                <p>Manage all the registered customers and administrators of your store.</p>
+            <div class="section-header-modern" style="margin-bottom: 40px; display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <h1>Users & Members</h1>
+                    <p>Manage all the registered customers and administrators of your store.</p>
+                </div>
+                <button onclick="manualRefresh()" class="normal" style="padding: 12px 24px; border-radius: 50px; display: flex; align-items: center; gap: 10px;">
+                    <i class="fas fa-sync-alt"></i> Refresh
+                </button>
+            </div>
+
+            <!-- User Statistics Summary -->
+            <div class="dashboard-grid-3" style="margin-bottom: 30px;">
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #e0f2fe; color: #0369a1;">
+                        <i class="fas fa-users"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="total-users-count">0</h3>
+                        <p>Total Users</p>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #f0fdf4; color: #22c55e;">
+                        <i class="fas fa-user-check"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="active-users-count">0</h3>
+                        <p>Active Users</p>
+                    </div>
+                </div>
+                <div class="summary-stat-card">
+                    <div class="stat-icon" style="background: #fef2f2; color: #ef4444;">
+                        <i class="fas fa-user-slash"></i>
+                    </div>
+                    <div class="stat-info">
+                        <h3 id="deleted-users-count">0</h3>
+                        <p>Deleted Accounts</p>
+                    </div>
+                </div>
             </div>
 
             <div class="dash-card">
@@ -36,6 +72,8 @@
                                 <th>Name & Email</th>
                                 <th>Phone Number</th>
                                 <th>Account Role</th>
+                                <th>Registered</th>
+                                <th>Status</th>
                                 <th>Actions</th>
                             </tr>
                         </thead>
@@ -52,11 +90,55 @@
 
     <script src="script.js"></script>
     <script>
+        // CRITICAL FIX: Proper initialization and auto-update
+        let adminUsersRefreshInterval = null;
+        
         document.addEventListener('DOMContentLoaded', () => {
             const user = JSON.parse(localStorage.getItem('currentUser'));
-            if (!user || user.role !== 'admin') { window.location.href = 'index.html'; return; }
+            
+            // Admin verification
+            if (!user || user.role !== 'admin') { 
+                console.error('❌ Unauthorized access attempt');
+                window.location.href = 'index.html'; 
+                return; 
+            }
+            
+            console.log('✅ Admin authenticated:', user.email);
+            
+            // Initial render
             renderAdminDashboard();
+            
+            // AUTO-UPDATE: Refresh every 5 seconds
+            adminUsersRefreshInterval = setInterval(() => {
+                console.log('🔄 Auto-refreshing admin users list...');
+                renderAdminUsers();
+            }, 5000);
+            
+            console.log('✅ Auto-update enabled (5s interval)');
+            
+            // REAL-TIME UPDATE: Listen for localStorage changes
+            window.addEventListener('storage', (e) => {
+                if (e.key === 'users' || e.key === 'deletedUsers') {
+                    console.log('🔄 Storage change detected, refreshing users...');
+                    renderAdminUsers();
+                }
+            });
         });
+        
+        // Cleanup on page unload
+        window.addEventListener('beforeunload', () => {
+            if (adminUsersRefreshInterval) {
+                clearInterval(adminUsersRefreshInterval);
+                console.log('✅ Auto-update interval cleared');
+            }
+        });
+        
+        // Manual refresh button
+        function manualRefresh() {
+            console.log('🔄 Manual refresh triggered');
+            renderAdminUsers();
+            showToast('Users list refreshed');
+        }
     </script>
 </body>
 

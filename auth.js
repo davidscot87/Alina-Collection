@@ -31,12 +31,28 @@ document.addEventListener('DOMContentLoaded', () => {
             const userData = {
                 name: user.displayName || user.email.split('@')[0],
                 email: user.email,
-                role: isAdmin ? "admin" : "user"
+                role: isAdmin ? "admin" : "user",
+                registeredDate: new Date().toISOString(),
+                profilePic: user.photoURL || null
             };
 
+            // Save to currentUser
             localStorage.setItem('currentUser', JSON.stringify(userData));
+            
+            // Add to users array if not exists
+            let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+            const existingUserIndex = allUsers.findIndex(u => u.email === userData.email);
+            if (existingUserIndex === -1) {
+                allUsers.push(userData);
+                localStorage.setItem('users', JSON.stringify(allUsers));
+            } else {
+                // Update existing user data
+                allUsers[existingUserIndex] = { ...allUsers[existingUserIndex], ...userData };
+                localStorage.setItem('users', JSON.stringify(allUsers));
+            }
+            
             if (typeof showToast === 'function') showToast('Welcome, ' + userData.name + '!');
-            setTimeout(() => window.location.href = isAdmin ? 'admin-product-config.html' : 'user-dashboard.html', 1000);
+            setTimeout(() => window.location.href = 'user-dashboard.html', 1000);
         } catch (error) {
             console.error("Google Auth Error:", error);
             if (typeof showToast === 'function') showToast('Google Auth failed: ' + error.message);
@@ -57,11 +73,27 @@ document.addEventListener('DOMContentLoaded', () => {
                 const user = userCredential.user;
 
                 const isAdmin = email === "imserv67@gmail.com";
-                const userData = { name: user.displayName || user.email.split('@')[0], email, role: isAdmin ? "admin" : "user" };
+                const userData = { 
+                    name: user.displayName || user.email.split('@')[0], 
+                    email, 
+                    role: isAdmin ? "admin" : "user",
+                    profilePic: user.photoURL || null
+                };
 
+                // Save to currentUser
                 localStorage.setItem('currentUser', JSON.stringify(userData));
+                
+                // Update users array
+                let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+                const existingUserIndex = allUsers.findIndex(u => u.email === userData.email);
+                if (existingUserIndex !== -1) {
+                    // Update existing user data (preserve registeredDate)
+                    allUsers[existingUserIndex] = { ...allUsers[existingUserIndex], ...userData };
+                    localStorage.setItem('users', JSON.stringify(allUsers));
+                }
+                
                 if (typeof showToast === 'function') showToast('Welcome back, ' + userData.name + '!');
-                setTimeout(() => window.location.href = isAdmin ? 'admin-product-config.html' : 'user-dashboard.html', 1000);
+                setTimeout(() => window.location.href = 'user-dashboard.html', 1000);
             } catch (error) {
                 if (typeof showToast === 'function') showToast('Login failed: ' + error.message);
             }
@@ -80,11 +112,30 @@ document.addEventListener('DOMContentLoaded', () => {
                 await updateProfile(userCredential.user, { displayName: name });
 
                 const isAdmin = email === "imserv67@gmail.com";
-                const userData = { name, email, role: isAdmin ? "admin" : "user" };
+                const userData = { 
+                    name, 
+                    email, 
+                    role: isAdmin ? "admin" : "user",
+                    registeredDate: new Date().toISOString(),
+                    profilePic: null,
+                    phone: null
+                };
+                
+                // Save to currentUser
                 localStorage.setItem('currentUser', JSON.stringify(userData));
+                
+                // Add to users array
+                let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+                const existingUserIndex = allUsers.findIndex(u => u.email === userData.email);
+                if (existingUserIndex === -1) {
+                    allUsers.push(userData);
+                } else {
+                    allUsers[existingUserIndex] = userData;
+                }
+                localStorage.setItem('users', JSON.stringify(allUsers));
 
                 if (typeof showToast === 'function') showToast('Registration successful!');
-                setTimeout(() => window.location.href = isAdmin ? 'admin-product-config.html' : 'user-dashboard.html', 1500);
+                setTimeout(() => window.location.href = 'user-dashboard.html', 1500);
             } catch (error) {
                 if (typeof showToast === 'function') showToast('Registration failed: ' + error.message);
             }
@@ -99,9 +150,22 @@ onAuthStateChanged(auth, (user) => {
         const userData = {
             name: user.displayName || user.email.split('@')[0],
             email: user.email,
-            role: isAdmin ? "admin" : "user"
+            role: isAdmin ? "admin" : "user",
+            profilePic: user.photoURL || null
         };
+        
+        // Save to currentUser
         localStorage.setItem('currentUser', JSON.stringify(userData));
+        
+        // Update users array if user exists
+        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+        const existingUserIndex = allUsers.findIndex(u => u.email === userData.email);
+        if (existingUserIndex !== -1) {
+            // Update existing user (preserve registeredDate and other fields)
+            allUsers[existingUserIndex] = { ...allUsers[existingUserIndex], ...userData };
+            localStorage.setItem('users', JSON.stringify(allUsers));
+        }
+        
         if (typeof updateNavbarAuth === 'function') updateNavbarAuth();
     } else {
         localStorage.removeItem('currentUser');

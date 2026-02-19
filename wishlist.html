@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0" />
+  <title>My Wishlist - Alina Collection</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css"
+    integrity="sha512-2SwdPD6INVrV/lHTZbO2nodKhrnDdJK9/kg2XD1r9uGqPo1cUbujc+IYdlYdEErWNu69gVcYgdxlmVmzTWnetw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
+  <link rel="stylesheet" href="style.css" />
+  <link rel="stylesheet" href="dashboard.css" />
+  <link rel="stylesheet" href="responsiveHome.css" />
+</head>
+
+<body>
+  <!-- Navigation Bar -->
+  <section id="header"></section>
+
+  <!-- Wishlist Hero Section -->
+  <section class="wishlist-hero">
+    <div class="wishlist-hero-content">
+      <div class="wishlist-hero-icon">
+        <i class="fa-solid fa-heart"></i>
+      </div>
+      <h1>My Wishlist</h1>
+      <p>Your favorite items saved for later</p>
+    </div>
+  </section>
+
+  <!-- Wishlist Content -->
+  <section class="wishlist-container section-p1">
+    <div class="wishlist-header">
+      <div class="wishlist-stats">
+        <span class="wishlist-count"><span id="wishlist-total">0</span> Items</span>
+      </div>
+      <div class="wishlist-actions">
+        <button class="btn-secondary" onclick="window.location.href='shop.html'">
+          <i class="fa-solid fa-plus"></i> Add More Items
+        </button>
+        <button class="btn-primary" id="add-all-to-cart">
+          <i class="fa-solid fa-cart-plus"></i> Add All to Cart
+        </button>
+      </div>
+    </div>
+
+    <!-- Empty State -->
+    <div id="empty-wishlist" class="empty-state" style="display: none;">
+      <div class="empty-icon">
+        <i class="fa-solid fa-heart-crack"></i>
+      </div>
+      <h2>Your Wishlist is Empty</h2>
+      <p>Start adding items you love to your wishlist</p>
+      <button class="normal" onclick="window.location.href='shop.html'">
+        Explore Products <i class="fa-solid fa-arrow-right"></i>
+      </button>
+    </div>
+
+    <!-- Wishlist Grid -->
+    <div id="wishlist-grid" class="wishlist-grid">
+      <!-- Products will be dynamically inserted here -->
+    </div>
+  </section>
+
+  <!-- Footer -->
+  <footer></footer>
+
+  <script src="script.js"></script>
+  <script type="module" src="firebase-init.js"></script>
+  <script type="module" src="auth.js"></script>
+
+  <script>
+    // Render wishlist items
+    function renderWishlist() {
+      const wishlistIds = JSON.parse(localStorage.getItem('wishlist')) || [];
+      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+      const wishlistItems = wishlistIds.map(id => allProducts.find(p => p.id === id)).filter(p => p);
+
+      const grid = document.getElementById('wishlist-grid');
+      const emptyState = document.getElementById('empty-wishlist');
+      const totalCount = document.getElementById('wishlist-total');
+
+      totalCount.textContent = wishlistItems.length;
+
+      if (wishlistItems.length === 0) {
+        grid.style.display = 'none';
+        emptyState.style.display = 'flex';
+        document.querySelector('.wishlist-header').style.display = 'none';
+        return;
+      }
+
+      grid.style.display = 'grid';
+      emptyState.style.display = 'none';
+      document.querySelector('.wishlist-header').style.display = 'flex';
+
+      grid.innerHTML = wishlistItems.map(item => {
+        const discount = item.discount || 0;
+        const originalPrice = item.price;
+        const finalPrice = discount > 0 ? (originalPrice * (1 - discount / 100)).toFixed(2) : originalPrice;
+
+        return `
+          <div class="wishlist-card" data-id="${item.id}">
+            <button class="wishlist-remove" onclick="removeFromWishlist(${item.id})">
+              <i class="fa-solid fa-xmark"></i>
+            </button>
+            ${discount > 0 ? `<span class="wishlist-badge">-${discount}%</span>` : ''}
+            <div class="wishlist-image" onclick="window.location.href='sproduct.html?id=${item.id}'">
+              <img src="${item.image || 'image/product/f1.jpg'}" alt="${item.name}" 
+                   onerror="this.onerror=null;this.src='image/product/f1.jpg';">
+            </div>
+            <div class="wishlist-info">
+              <h3 onclick="window.location.href='sproduct.html?id=${item.id}'">${item.name}</h3>
+              <p class="wishlist-brand">${item.brand || 'Alina Collection'}</p>
+              <div class="wishlist-rating">
+                ${generateStars(item.rating || 4)}
+                <span>(${item.reviews || 0})</span>
+              </div>
+              <div class="wishlist-price">
+                ${discount > 0 ? `
+                  <span class="price-original">NPR ${originalPrice}</span>
+                  <span class="price-final">NPR ${finalPrice}</span>
+                ` : `
+                  <span class="price-final">NPR ${originalPrice}</span>
+                `}
+              </div>
+              <button class="btn-add-cart" onclick="addToCartFromWishlist(${item.id})">
+                <i class="fa-solid fa-cart-shopping"></i> Add to Cart
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Generate star rating
+    function generateStars(rating) {
+      const fullStars = Math.floor(rating);
+      const halfStar = rating % 1 >= 0.5;
+      let stars = '';
+      
+      for (let i = 0; i < fullStars; i++) {
+        stars += '<i class="fa-solid fa-star"></i>';
+      }
+      if (halfStar) {
+        stars += '<i class="fa-solid fa-star-half-stroke"></i>';
+      }
+      const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
+      for (let i = 0; i < emptyStars; i++) {
+        stars += '<i class="fa-regular fa-star"></i>';
+      }
+      return stars;
+    }
+
+    // Remove from wishlist
+    function removeFromWishlist(productId) {
+      let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
+      wishlist = wishlist.filter(id => id !== productId);
+      localStorage.setItem('wishlist', JSON.stringify(wishlist));
+      
+      showToast('Removed from wishlist');
+      renderWishlist();
+      updateWishlistCount();
+    }
+
+    // Add to cart from wishlist
+    function addToCartFromWishlist(productId) {
+      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+      const product = allProducts.find(p => p.id === productId);
+      
+      if (!product) {
+        showToast('Product not found');
+        return;
+      }
+
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      const existingItem = cart.find(item => item.id === productId);
+
+      if (existingItem) {
+        existingItem.quantity += 1;
+        showToast('Quantity updated in cart');
+      } else {
+        cart.push({ ...product, quantity: 1 });
+        showToast('Added to cart');
+      }
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+    }
+
+    // Add all to cart
+    document.getElementById('add-all-to-cart')?.addEventListener('click', function() {
+      const wishlistIds = JSON.parse(localStorage.getItem('wishlist')) || [];
+      
+      if (wishlistIds.length === 0) {
+        showToast('Your wishlist is empty');
+        return;
+      }
+
+      const allProducts = JSON.parse(localStorage.getItem('products')) || [];
+      let cart = JSON.parse(localStorage.getItem('cart')) || [];
+      let addedCount = 0;
+
+      wishlistIds.forEach(id => {
+        const product = allProducts.find(p => p.id === id);
+        if (product) {
+          const existingItem = cart.find(item => item.id === id);
+          if (existingItem) {
+            existingItem.quantity += 1;
+          } else {
+            cart.push({ ...product, quantity: 1 });
+            addedCount++;
+          }
+        }
+      });
+
+      localStorage.setItem('cart', JSON.stringify(cart));
+      updateCartCount();
+      showToast(`${addedCount} items added to cart`);
+    });
+
+    // Initialize on page load
+    document.addEventListener('DOMContentLoaded', function() {
+      renderWishlist();
+    });
+  </script>
+</body>
+
+</html>

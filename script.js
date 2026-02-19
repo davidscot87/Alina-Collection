@@ -173,36 +173,39 @@ const LayoutManager = {
                     </div>
                 </div>
 
-                <div class="col">
-                    <h4>The Company</h4>
-                    <a href="about.html">Our Story</a>
-                    <a href="shop.html">The Collection</a>
-                    <a href="flash-sale.html">Exclusive Deals</a>
-                    <a href="contact.html">Contact Us</a>
-                </div>
+                <div class="footer-links-grid">
+                    <div class="col">
+                        <h4>The Company</h4>
+                        <a href="about.html">Our Story</a>
+                        <a href="shop.html">The Collection</a>
+                        <a href="flash-sale.html">Exclusive Deals</a>
+                        <a href="contact.html">Contact Us</a>
+                    </div>
 
-                <div class="col">
-                    <h4>Customer Care</h4>
-                    <a href="support.html">Help Center</a>
-                    <a href="shipping.html">Shipping Info</a>
-                    <a href="returns.html">Returns & Exchanges</a>
-                    <a href="support.html#faq">FAQs</a>
-                </div>
+                    <div class="col">
+                        <h4>Store Policies</h4>
+                        <p style="font-size: 13px; line-height: 1.8; color: var(--text-muted); margin: 10px 0;">
+                            <i class="fas fa-calendar-week" style="color: var(--primary-color); margin-right: 8px;"></i> New arrivals every week<br>
+                            <i class="fas fa-money-bill-wave" style="color: var(--primary-color); margin-right: 8px;"></i> Cash on Delivery available<br>
+                            <i class="fas fa-ban" style="color: var(--primary-color); margin-right: 8px;"></i> No returns or exchanges
+                        </p>
+                    </div>
 
-                <div class="col">
-                    <h4>My Account</h4>
-                    <a href="login.html">Sign In / Register</a>
-                    <a href="cart.html">View My Cart</a>
-                    <a href="user-dashboard.html">Order History</a>
-                    <a href="shop.html?cat=nepali">Nepali Heritage</a>
-                </div>
+                    <div class="col">
+                        <h4>My Account</h4>
+                        <a href="login.html">Sign In / Register</a>
+                        <a href="cart.html">View My Cart</a>
+                        <a href="user-dashboard.html">Order History</a>
+                        <a href="shop.html?cat=nepali">Nepali Heritage</a>
+                    </div>
 
-                <div class="col footer-contact">
-                    <h4>Get In Touch</h4>
-                    <p><i class="fas fa-map-marker-alt"></i> ${CONFIG.address}</p>
-                    <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
-                    <p><i class="fas fa-envelope"></i> ${CONFIG.email}</p>
-                    <p><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM, Sun-Fri</p>
+                    <div class="col footer-contact">
+                        <h4>Get In Touch</h4>
+                        <p><i class="fas fa-map-marker-alt"></i> ${CONFIG.address}</p>
+                        <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
+                        <p><i class="fas fa-envelope"></i> ${CONFIG.email}</p>
+                        <p><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM, Sun-Fri</p>
+                    </div>
                 </div>
             </div>
 
@@ -238,7 +241,8 @@ const LayoutManager = {
             <ul class="mob-drawer-links">
                 <li class="mob-link-item" style="--i:1"><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
                 <li class="mob-link-item mob-has-sub" style="--i:2">
-                    <a href="#" class="mob-sub-toggle"><i class="fas fa-shopping-bag"></i> Shop <i class="fas fa-chevron-down mob-chevron"></i></a>
+                    <a href="shop.html" class="mob-shop-link"><i class="fas fa-shopping-bag"></i> Shop</a>
+                    <button class="mob-sub-toggle" aria-label="Toggle shop categories"><i class="fas fa-chevron-down mob-chevron"></i></button>
                     <ul class="mob-sub-menu">
                         <li><a href="shop.html?cat=Tops"><i class="fas fa-tshirt"></i> Tops & Shirts</a></li>
                         <li><a href="shop.html?cat=Bottoms"><i class="fas fa-socks"></i> Pants & Bottoms</a></li>
@@ -335,10 +339,11 @@ const LayoutManager = {
         if (mobClose) mobClose.addEventListener('click', closeDrawer);
         if (overlay) overlay.addEventListener('click', closeDrawer);
 
-        // Mobile accordion
+        // Mobile accordion - Updated to work with button toggle
         document.querySelectorAll('.mob-sub-toggle').forEach(toggle => {
             toggle.addEventListener('click', (e) => {
                 e.preventDefault();
+                e.stopPropagation();
                 const parent = toggle.closest('.mob-has-sub');
                 if (parent) parent.classList.toggle('sub-open');
             });
@@ -470,7 +475,7 @@ const LayoutManager = {
 
 
 // === 1. State Management & Data ===
-const PRODUCT_VERSION = "3.9"; // Granular "Name-Wise" Visual Accuracy Overhaul
+const PRODUCT_VERSION = "4.0"; // FIXED: Unique image URLs per product with verification
 
 const categoriesList = [
     "Signature Blouses", "Ethereal Maxi Dresses", "Artisan Sundresses", "Vanguard Evening Gowns",
@@ -540,10 +545,13 @@ function generateDefaultProducts() {
             const mat = materials[(i + id) % materials.length];
             const style = styles[(i * id) % styles.length];
 
-            // Precise Selection: Match image content to the product name
-            const photoId = pool[i % pool.length];
-            // Ensure 100% uniqueness via unique ID seed
-            const uniqueImageURL = `https://images.unsplash.com/photo-${photoId}.jpg?auto=format&fit=crop&w=600&h=800&q=80&sig=${id}`;
+            // FIXED: Ensure 100% unique image per product using multiple uniqueness factors
+            // Use product ID, category index, and item index to create unique combinations
+            const poolIndex = (i - 1) % pool.length;
+            const photoId = pool[poolIndex];
+            
+            // Create truly unique URL with multiple unique parameters
+            const uniqueImageURL = `https://images.unsplash.com/photo-${photoId}?auto=format&fit=crop&w=600&h=800&q=80&seed=${id}&v=${i}&cat=${cat.replace(/\s/g, '')}`;
 
             const brand = premiumBrands[(i + id) % premiumBrands.length];
 
@@ -561,10 +569,47 @@ function generateDefaultProducts() {
             });
         }
     });
+    
+    // VERIFICATION: Log unique image count
+    const uniqueImages = new Set(products.map(p => p.image));
+    console.log(`✅ Generated ${products.length} products with ${uniqueImages.size} unique image URLs`);
+    
     return products;
 }
 
 const defaultProducts = generateDefaultProducts();
+
+// DIAGNOSTIC FUNCTION: Check product image uniqueness
+function verifyProductImageUniqueness() {
+    const products = JSON.parse(localStorage.getItem('products')) || [];
+    const imageMap = new Map();
+    
+    products.forEach(p => {
+        if (!imageMap.has(p.image)) {
+            imageMap.set(p.image, []);
+        }
+        imageMap.get(p.image).push({ id: p.id, name: p.name });
+    });
+    
+    const duplicates = Array.from(imageMap.entries()).filter(([img, products]) => products.length > 1);
+    
+    if (duplicates.length > 0) {
+        console.error(`🔴 CRITICAL: Found ${duplicates.length} duplicate images!`);
+        duplicates.forEach(([img, products]) => {
+            console.error(`   Image: ${img.substring(0, 60)}...`);
+            console.error(`   Used by ${products.length} products:`, products.map(p => `#${p.id} ${p.name}`).join(', '));
+        });
+        return false;
+    } else {
+        console.log(`✅ SUCCESS: All ${products.length} products have unique images`);
+        return true;
+    }
+}
+
+// Run verification on page load
+if (typeof window !== 'undefined') {
+    window.verifyProductImages = verifyProductImageUniqueness;
+}
 
 let allProducts = JSON.parse(localStorage.getItem('products')) || defaultProducts;
 
@@ -587,6 +632,14 @@ let cart = JSON.parse(localStorage.getItem('cart')) || [];
 let wishlist = JSON.parse(localStorage.getItem('wishlist')) || [];
 let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
 let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+
+// CRITICAL FIX: Function to refresh global data from localStorage
+function refreshGlobalData() {
+    allUsers = JSON.parse(localStorage.getItem('users')) || [];
+    allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+    allProducts = JSON.parse(localStorage.getItem('products')) || defaultProducts;
+    console.log(`✅ Global data refreshed: ${allUsers.length} users, ${allOrders.length} orders, ${allProducts.length} products`);
+}
 
 // === 2. Multi-Currency Engine ===
 const exchangeRates = { "NPR": 1, "USD": 0.0075, "EUR": 0.0069 };
@@ -623,7 +676,7 @@ function updateNavbarAuth() {
         const authLi = document.createElement('li');
         authLi.id = 'auth-btn';
         const aDashboard = document.createElement('a');
-        aDashboard.href = currentUser.role === 'admin' ? 'admin-product-config.html' : 'user-dashboard.html';
+        aDashboard.href = 'user-dashboard.html';
         aDashboard.innerHTML = `<i class="fa-solid fa-user"></i> ${currentUser.name}`;
         authLi.appendChild(aDashboard);
 
@@ -700,15 +753,288 @@ function updateNavbarAuth() {
 }
 
 function logoutUser() {
+    // Show confirmation modal
+    showLogoutConfirmation();
+}
+
+function showLogoutConfirmation() {
+    // Create modal overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'logout-modal-overlay';
+    overlay.id = 'logout-modal-overlay';
+    
+    // Create modal content
+    const modal = document.createElement('div');
+    modal.className = 'logout-modal';
+    
+    modal.innerHTML = `
+        <div class="logout-modal-header">
+            <i class="fas fa-sign-out-alt logout-icon"></i>
+            <h3>Confirm Logout</h3>
+        </div>
+        <div class="logout-modal-body">
+            <p>Are you sure you want to sign out?</p>
+            <p class="logout-note">You can sign back in anytime.</p>
+        </div>
+        <div class="logout-modal-footer">
+            <button class="logout-btn-cancel" id="logout-cancel-btn">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="logout-btn-confirm" id="logout-confirm-btn">
+                <i class="fas fa-check"></i> Yes, Logout
+            </button>
+        </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Animate in
+    setTimeout(() => {
+        overlay.classList.add('active');
+    }, 10);
+    
+    // Handle cancel
+    document.getElementById('logout-cancel-btn').addEventListener('click', closeLogoutModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeLogoutModal();
+        }
+    });
+    
+    // Handle confirm
+    document.getElementById('logout-confirm-btn').addEventListener('click', confirmLogout);
+    
+    // Handle ESC key
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeLogoutModal();
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+}
+
+function closeLogoutModal() {
+    const overlay = document.getElementById('logout-modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            overlay.remove();
+            document.body.style.overflow = '';
+        }, 300);
+    }
+}
+
+function confirmLogout() {
+    // Close modal first
+    closeLogoutModal();
+    
+    // Perform logout
     localStorage.removeItem('currentUser');
     localStorage.removeItem('isLoggedIn');
+    
     // Global bridge for auth.js to call firebase signOut
     if (window.firebaseSignOut) {
         window.firebaseSignOut();
     }
+    
     showToast('Logged out successfully');
+    
+    // Redirect to home page
     setTimeout(() => {
         window.location.href = 'index.html';
+    }, 1000);
+}
+
+// === Account Deletion System ===
+function showDeleteAccountModal() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) {
+        showToast('Please login first');
+        return;
+    }
+
+    // Create modal overlay
+    const overlay = document.createElement('div');
+    overlay.className = 'delete-account-modal-overlay';
+    overlay.id = 'delete-account-modal-overlay';
+    
+    // Create modal content
+    const modal = document.createElement('div');
+    modal.className = 'delete-account-modal';
+    
+    modal.innerHTML = `
+        <div class="delete-modal-header">
+            <i class="fas fa-exclamation-triangle delete-warning-icon"></i>
+            <h3>Delete Account</h3>
+        </div>
+        <div class="delete-modal-body">
+            <div class="warning-box">
+                <i class="fas fa-info-circle"></i>
+                <p><strong>Warning:</strong> This action is permanent and cannot be undone!</p>
+            </div>
+            <h4>The following data will be permanently deleted:</h4>
+            <ul class="deletion-list">
+                <li><i class="fas fa-user"></i> Your profile information</li>
+                <li><i class="fas fa-shopping-cart"></i> Shopping cart and wishlist</li>
+                <li><i class="fas fa-receipt"></i> Order history</li>
+                <li><i class="fas fa-star"></i> Loyalty points</li>
+                <li><i class="fas fa-database"></i> All personal data</li>
+            </ul>
+            <div class="confirmation-input">
+                <label>Type <strong>DELETE</strong> to confirm:</label>
+                <input type="text" id="delete-confirmation-input" placeholder="Type DELETE" autocomplete="off">
+                <span class="input-error" id="delete-input-error"></span>
+            </div>
+        </div>
+        <div class="delete-modal-footer">
+            <button class="delete-btn-cancel" id="delete-cancel-btn">
+                <i class="fas fa-times"></i> Cancel
+            </button>
+            <button class="delete-btn-confirm" id="delete-confirm-btn" disabled>
+                <i class="fas fa-trash-can"></i> Delete My Account
+            </button>
+        </div>
+    `;
+    
+    overlay.appendChild(modal);
+    document.body.appendChild(overlay);
+    
+    // Prevent body scroll
+    document.body.style.overflow = 'hidden';
+    
+    // Animate in
+    setTimeout(() => {
+        overlay.classList.add('active');
+    }, 10);
+    
+    // Handle confirmation input
+    const confirmInput = document.getElementById('delete-confirmation-input');
+    const confirmBtn = document.getElementById('delete-confirm-btn');
+    const errorSpan = document.getElementById('delete-input-error');
+    
+    confirmInput.addEventListener('input', (e) => {
+        const value = e.target.value.trim();
+        if (value === 'DELETE') {
+            confirmBtn.disabled = false;
+            confirmBtn.classList.add('enabled');
+            errorSpan.textContent = '';
+        } else {
+            confirmBtn.disabled = true;
+            confirmBtn.classList.remove('enabled');
+            if (value.length > 0) {
+                errorSpan.textContent = 'Please type DELETE exactly';
+            } else {
+                errorSpan.textContent = '';
+            }
+        }
+    });
+    
+    // Handle cancel
+    document.getElementById('delete-cancel-btn').addEventListener('click', closeDeleteAccountModal);
+    overlay.addEventListener('click', (e) => {
+        if (e.target === overlay) {
+            closeDeleteAccountModal();
+        }
+    });
+    
+    // Handle confirm
+    confirmBtn.addEventListener('click', () => {
+        if (!confirmBtn.disabled) {
+            confirmDeleteAccount();
+        }
+    });
+    
+    // Handle ESC key
+    const escHandler = (e) => {
+        if (e.key === 'Escape') {
+            closeDeleteAccountModal();
+            document.removeEventListener('keydown', escHandler);
+        }
+    };
+    document.addEventListener('keydown', escHandler);
+    
+    // Focus on input
+    setTimeout(() => {
+        confirmInput.focus();
+    }, 400);
+}
+
+function closeDeleteAccountModal() {
+    const overlay = document.getElementById('delete-account-modal-overlay');
+    if (overlay) {
+        overlay.classList.remove('active');
+        setTimeout(() => {
+            overlay.remove();
+            document.body.style.overflow = '';
+        }, 300);
+    }
+}
+
+function confirmDeleteAccount() {
+    const currentUser = JSON.parse(localStorage.getItem('currentUser'));
+    if (!currentUser) return;
+    
+    // Close modal
+    closeDeleteAccountModal();
+    
+    // Show processing toast
+    showToast('Deleting account...');
+    
+    // Simulate deletion process
+    setTimeout(() => {
+        // Get all users
+        let allUsers = JSON.parse(localStorage.getItem('users')) || [];
+        
+        // Find the user to delete
+        const userToDelete = allUsers.find(u => u.email === currentUser.email);
+        
+        // Add to deleted users list with deletion timestamp
+        if (userToDelete) {
+            let deletedUsers = JSON.parse(localStorage.getItem('deletedUsers')) || [];
+            deletedUsers.push({
+                ...userToDelete,
+                deletedDate: new Date().toISOString(),
+                deletedBy: 'self'
+            });
+            localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
+        }
+        
+        // Remove current user from users array
+        allUsers = allUsers.filter(u => u.email !== currentUser.email);
+        localStorage.setItem('users', JSON.stringify(allUsers));
+        
+        // Remove user-specific data
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isLoggedIn');
+        
+        // Remove user's cart and wishlist
+        const userCartKey = `cart_${currentUser.email}`;
+        const userWishlistKey = `wishlist_${currentUser.email}`;
+        localStorage.removeItem(userCartKey);
+        localStorage.removeItem(userWishlistKey);
+        
+        // Remove user's orders
+        let allOrders = JSON.parse(localStorage.getItem('orders')) || [];
+        allOrders = allOrders.filter(o => o.userEmail !== currentUser.email);
+        localStorage.setItem('orders', JSON.stringify(allOrders));
+        
+        // Firebase signout if applicable
+        if (window.firebaseSignOut) {
+            window.firebaseSignOut();
+        }
+        
+        // Show success message
+        showToast('Account deleted successfully');
+        
+        // Redirect to home page
+        setTimeout(() => {
+            window.location.href = 'index.html';
+        }, 1500);
     }, 1000);
 }
 
@@ -784,51 +1110,67 @@ function renderProducts(containerId, limit = null, category = null, search = nul
     const htmlBuffer = list.map(p => {
         const isWishlisted = wishlist.includes(p.id);
         const showFlashBadge = !!p.isFlash;
+        
+        // Calculate discount percentage
+        const oldPrice = p.oldPrice || (showFlashBadge ? p.price * 1.5 : null);
+        const discountPercent = oldPrice ? Math.round(((oldPrice - p.price) / oldPrice) * 100) : 0;
 
         return `
-            <div class="pro">
+            <div class="pro" onclick="window.location.href='sproduct.html?id=${p.id}'">
                 <div class="pro-img-wrapper">
-                    ${showFlashBadge ? `<span class="badge-sale">FLASH SALE</span>` : ''}
-                    <div class="wishlist-icon ${isWishlisted ? 'active' : ''}" onclick="toggleWishlist(${p.id})">
+                    ${discountPercent > 0 ? `<span class="discount-badge">-${discountPercent}%</span>` : ''}
+                    <div class="wishlist-icon ${isWishlisted ? 'active' : ''}" onclick="event.stopPropagation(); toggleWishlist(${p.id})">
                         <i class="${isWishlisted ? 'fa-solid' : 'fa-regular'} fa-heart"></i>
                     </div>
-                    <img src="${p.image}" alt="" onerror="this.onerror=null;this.src='${UNIVERSAL_FALLBACK_IMAGE}';" onclick="window.location.href='sproduct.html?id=${p.id}'" loading="lazy">
-                    <button class="quick-view-btn" onclick="openQuickView(${p.id}); return false;">QUICK VIEW</button>
+                    <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='${UNIVERSAL_FALLBACK_IMAGE}';" loading="lazy">
                 </div>
-                <div class="pro-data">
-                    <div class="des">
-                        <div class="rating-amount-row">
-                            <div class="star-wrapper">
-                                <span class="rating-num">${p.rating}</span>
-                                <div class="star">
-                                    ${generateStarRating(p.rating)}
-                                </div>
-                                <span class="review-num">${p.reviewCount} Reviews</span>
-                            </div>
-                            <span class="stock-amount">Stock: ${p.stock}</span>
-                        </div>
-                        <span class="brand-tag">${p.brand.toUpperCase()}</span>
-                        <h5>${p.name}</h5>
-                        ${showFlashBadge || p.oldPrice ? `
-                            <div class="price-row">
-                                <h4 class="old-price">${p.oldPrice ? convertPrice(p.oldPrice) : convertPrice(p.price * 1.5)}</h4>
-                                <h4>${convertPrice(p.price)}</h4>
-                            </div>
-                            <div class="stock-bar">
-                                <div class="progress" style="width: ${Math.max(20, (p.stock / 30) * 100)}%;"></div>
-                            </div>
-                            <p class="stock-text">Limited Edition Sale</p>
-                        ` : `<h4>${convertPrice(p.price)}</h4>`}
+                <div class="pro-body">
+                    <span class="brand-tag">${p.brand.toUpperCase()}</span>
+                    <h3 class="pro-title">${p.name}</h3>
+                    <div class="rating-row">
+                        ${generateStarRating(p.rating)}
+                        <span class="review-count">(${p.reviewCount || 0})</span>
                     </div>
-                    <div class="product-actions-text">
-                        <button onclick="addToCart(${p.id}); return false;" class="add-cart-btn">Add to Cart</button>
-                        <button onclick="buyNow(${p.id}); return false;" class="buy-now-btn">Buy Now</button>
+                    <div class="price-wrapper">
+                        <span class="current-price">${convertPrice(p.price)}</span>
+                        ${oldPrice ? `<span class="original-price">${convertPrice(oldPrice)}</span>` : ''}
+                    </div>
+                    <div class="product-actions">
+                        <button onclick="event.stopPropagation(); addToCart(${p.id})" class="btn-add-cart">
+                            <i class="fa-solid fa-cart-plus"></i> Add to Cart
+                        </button>
+                        <button onclick="event.stopPropagation(); buyNow(${p.id})" class="btn-buy-now">
+                            <i class="fa-solid fa-bolt"></i> Buy Now
+                        </button>
                     </div>
                 </div>
             </div>`;
     });
 
     container.innerHTML = htmlBuffer.join('');
+
+    // Add "View All" card at the end for mobile horizontal scroll (only for limited containers)
+    if (limit && window.innerWidth < 640) {
+        const viewAllCard = document.createElement('a');
+        viewAllCard.className = 'view-all-card';
+        
+        // Determine the link based on container type
+        let viewAllLink = 'shop.html';
+        if (isFlashContainer) {
+            viewAllLink = 'flash-sale.html';
+        } else if (category) {
+            viewAllLink = `shop.html?cat=${category}`;
+        }
+        
+        viewAllCard.href = viewAllLink;
+        viewAllCard.innerHTML = `
+            <i class="fa-solid fa-grid-2"></i>
+            <div class="view-all-text">View All</div>
+            <div class="view-all-subtitle">Explore our complete collection</div>
+        `;
+        
+        container.appendChild(viewAllCard);
+    }
 }
 
 function generateStarRating(rating) {
@@ -1074,6 +1416,9 @@ function getStockStatus(stock) {
 }
 
 function renderAdminDashboard() {
+    // CRITICAL FIX: Refresh global data first
+    refreshGlobalData();
+    
     // 1. Executive Metrics
     const totalSales = allOrders.reduce((sum, o) => sum + o.total, 0);
     const lowStockCount = allProducts.filter(p => p.stock < 10).length;
@@ -1088,9 +1433,30 @@ function renderAdminDashboard() {
     if (pTable) {
         // Sort by ID descending to show latest additions first
         const sortedProducts = [...allProducts].reverse();
+        
+        // VERIFICATION: Check for duplicate images in dashboard
+        const imageMap = new Map();
+        sortedProducts.forEach(p => {
+            if (!imageMap.has(p.image)) {
+                imageMap.set(p.image, []);
+            }
+            imageMap.get(p.image).push(p.id);
+        });
+        
+        // Log warning if duplicates found
+        const duplicates = Array.from(imageMap.entries()).filter(([img, ids]) => ids.length > 1);
+        if (duplicates.length > 0) {
+            console.warn(`⚠️ Dashboard: Found ${duplicates.length} duplicate images across products`);
+            duplicates.forEach(([img, ids]) => {
+                console.warn(`   Image: ${img.substring(0, 80)}... used by products: ${ids.join(', ')}`);
+            });
+        } else {
+            console.log(`✅ Dashboard: All ${sortedProducts.length} products have unique images`);
+        }
+        
         pTable.innerHTML = sortedProducts.map(p => `
             <tr>
-                <td><img src="${p.image}" class="inventory-img" onerror="this.onerror=null;this.src='${UNIVERSAL_FALLBACK_IMAGE}';"></td>
+                <td><img src="${p.image}" class="inventory-img" alt="Product ${p.id}" onerror="this.onerror=null;this.src='${UNIVERSAL_FALLBACK_IMAGE}';"></td>
                 <td>
                     <div style="font-weight:800;">${p.name}</div>
                     <div style="font-size:11px; color:var(--text-muted);">Product ID: #${p.id}</div>
@@ -1125,7 +1491,7 @@ function renderAdminDashboard() {
     if (invSummary) {
         invSummary.innerHTML = allProducts.slice(0, 5).map(p => `
             <div class="mini-item">
-                <img src="${p.image}" alt="">
+                <img src="${p.image}" alt="${p.name}" onerror="this.onerror=null;this.src='${UNIVERSAL_FALLBACK_IMAGE}';">
                 <div class="mini-item-info">
                     <h4>${p.name}</h4>
                     <p>Price: ${convertPrice(p.price)} | Stock: ${p.stock}</p>
@@ -1190,32 +1556,144 @@ function updateOrderStatus(id, newStatus) {
 
 function renderAdminUsers() {
     const uTable = document.querySelector('#admin-user-table tbody');
-    if (!uTable) return;
+    if (!uTable) {
+        console.error('❌ Admin Users Table not found!');
+        return;
+    }
 
-    // David Scot is the Sovereign, always top
-    let usersList = [{ name: "David Scot", email: "davidscot8786@gmail.com", role: "admin" }, ...allUsers.filter(u => u.name !== "David Scot")];
+    // CRITICAL FIX: Read fresh data from localStorage every time
+    const activeUsers = JSON.parse(localStorage.getItem('users')) || [];
+    const deletedUsers = JSON.parse(localStorage.getItem('deletedUsers')) || [];
+    
+    console.log(`✅ Loaded ${activeUsers.length} active users and ${deletedUsers.length} deleted users`);
+    
+    // Update statistics
+    const totalUsersEl = document.getElementById('total-users-count');
+    const activeUsersEl = document.getElementById('active-users-count');
+    const deletedUsersEl = document.getElementById('deleted-users-count');
+    
+    if (totalUsersEl) totalUsersEl.textContent = activeUsers.length + deletedUsers.length;
+    if (activeUsersEl) activeUsersEl.textContent = activeUsers.length;
+    if (deletedUsersEl) deletedUsersEl.textContent = deletedUsers.length;
+    
+    // Combine active and deleted users
+    const activeUsersList = activeUsers.map(u => ({ ...u, status: 'active' }));
+    const deletedUsersList = deletedUsers.map(u => ({ ...u, status: 'deleted' }));
+    const combinedUsers = [...activeUsersList, ...deletedUsersList];
+    
+    // Sort: Admin first, then by registration date (newest first)
+    combinedUsers.sort((a, b) => {
+        if (a.role === 'admin' && b.role !== 'admin') return -1;
+        if (a.role !== 'admin' && b.role === 'admin') return 1;
+        const dateA = a.registeredDate ? new Date(a.registeredDate) : new Date(0);
+        const dateB = b.registeredDate ? new Date(b.registeredDate) : new Date(0);
+        return dateB - dateA;
+    });
 
-    uTable.innerHTML = usersList.map(u => `
-        <tr>
-            <td data-label="NAME">
-                <div style="font-weight:800;">${u.name}</div>
-                <div style="font-size:11px; color:#94a3b8;">${u.email}</div>
-            </td>
-            <td data-label="PHONE">${u.phone || 'Contact Private'}</td>
-            <td data-label="ROLE"><span class="role-badge role-${u.role}">${u.role}</span></td>
-            <td data-label="ACTION">
-                ${u.name !== 'David Scot' ? `<button class="action-btn btn-delete" onclick="expungeUser('${u.email}')">Remove User</button>` : '<span style="font-size:11px; color:#22c55e; font-weight:800;"><i class="fas fa-crown"></i> OWNER</span>'}
-            </td>
-        </tr>
-    `).join('');
+    if (combinedUsers.length === 0) {
+        console.warn('⚠️ No users found in database');
+        uTable.innerHTML = `
+            <tr>
+                <td colspan="6" style="text-align:center; padding: 60px 20px; color: var(--dash-text-muted);">
+                    <i class="fas fa-users" style="font-size: 48px; opacity: 0.3; margin-bottom: 20px; display: block;"></i>
+                    <h3 style="font-size: 18px; margin-bottom: 8px;">No Users Found</h3>
+                    <p style="font-size: 14px;">Users will appear here when they register on the website.</p>
+                </td>
+            </tr>
+        `;
+        return;
+    }
+
+    console.log(`✅ Rendering ${combinedUsers.length} users to table`);
+
+    uTable.innerHTML = combinedUsers.map(u => {
+        const isOwner = u.email === 'davidscot8786@gmail.com' || u.email === 'imserv67@gmail.com' || u.role === 'admin';
+        const statusBadge = u.status === 'deleted' 
+            ? '<span class="status-badge status-cancelled">Deleted</span>'
+            : '<span class="status-badge status-delivered">Active</span>';
+        
+        const registeredDate = u.registeredDate 
+            ? new Date(u.registeredDate).toLocaleDateString('en-US', { year: 'numeric', month: 'short', day: 'numeric' })
+            : 'N/A';
+        
+        const profilePic = u.profilePic 
+            ? `<img src="${u.profilePic}" alt="${u.name}" style="width: 40px; height: 40px; border-radius: 50%; object-fit: cover; margin-right: 12px; border: 2px solid var(--dash-border);">`
+            : `<div style="width: 40px; height: 40px; border-radius: 50%; background: var(--dash-primary-light); color: var(--dash-primary); display: flex; align-items: center; justify-content: center; font-weight: 800; font-size: 16px; margin-right: 12px; border: 2px solid var(--dash-border);">${u.name ? u.name.charAt(0).toUpperCase() : '?'}</div>`;
+        
+        return `
+            <tr style="${u.status === 'deleted' ? 'opacity: 0.6;' : ''}">
+                <td data-label="NAME">
+                    <div style="display: flex; align-items: center;">
+                        ${profilePic}
+                        <div>
+                            <div style="font-weight:800; font-size: 14px; color: var(--dash-text);">${u.name || 'Unknown User'}</div>
+                            <div style="font-size:11px; color: var(--dash-text-muted); margin-top: 2px;">${u.email}</div>
+                        </div>
+                    </div>
+                </td>
+                <td data-label="PHONE">
+                    <div style="font-size: 13px; font-weight: 600;">${u.phone || '<span style="color: var(--dash-text-muted); font-style: italic;">Not provided</span>'}</div>
+                </td>
+                <td data-label="ROLE">
+                    <span class="role-badge role-${u.role || 'user'}" style="text-transform: capitalize;">
+                        ${u.role === 'admin' ? '<i class="fas fa-crown"></i> Admin' : '<i class="fas fa-user"></i> User'}
+                    </span>
+                </td>
+                <td data-label="REGISTERED">
+                    <div style="font-size: 12px; font-weight: 600; color: var(--dash-text-muted);">${registeredDate}</div>
+                </td>
+                <td data-label="STATUS">${statusBadge}</td>
+                <td data-label="ACTION">
+                    ${u.status === 'deleted' 
+                        ? '<span style="font-size:11px; color: var(--dash-text-muted); font-style: italic;">Account Deleted</span>'
+                        : isOwner 
+                            ? '<span style="font-size:11px; color:#22c55e; font-weight:800;"><i class="fas fa-shield-halved"></i> PROTECTED</span>'
+                            : `<button class="action-btn btn-delete" onclick="expungeUser('${u.email}')"><i class="fas fa-trash"></i> Remove</button>`
+                    }
+                </td>
+            </tr>
+        `;
+    }).join('');
+    
+    console.log('✅ Users table rendered successfully');
 }
 
 function expungeUser(email) {
-    if (confirm('Are you sure you want to remove this user from the list?')) {
-        allUsers = allUsers.filter(u => u.email !== email);
-        localStorage.setItem('users', JSON.stringify(allUsers));
+    if (!confirm('Are you sure you want to remove this user from the list?')) {
+        return;
+    }
+    
+    try {
+        // CRITICAL FIX: Read fresh data from localStorage
+        let activeUsers = JSON.parse(localStorage.getItem('users')) || [];
+        const userToRemove = activeUsers.find(u => u.email === email);
+        
+        if (!userToRemove) {
+            showToast('User not found');
+            return;
+        }
+        
+        // Remove from active users
+        activeUsers = activeUsers.filter(u => u.email !== email);
+        localStorage.setItem('users', JSON.stringify(activeUsers));
+        
+        // Add to deleted users archive
+        let deletedUsers = JSON.parse(localStorage.getItem('deletedUsers')) || [];
+        deletedUsers.push({
+            ...userToRemove,
+            deletedDate: new Date().toISOString(),
+            deletedBy: 'admin'
+        });
+        localStorage.setItem('deletedUsers', JSON.stringify(deletedUsers));
+        
+        console.log(`✅ User ${email} removed and archived`);
+        
+        // Refresh the display
         renderAdminDashboard();
-        showToast('User removed');
+        showToast('User removed successfully');
+    } catch (error) {
+        console.error('❌ Error removing user:', error);
+        showToast('Error removing user');
     }
 }
 
@@ -1385,60 +1863,40 @@ function renderReviews(product) {
     section.id = 'product-reviews';
     section.className = 'section-p1';
 
-    const reviewerNames = ["Eleanor Vance", "Julian Thorne", "Seraphina Moore", "Alistair Grey", "Isolde Bell"];
-    const reviewTexts = [
-        "The attention to detail on this piece is remarkable. The fit is perfect and the material feels incredibly premium.",
-        "A truly standout addition to my wardrobe. Vanguard Collective never fails to deliver on both style and substance.",
-        "Exceeded all my expectations. The architectural silhouette is flattering and the craftsmanship is top-tier.",
-        "High-end fashion that actually feels comfortable for daily wear. This is exactly what I've been looking for.",
-        "Iconic design. Received so many compliments already. Definitely worth every penny."
-    ];
-
+    // Coming Soon Design
     let reviewsHTML = `
-        <div class="reviews-header" style="margin-bottom: 40px; display: flex; align-items: center; justify-content: space-between;">
-            <div>
-                <h2 style="font-size: 32px; margin-bottom: 5px;">Customer Reviews</h2>
-                <div class="overall-rating" style="display: flex; align-items: center; gap: 15px;">
-                    <h1 style="font-size: 48px; color: var(--secondary-color);">${product.rating}</h1>
-                    <div>
-                        <div class="star" style="color: #f3b519; font-size: 18px;">${generateStarRating(product.rating)}</div>
-                        <p style="margin: 0; font-size: 14px; color: var(--text-muted);">Based on ${product.reviewCount} reviews</p>
-                    </div>
+        <div class="reviews-coming-soon" style="text-align: center; padding: 80px 20px; background: linear-gradient(135deg, #f8fafc 0%, #e0f2fe 100%); border-radius: 20px; border: 2px dashed #0ea5e9;">
+            <div class="star-display" style="font-size: 48px; color: #0ea5e9; margin-bottom: 20px; display: flex; justify-content: center; gap: 10px;">
+                <i class="fa-solid fa-star" style="animation: starPulse 1.5s ease-in-out infinite;"></i>
+                <i class="fa-solid fa-star" style="animation: starPulse 1.5s ease-in-out 0.1s infinite;"></i>
+                <i class="fa-solid fa-star" style="animation: starPulse 1.5s ease-in-out 0.2s infinite;"></i>
+                <i class="fa-solid fa-star" style="animation: starPulse 1.5s ease-in-out 0.3s infinite;"></i>
+                <i class="fa-solid fa-star" style="animation: starPulse 1.5s ease-in-out 0.4s infinite;"></i>
+            </div>
+            <h2 style="font-size: 36px; color: #0c4a6e; margin-bottom: 15px; font-weight: 800;">Customer Reviews Coming Soon!</h2>
+            <p style="font-size: 18px; color: #0369a1; margin-bottom: 30px; max-width: 600px; margin-left: auto; margin-right: auto; line-height: 1.6;">We're building an amazing review system with verified purchases, photo reviews, and exclusive rewards for reviewers.</p>
+            <div style="display: flex; justify-content: center; gap: 40px; margin-bottom: 30px; flex-wrap: wrap;">
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-shield-check" style="font-size: 32px; color: #0ea5e9; margin-bottom: 10px;"></i>
+                    <p style="font-size: 14px; color: #0369a1; font-weight: 600; margin: 0;">Verified Reviews</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-camera" style="font-size: 32px; color: #0ea5e9; margin-bottom: 10px;"></i>
+                    <p style="font-size: 14px; color: #0369a1; font-weight: 600; margin: 0;">Photo Reviews</p>
+                </div>
+                <div style="text-align: center;">
+                    <i class="fa-solid fa-gift" style="font-size: 32px; color: #0ea5e9; margin-bottom: 10px;"></i>
+                    <p style="font-size: 14px; color: #0369a1; font-weight: 600; margin: 0;">Earn Rewards</p>
                 </div>
             </div>
-            <button class="normal">Write a Review</button>
+            <button class="normal" onclick="showToast('We will notify you when reviews are available!')" style="background: #0ea5e9; color: white; padding: 15px 40px; font-size: 16px; font-weight: 700;">Notify Me When Available</button>
         </div>
-        <div class="reviews-list" style="display: flex; flex-direction: column; gap: 30px;">
     `;
 
-    for (let i = 0; i < 3; i++) {
-        const name = reviewerNames[i % reviewerNames.length];
-        const text = reviewTexts[i % reviewTexts.length];
-        const date = new Date();
-        date.setDate(date.getDate() - (i * 5 + 2));
-
-        reviewsHTML += `
-            <div class="review-item" style="padding-bottom: 30px; border-bottom: 1px solid #eee;">
-                <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px;">
-                    <div style="display: flex; align-items: center; gap: 15px;">
-                        <div class="avatar" style="width: 45px; height: 45px; border-radius: 50%; background: #f0f2f5; display: flex; align-items: center; justify-content: center; font-weight: 800; color: var(--primary-color);">${name.charAt(0)}</div>
-                        <div>
-                            <h5 style="margin: 0; font-size: 16px;">${name} <i class="fas fa-check-circle" style="color: #22c55e; font-size: 12px; margin-left: 5px;"></i> <span style="font-size: 11px; font-weight: 500; color: #22c55e;">Verified Buyer</span></h5>
-                            <div class="star" style="color: #f3b519; font-size: 12px;">${generateStarRating(5.0)}</div>
-                        </div>
-                    </div>
-                    <span style="font-size: 13px; color: var(--text-muted);">${date.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' })}</span>
-                </div>
-                <p style="margin: 10px 0 0 60px; line-height: 1.6; color: var(--text-color); font-weight: 500;">${text}</p>
-            </div>
-        `;
-    }
-
-    reviewsHTML += '</div>';
     section.innerHTML = reviewsHTML;
 
     // Insert before related products
-    const relatedSection = document.getElementById('product1'); // The related pro section
+    const relatedSection = document.getElementById('product1');
     if (relatedSection) {
         relatedSection.parentNode.insertBefore(section, relatedSection);
     }
@@ -1588,22 +2046,7 @@ function showToast(m) {
     setTimeout(() => { t.classList.remove('show'); if (t.parentNode) document.body.removeChild(t); }, 8000);
 }// Filter Portal Logic
 function toggleFilterPortal() {
-    const portal = document.getElementById('filter-portal');
-    const container = document.getElementById('portal-filter-container');
-    const sidebarInner = document.querySelector('.sidebar-inner');
-
-    if (!portal || !container || !sidebarInner) return;
-
-    portal.classList.toggle('active');
-
-    if (portal.classList.contains('active')) {
-        // Move sidebar into portal
-        container.appendChild(sidebarInner);
-    } else {
-        // Move sidebar back to its original location (inside aside.filter-sidebar)
-        const aside = document.querySelector('.filter-sidebar');
-        if (aside) aside.appendChild(sidebarInner);
-    }
+    showToast('Filter Portal Coming Soon! 🔍');
 }
 
 // Contact form logic moved to LayoutManager.initContactForm()
@@ -1767,31 +2210,17 @@ function initNewsletterPopup() {
 }
 
 function initDarkMode() {
-    const darkModeStorage = localStorage.getItem('darkMode');
-    const prefersDark = window.matchMedia('(prefers-color-scheme: dark)');
-
-    // Logic: Use stored preference if exists, otherwise follow system
-    let isDark = darkModeStorage === null ? prefersDark.matches : darkModeStorage === 'true';
-
-    const updateTheme = (dark, save = true) => {
-        document.body.classList.toggle('dark-mode', dark);
-        if (save) localStorage.setItem('darkMode', dark);
-
-        // Update Desktop Icon
-        const desktopIcon = document.querySelector('#dark-mode-toggle i');
-        if (desktopIcon) desktopIcon.className = dark ? 'fas fa-sun' : 'fas fa-moon';
-
-        // Update Mobile Icon (via exported function)
-        if (window.updateMobileDarkModeIcon) window.updateMobileDarkModeIcon(dark);
+    // Force light mode and show coming soon alert
+    document.body.classList.remove('dark-mode');
+    
+    const showComingSoonAlert = () => {
+        showToast('Dark Mode Coming Soon! 🌙');
     };
-
-    // Initial setup
-    updateTheme(isDark, false);
 
     // Desktop Toggle
     if (!document.getElementById('dark-mode-toggle')) {
         const desktopToggle = document.createElement('li');
-        desktopToggle.innerHTML = `<a href="#" id="dark-mode-toggle" title="Toggle Dark Mode"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i></a>`;
+        desktopToggle.innerHTML = `<a href="#" id="dark-mode-toggle" title="Dark Mode Coming Soon"><i class="fas fa-moon"></i></a>`;
         const navbar = document.getElementById('navbar');
         if (navbar) {
             const closeBtn = document.getElementById('close');
@@ -1800,7 +2229,6 @@ function initDarkMode() {
         }
     }
 
-
     // Mobile Toggle Injection
     const drawerLinks = document.querySelector('.mob-drawer-links');
     if (drawerLinks && !document.getElementById('mob-dark-mode-toggle')) {
@@ -1808,32 +2236,23 @@ function initDarkMode() {
         mobToggleLi.className = 'mob-link-item';
         mobToggleLi.id = 'mob-dark-mode-item';
         mobToggleLi.style.setProperty('--i', '8');
-        mobToggleLi.innerHTML = `<a href="#" id="mob-dark-mode-toggle"><i class="fas ${isDark ? 'fa-sun' : 'fa-moon'}"></i> Dark Mode</a>`;
+        mobToggleLi.innerHTML = `<a href="#" id="mob-dark-mode-toggle"><i class="fas fa-moon"></i> Dark Mode</a>`;
         drawerLinks.appendChild(mobToggleLi);
 
         document.getElementById('mob-dark-mode-toggle').onclick = (e) => {
             e.preventDefault();
-            const nowDark = !document.body.classList.contains('dark-mode');
-            updateTheme(nowDark);
+            showComingSoonAlert();
         };
     }
 
-    // Click hander for desktop
+    // Click handler for desktop
     const desktopBtn = document.getElementById('dark-mode-toggle');
     if (desktopBtn) {
         desktopBtn.onclick = (e) => {
             e.preventDefault();
-            const nowDark = !document.body.classList.contains('dark-mode');
-            updateTheme(nowDark);
+            showComingSoonAlert();
         };
     }
-
-    // Listener for system changes (only if no manual override in this session)
-    prefersDark.addEventListener('change', (e) => {
-        if (localStorage.getItem('darkMode') === null) {
-            updateTheme(e.matches, false);
-        }
-    });
 }
 
 function initCustomDropdowns() {

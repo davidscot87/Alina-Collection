@@ -152,15 +152,15 @@
 
     /* Flash Highlight */
     #flash-highlight {
-        padding: 30px 30px;
+        padding: 20px 30px;
     }
 
     .flash-banner {
-        padding: 40px;
+        padding: 25px 30px;
     }
 
     .flash-text h2 {
-        font-size: 34px;
+        font-size: 28px;
     }
 
     /* Banner */
@@ -400,22 +400,22 @@
     .flash-banner {
         flex-direction: column;
         text-align: center;
-        padding: 40px 30px;
+        padding: 25px 20px;
     }
 
     .flash-text {
         width: 100%;
-        margin-bottom: 25px;
+        margin-bottom: 15px;
     }
 
     .flash-products-mini {
         width: 100%;
         justify-content: flex-start;
-        padding: 10px 0;
+        padding: 8px 0;
     }
 
     .flash-text h2 {
-        font-size: 30px;
+        font-size: 24px;
     }
 
     .small-countdown {
@@ -452,15 +452,7 @@
         min-width: 180px;
     }
 
-    /* Products */
-    .pro {
-        width: 45%;
-        min-width: 200px;
-    }
-
-    .pro-container {
-        justify-content: center;
-    }
+    /* Products - Grid layout handled by mobile-first CSS in style.css */
 
     /* Banner */
     #banner {
@@ -671,21 +663,15 @@
 
     /* Dashboard */
     .profile-header-card {
-        flex-direction: column;
-        text-align: center;
-        padding: 40px 30px;
+        padding: 30px 20px;
     }
 
     .profile-info-main {
-        flex-direction: column;
-        text-align: center;
-        margin-bottom: 30px;
+        gap: 12px;
     }
 
     .profile-stats-summary {
-        justify-content: center;
-        gap: 30px;
-        flex-wrap: wrap;
+        gap: 15px 20px;
     }
 
     .settings-grid {
@@ -828,11 +814,7 @@
         min-width: 150px;
     }
 
-    /* Products */
-    .pro {
-        width: 46%;
-        min-width: 180px;
-    }
+    /* Products - Grid layout handled by mobile-first CSS in style.css */
 
     /* Flash Hero */
     #flash-hero h1 {
@@ -895,6 +877,25 @@
         font-weight: 800;
         font-size: 12px;
         color: var(--text-muted);
+    }
+
+    /* Product name - align left with wrapping */
+    #cart table td:nth-child(3) {
+        text-align: left;
+        padding-left: 15px;
+        padding-right: 15px;
+        justify-content: flex-start;
+        white-space: normal;
+        word-wrap: break-word;
+        line-height: 1.6;
+        display: block;
+    }
+
+    #cart table td:nth-child(3)::before {
+        position: static;
+        display: block;
+        margin-bottom: 8px;
+        width: 100%;
     }
 
     #cart table td:last-child {
@@ -1058,38 +1059,40 @@
 
     /* Flash Highlight */
     #flash-highlight {
-        padding: 15px 10px;
+        padding: 12px 10px;
     }
 
     .flash-banner {
-        padding: 30px 15px;
-        border-radius: 20px;
+        padding: 20px 15px;
+        border-radius: 16px;
+        min-height: 180px;
     }
 
     .flash-text h2 {
-        font-size: 24px;
-    }
-
-    .flash-text p {
-        font-size: 14px;
-    }
-
-    .small-countdown {
-        gap: 8px;
-    }
-
-    .small-countdown .time-box {
-        min-width: 55px;
-        padding: 8px 6px;
-    }
-
-    .small-countdown .time-box span {
         font-size: 20px;
     }
 
+    .flash-text p {
+        font-size: 13px;
+    }
+
+    .small-countdown {
+        gap: 6px;
+        margin: 12px 0;
+    }
+
+    .small-countdown .time-box {
+        min-width: 48px;
+        padding: 6px 4px;
+    }
+
+    .small-countdown .time-box span {
+        font-size: 18px;
+    }
+
     .flash-products-mini .pro {
-        min-width: 200px;
-        padding: 10px;
+        min-width: 180px;
+        padding: 8px;
     }
 
     /* Category */
@@ -1118,9 +1121,9 @@
         max-width: none;
         min-width: auto;
         padding: 30px 20px;
-        flex-direction: row;
-        text-align: left;
-        gap: 20px;
+        flex-direction: column;
+        text-align: center;
+        gap: 15px;
     }
 
     #feature .fe-box i {
@@ -1128,7 +1131,7 @@
         height: 60px;
         line-height: 60px;
         font-size: 24px;
-        margin-bottom: 0;
+        margin-bottom: 10px;
         flex-shrink: 0;
     }
 
@@ -1141,54 +1144,25 @@
         font-size: 24px;
     }
 
-    .pro-container {
-        gap: 12px;
-        justify-content: space-between;
-    }
-
-    .pro {
-        width: 47%;
-        min-width: 0;
-        margin: 8px 0;
-        padding: 10px;
-        border-radius: 18px;
-    }
-
-    .pro .pro-img-wrapper {
-        border-radius: 14px;
-    }
-
-    .pro .des {
-        padding: 10px 3px 0;
-        gap: 4px;
-    }
-
-    .pro .des h5 {
-        font-size: 13px;
-    }
-
-    .pro .des h4 {
-        font-size: 16px;
-    }
+    /* Product cards use mobile-first grid CSS in style.css */
 
     .brand-tag {
         font-size: 10px;
         letter-spacing: 1px;
     }
 
-    .product-actions-text {
-        margin-top: 10px;
-        gap: 6px;
-    }
-
-    .product-actions-text button {
-        font-size: 10px;
-        padding: 8px 6px;
-        border-radius: 14px;
-    }
+    /* Product cards now use mobile-first CSS in style.css */
 
     .quick-view-btn {
         display: none;
+    }
+
+    /* Discount Badge Mobile */
+    .discount-badge,
+    .badge-sale {
+        font-size: 12px;
+        top: 10px;
+        left: 10px;
     }
 
     /* Banner */
@@ -1525,27 +1499,77 @@
     .profile-header-card {
         padding: 30px 20px;
         border-radius: 20px;
+        flex-wrap: nowrap;
+    }
+
+    /* Restructure on tablet/mobile */
+    .profile-info-main {
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
     }
 
     .avatar-container {
-        width: 100px;
-        height: 100px;
+        width: 80px;
+        height: 80px;
+        margin-bottom: 24px;
+        position: relative;
+    }
+
+    .avatar-edit-btn {
+        width: 24px;
+        height: 24px;
+        font-size: 10px;
+    }
+
+    .avatar-edit-btn i {
+        font-size: 10px;
     }
 
     .profile-avatar {
-        font-size: 36px;
+        font-size: 28px;
+    }
+
+    .profile-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
     }
 
     .profile-text h2 {
-        font-size: 26px;
+        font-size: 18px;
+        order: 1;
     }
 
+    .profile-text p {
+        font-size: 11px;
+        order: 2;
+    }
+
+    .role-badge {
+        font-size: 9px;
+        padding: 4px 10px;
+        order: 3;
+        margin-top: -10px;
+        position: absolute;
+        bottom: -28px;
+        left: 50%;
+        transform: translateX(-50%);
+    }
+
+    /* Reduce stats size slightly */
     .profile-stats-summary {
-        gap: 20px;
+        gap: 10px 15px;
+        grid-template-columns: repeat(2, minmax(70px, 1fr));
     }
 
     .summary-value {
-        font-size: 24px;
+        font-size: 16px;
+    }
+
+    .summary-label {
+        font-size: 8px;
     }
 
     .dash-card {
@@ -1639,12 +1663,118 @@
         height: 48px;
         font-size: 20px;
     }
+
+    /* Pagination Tablet/Mobile */
+    #pagination {
+        margin: 40px 0 25px;
+        padding: 18px 10px;
+    }
+
+    #pagination a {
+        padding: 11px 16px;
+        font-size: 13px;
+        margin: 0 5px;
+        min-width: 42px;
+    }
+
+    #pagination a i {
+        font-size: 13px;
+    }
 }
 
 /* ------------------------------------------------------------------
    480px — Standard Mobile
    ------------------------------------------------------------------ */
 @media screen and (max-width: 480px) {
+
+    /* Profile Header - Horizontal Mobile */
+    .profile-header-card {
+        padding: 20px 12px;
+        flex-wrap: nowrap;
+    }
+
+    /* Restructure layout on mobile */
+    .profile-info-main {
+        flex-direction: column;
+        align-items: center;
+        gap: 3px;
+    }
+
+    .avatar-container {
+        width: 70px;
+        height: 70px;
+        position: relative;
+        margin-bottom: 23px;
+    }
+
+    .avatar-edit-btn {
+        width: 22px;
+        height: 22px;
+        font-size: 9px;
+        bottom: 1px;
+        right: 1px;
+    }
+
+    .avatar-edit-btn i {
+        font-size: 9px;
+    }
+
+    .profile-avatar {
+        font-size: 24px;
+    }
+
+    .profile-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0px;
+    }
+
+    .profile-text h2 {
+        font-size: 16px;
+        order: 1;
+        margin-bottom: 0;
+        line-height: 1;
+    }
+
+    .profile-text p {
+        font-size: 10px;
+        order: 2;
+        margin-bottom: 0;
+        margin-top: 1px;
+        line-height: 1.1;
+        opacity: 0.85;
+    }
+
+    .role-badge {
+        font-size: 8px;
+        padding: 4px 10px;
+        order: 3;
+        margin-top: 0;
+        position: absolute;
+        bottom: -25px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    /* Reduce stats size */
+    .profile-stats-summary {
+        gap: 8px 12px;
+        grid-template-columns: repeat(2, minmax(60px, 1fr));
+    }
+
+    .summary-value {
+        font-size: 14px;
+        line-height: 1.1;
+    }
+
+    .summary-label {
+        font-size: 7px;
+        line-height: 1.1;
+    }
 
     /* Hero fine-tuning */
     #hero {
@@ -1659,33 +1789,27 @@
         font-size: 17px;
     }
 
-    /* Products — still 2 columns but tighter */
-    .pro {
-        width: 47%;
-        padding: 8px;
-    }
+    /* Product cards now use mobile-first CSS in style.css */
 
-    .pro .des h5 {
-        font-size: 12px;
-    }
-
-    .pro .des h4 {
-        font-size: 14px;
-    }
-
-    .product-actions-text button {
-        font-size: 9px;
-        padding: 7px 4px;
+    /* Discount Badge - Smaller Mobile */
+    .discount-badge,
+    .badge-sale {
+        font-size: 11px;
+        top: 8px;
+        left: 8px;
     }
 
     /* Feature boxes */
     #feature .fe-box {
-        padding: 20px 15px;
+        padding: 25px 15px;
+        flex-direction: column;
+        text-align: center;
     }
 
     #feature .fe-box i {
         width: 50px;
         height: 50px;
+        margin-bottom: 8px;
         line-height: 50px;
         font-size: 20px;
     }
@@ -1708,17 +1832,140 @@
         font-size: 20px;
     }
 
-    /* Dashboard refinements */
-    .profile-text h2 {
-        font-size: 22px;
+    /* Dashboard refinements - Horizontal Mobile */
+    .profile-header-card {
+        padding: 18px 10px;
+        flex-wrap: nowrap;
     }
 
-    .summary-value {
+    /* Restructure layout on small mobile */
+    .profile-info-main {
+        flex-direction: column;
+        align-items: center;
+        gap: 2px;
+    }
+
+    .avatar-container {
+        width: 60px;
+        height: 60px;
+        margin-bottom: 20px;
+        position: relative;
+    }
+
+    .avatar-edit-btn {
+        width: 20px;
+        height: 20px;
+        font-size: 8px;
+        bottom: 0px;
+        right: 0px;
+    }
+
+    .avatar-edit-btn i {
+        font-size: 8px;
+    }
+
+    .profile-avatar {
         font-size: 20px;
     }
 
+    .profile-text {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+        gap: 0px;
+    }
+
+    .profile-text h2 {
+        font-size: 14px;
+        order: 1;
+        margin-bottom: 0;
+        line-height: 1;
+    }
+
+    .profile-text p {
+        font-size: 9px;
+        order: 2;
+        margin-bottom: 0;
+        margin-top: 1px;
+        line-height: 1.1;
+        opacity: 0.85;
+    }
+
+    .role-badge {
+        font-size: 7px;
+        padding: 3px 8px;
+        order: 3;
+        margin-top: 0;
+        position: absolute;
+        bottom: -22px;
+        left: 50%;
+        transform: translateX(-50%);
+        white-space: nowrap;
+        line-height: 1;
+    }
+
+    /* Reduce stats size more */
+    .profile-stats-summary {
+        gap: 6px 10px;
+        grid-template-columns: repeat(2, minmax(55px, 1fr));
+    }
+
+    .summary-value {
+        font-size: 12px;
+        line-height: 1.1;
+    }
+
     .summary-label {
+        font-size: 6px;
+        line-height: 1.1;
+    }
+
+    /* Enhanced Dashboard Mini-List Mobile Optimization */
+    .mini-list {
+        gap: 10px;
+        padding: 12px 0;
+        scroll-snap-type: x mandatory;
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .mini-item {
+        min-width: 130px;
+        padding: 12px;
+        scroll-snap-align: start;
+        scroll-snap-stop: always;
+    }
+
+    .mini-item img {
+        width: 70px;
+        height: 70px;
+    }
+
+    .mini-item-info h4 {
+        font-size: 12px;
+        max-width: 110px;
+    }
+
+    .mini-item-info p {
         font-size: 10px;
+    }
+
+    /* Dashboard Cards Mobile Spacing */
+    .dash-card {
+        padding: 20px 15px;
+        margin-bottom: 25px;
+    }
+
+    .dash-header-modern {
+        margin-bottom: 15px;
+    }
+
+    .dash-header-modern h3 {
+        font-size: 16px;
+    }
+
+    .view-link {
+        font-size: 11px;
     }
 
     /* Category Showcase Responsive */
@@ -1729,6 +1976,23 @@
     /* Flash sale mini products */
     .flash-products-mini .pro {
         min-width: 170px;
+    }
+
+    /* Pagination Mobile */
+    #pagination {
+        margin: 30px 0 20px;
+        padding: 15px 10px;
+    }
+
+    #pagination a {
+        padding: 10px 14px;
+        font-size: 13px;
+        margin: 0 4px;
+        min-width: 40px;
+    }
+
+    #pagination a i {
+        font-size: 13px;
     }
 }
 
@@ -1753,15 +2017,13 @@
         font-size: 10px;
     }
 
-    /* Single column products on very small screens */
+    /* Keep 2-column products on very small screens */
     .pro {
-        width: 100%;
+        width: 47% !important;
+        padding: 6px;
     }
 
-    .pro-container {
-        flex-direction: column;
-        align-items: center;
-    }
+    /* Product cards now use mobile-first CSS in style.css */
 
     /* Footer even tighter */
     footer {
@@ -1795,6 +2057,24 @@
     #auth-section button {
         padding: 10px 30px;
         font-size: 11px;
+    }
+
+    /* Pagination Small Mobile */
+    #pagination {
+        margin: 25px 0 15px;
+        padding: 12px 5px;
+    }
+
+    #pagination a {
+        padding: 8px 12px;
+        font-size: 12px;
+        margin: 0 3px;
+        min-width: 36px;
+        border-radius: 8px;
+    }
+
+    #pagination a i {
+        font-size: 12px;
     }
 }
 
@@ -2058,6 +2338,46 @@ body.dark-mode .mob-link-item>a.active {
 .mob-has-sub.sub-open .mob-chevron {
     transform: rotate(180deg);
     color: var(--primary-color);
+}
+
+/* ---- Shop Link with Separate Toggle Button ---- */
+.mob-has-sub {
+    position: relative;
+}
+
+.mob-has-sub .mob-shop-link {
+    flex: 1;
+}
+
+.mob-sub-toggle {
+    background: transparent;
+    border: none;
+    padding: 12px 15px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--text-muted);
+    transition: all 0.3s ease;
+    margin-left: auto;
+}
+
+.mob-sub-toggle:hover {
+    color: var(--primary-color);
+}
+
+.mob-sub-toggle:focus {
+    outline: none;
+}
+
+.mob-has-sub > a,
+.mob-has-sub > .mob-sub-toggle {
+    display: inline-flex;
+}
+
+.mob-link-item.mob-has-sub > a {
+    flex: 1;
+    padding-right: 0;
 }
 
 /* ---- Sub Menu (Accordion) ---- */
