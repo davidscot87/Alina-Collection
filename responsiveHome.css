@@ -1246,6 +1246,15 @@
     footer .col a {
         font-size: 13px;
         margin-bottom: 14px;
+        line-height: 1.7;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+    }
+
+    footer .col h4 {
+        font-size: 15px;
+        margin-bottom: 20px;
     }
 
     footer .footer-brand p {
@@ -1257,7 +1266,10 @@
     }
 
     .footer-bottom-content p {
-        font-size: 12px;
+        font-size: 13px;
+        line-height: 1.7;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     footer .follow .icon a {
@@ -2031,7 +2043,23 @@
     }
 
     footer .col a {
-        font-size: 12px;
+        font-size: 11px;
+        line-height: 1.8;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        white-space: normal;
+        margin-bottom: 12px;
+    }
+
+    .footer-bottom-content {
+        padding: 0 12px;
+    }
+
+    .footer-bottom-content p {
+        font-size: 11px;
+        line-height: 1.8;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     #banner3 .banner-box {

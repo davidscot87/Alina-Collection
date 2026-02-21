@@ -3389,6 +3389,10 @@ footer .col a {
     display: block;
     transition: var(--transition);
     position: relative;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 footer .col a::before {
@@ -3409,6 +3413,31 @@ footer .col a:hover {
 
 footer .col a:hover::before {
     width: 100%;
+}
+
+/* Non-clickable footer links (Store Policies & Get In Touch) */
+footer .col a[style*="pointer-events: none"] {
+    cursor: default;
+    line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+}
+
+footer .col a[style*="pointer-events: none"]::before {
+    display: none;
+}
+
+footer .col a[style*="pointer-events: none"]:hover {
+    transform: none;
+    color: #94a3b8;
+}
+
+footer .col a[style*="pointer-events: none"] i {
+    color: var(--primary-color);
+    margin-right: 8px;
+    font-size: 14px;
+    flex-shrink: 0;
 }
 
 footer .footer-brand p {
@@ -3481,11 +3510,14 @@ footer .follow .icon a:hover {
     box-shadow: 0 8px 20px rgba(221, 45, 74, 0.4);
 }
 
-footer .footer-contact p {
+footer .footer-contact a {
     display: flex;
     align-items: flex-start;
     gap: 12px;
-    line-height: 1.6;
+    line-height: 1.8;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
 }
 
 footer .footer-contact i {
@@ -3495,6 +3527,12 @@ footer .footer-contact i {
     text-align: center;
     margin-top: 3px;
     flex-shrink: 0;
+}
+
+footer .footer-contact a span {
+    flex: 1;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .footer-bottom {
@@ -3517,13 +3555,20 @@ footer .footer-contact i {
     display: flex;
     justify-content: center;
     align-items: center;
+    padding: 0 20px;
 }
 
 .footer-bottom-content p {
-    font-size: 13px;
+    font-size: 14px;
     color: #64748b;
     font-weight: 500;
     letter-spacing: 0.5px;
+    line-height: 1.6;
+    text-align: center;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    white-space: normal;
+    max-width: 100%;
 }
 
 

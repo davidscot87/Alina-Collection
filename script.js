@@ -7,7 +7,7 @@ const CONFIG = {
     brandName: "Alina Collection",
     logoPath: "image/Logo/logo.png",
     phone: "+977 970-5978322",
-    email: "hello@alinacollection.com",
+    email: "alisharouniyar291@gmail.com",
     address: "Ithari BP Chowk, Nepal",
 };
 
@@ -165,10 +165,7 @@ const LayoutManager = {
                     <div class="follow">
                         <h4>Connect With Us</h4>
                         <div class="icon">
-                            <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                            <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
-                            <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                            <a href="#" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                            <a href="https://tiktok.com/@clothhouse06" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                         </div>
                     </div>
                 </div>
@@ -184,11 +181,15 @@ const LayoutManager = {
 
                     <div class="col">
                         <h4>Store Policies</h4>
-                        <p style="font-size: 13px; line-height: 1.8; color: var(--text-muted); margin: 10px 0;">
-                            <i class="fas fa-calendar-week" style="color: var(--primary-color); margin-right: 8px;"></i> New arrivals every week<br>
-                            <i class="fas fa-money-bill-wave" style="color: var(--primary-color); margin-right: 8px;"></i> Cash on Delivery available<br>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
+                            <i class="fas fa-calendar-week" style="color: var(--primary-color); margin-right: 8px;"></i> New arrivals every week
+                        </a>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
+                            <i class="fas fa-money-bill-wave" style="color: var(--primary-color); margin-right: 8px;"></i> Cash on Delivery available
+                        </a>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
                             <i class="fas fa-ban" style="color: var(--primary-color); margin-right: 8px;"></i> No returns or exchanges
-                        </p>
+                        </a>
                     </div>
 
                     <div class="col">
@@ -201,10 +202,15 @@ const LayoutManager = {
 
                     <div class="col footer-contact">
                         <h4>Get In Touch</h4>
-                        <p><i class="fas fa-map-marker-alt"></i> ${CONFIG.address}</p>
-                        <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
-                        <p><i class="fas fa-envelope"></i> ${CONFIG.email}</p>
-                        <p><i class="fas fa-clock"></i> 8:00 AM - 6:00 PM, Sun-Fri</p>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
+                            <i class="fas fa-map-marker-alt"></i> ${CONFIG.address}
+                        </a>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
+                            <i class="fas fa-phone-alt"></i> ${CONFIG.phone}
+                        </a>
+                        <a href="javascript:void(0)" style="pointer-events: none; cursor: default;">
+                            <i class="fas fa-envelope"></i> ${CONFIG.email}
+                        </a>
                     </div>
                 </div>
             </div>
@@ -273,9 +279,7 @@ const LayoutManager = {
 
             <div class="mob-drawer-footer">
                 <div class="mob-drawer-social">
-                    <a href="#" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
-                    <a href="#" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
-                    <a href="#" aria-label="YouTube"><i class="fab fa-youtube"></i></a>
+                    <a href="https://tiktok.com/@clothhouse06" target="_blank" rel="noopener noreferrer" aria-label="TikTok"><i class="fab fa-tiktok"></i></a>
                 </div>
                 <div class="mob-drawer-contact">
                     <p><i class="fas fa-phone-alt"></i> ${CONFIG.phone}</p>
@@ -652,6 +656,45 @@ function convertPrice(nprPrice) {
 }
 
 // === 3. Authentication & Dashboards ===
+
+// Authentication Guard - Protects pages that require login
+function checkAuthenticationRequired() {
+    const protectedPages = [
+        'user-dashboard.html',
+        'checkout.html',
+        'admin-users.html',
+        'admin-orders.html',
+        'admin-inventory.html',
+        'admin-product-config.html'
+    ];
+    
+    const currentPage = window.location.pathname.split('/').pop();
+    const isProtectedPage = protectedPages.some(page => currentPage.includes(page));
+    
+    if (isProtectedPage) {
+        const currentUser = localStorage.getItem('currentUser');
+        
+        // Check if user is authenticated (only need currentUser to exist)
+        if (!currentUser) {
+            // User is not authenticated, redirect to login
+            showToast('⚠ Please login to access this page');
+            setTimeout(() => {
+                window.location.replace('index.html');
+            }, 1000);
+            return false;
+        }
+    }
+    
+    return true;
+}
+
+// Run auth check on page load
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', checkAuthenticationRequired);
+} else {
+    checkAuthenticationRequired();
+}
+
 function handleAuth() {
     // Note: Authentication is now strictly managed by auth.js using Firebase.
     // This function is kept for any UI-specific toggles that might still be needed.
@@ -757,6 +800,9 @@ function logoutUser() {
     showLogoutConfirmation();
 }
 
+// Make logout globally accessible
+window.logoutUser = logoutUser;
+
 function showLogoutConfirmation() {
     // Create modal overlay
     const overlay = document.createElement('div');
@@ -833,21 +879,64 @@ function confirmLogout() {
     // Close modal first
     closeLogoutModal();
     
-    // Perform logout
-    localStorage.removeItem('currentUser');
-    localStorage.removeItem('isLoggedIn');
+    // Show loading state
+    showToast('Logging out...');
     
-    // Global bridge for auth.js to call firebase signOut
-    if (window.firebaseSignOut) {
-        window.firebaseSignOut();
+    // Perform complete logout with proper async handling
+    performCompleteLogout();
+}
+
+async function performCompleteLogout() {
+    try {
+        // 1. Clear Firebase session (if exists)
+        if (window.firebaseSignOut) {
+            try {
+                await window.firebaseSignOut();
+            } catch (firebaseError) {
+                console.log('Firebase signout:', firebaseError.message);
+                // Continue with local logout even if Firebase fails
+            }
+        }
+        
+        // 2. Clear all localStorage authentication data
+        localStorage.removeItem('currentUser');
+        localStorage.removeItem('isLoggedIn');
+        localStorage.removeItem('authToken');
+        localStorage.removeItem('refreshToken');
+        localStorage.removeItem('userSession');
+        
+        // 3. Clear sessionStorage
+        sessionStorage.clear();
+        
+        // 4. Clear any auth-related cookies (if used)
+        document.cookie.split(";").forEach(function(c) { 
+            document.cookie = c.replace(/^ +/, "").replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/"); 
+        });
+        
+        // 5. Reset global auth state
+        window.currentUser = null;
+        window.isAuthenticated = false;
+        
+        // 6. Show success message
+        showToast('✓ Logged out successfully');
+        
+        // 7. Redirect after ensuring all cleanup is done
+        setTimeout(() => {
+            // Force reload to clear any cached state
+            window.location.replace('index.html');
+        }, 500);
+        
+    } catch (error) {
+        console.error('Logout error:', error);
+        showToast('⚠ Logout completed with warnings');
+        
+        // Force logout anyway
+        localStorage.clear();
+        sessionStorage.clear();
+        setTimeout(() => {
+            window.location.replace('index.html');
+        }, 500);
     }
-    
-    showToast('Logged out successfully');
-    
-    // Redirect to home page
-    setTimeout(() => {
-        window.location.href = 'index.html';
-    }, 1000);
 }
 
 // === Account Deletion System ===
@@ -1111,9 +1200,13 @@ function renderProducts(containerId, limit = null, category = null, search = nul
         const isWishlisted = wishlist.includes(p.id);
         const showFlashBadge = !!p.isFlash;
         
-        // Calculate discount percentage
-        const oldPrice = p.oldPrice || (showFlashBadge ? p.price * 1.5 : null);
-        const discountPercent = oldPrice ? Math.round(((oldPrice - p.price) / oldPrice) * 100) : 0;
+        // Use admin-defined discount or calculate from oldPrice
+        let discountPercent = p.discountPercent || 0;
+        
+        // If no admin discount but oldPrice exists, calculate it
+        if (!discountPercent && p.oldPrice && p.oldPrice > p.price) {
+            discountPercent = Math.round(((p.oldPrice - p.price) / p.oldPrice) * 100);
+        }
 
         return `
             <div class="pro" onclick="window.location.href='sproduct.html?id=${p.id}'">
@@ -1133,7 +1226,7 @@ function renderProducts(containerId, limit = null, category = null, search = nul
                     </div>
                     <div class="price-wrapper">
                         <span class="current-price">${convertPrice(p.price)}</span>
-                        ${oldPrice ? `<span class="original-price">${convertPrice(oldPrice)}</span>` : ''}
+                        ${p.oldPrice ? `<span class="original-price">${convertPrice(p.oldPrice)}</span>` : ''}
                     </div>
                     <div class="product-actions">
                         <button onclick="event.stopPropagation(); addToCart(${p.id})" class="btn-add-cart">
@@ -1148,29 +1241,6 @@ function renderProducts(containerId, limit = null, category = null, search = nul
     });
 
     container.innerHTML = htmlBuffer.join('');
-
-    // Add "View All" card at the end for mobile horizontal scroll (only for limited containers)
-    if (limit && window.innerWidth < 640) {
-        const viewAllCard = document.createElement('a');
-        viewAllCard.className = 'view-all-card';
-        
-        // Determine the link based on container type
-        let viewAllLink = 'shop.html';
-        if (isFlashContainer) {
-            viewAllLink = 'flash-sale.html';
-        } else if (category) {
-            viewAllLink = `shop.html?cat=${category}`;
-        }
-        
-        viewAllCard.href = viewAllLink;
-        viewAllCard.innerHTML = `
-            <i class="fa-solid fa-grid-2"></i>
-            <div class="view-all-text">View All</div>
-            <div class="view-all-subtitle">Explore our complete collection</div>
-        `;
-        
-        container.appendChild(viewAllCard);
-    }
 }
 
 function generateStarRating(rating) {
@@ -1508,13 +1578,34 @@ function renderAdminOrders() {
     const fullOrderTable = document.querySelector('#admin-full-order-table tbody');
     const recentOrderTable = document.querySelector('#admin-recent-order-table tbody');
 
-    const ordersHTML = allOrders.slice().reverse().map(o => `
+    const ordersHTML = allOrders.slice().reverse().map(o => {
+        // Get product details for each order item
+        const productDetails = o.items.map(item => {
+            const product = allProducts.find(p => p.id === item.id);
+            return {
+                ...item,
+                name: product ? product.name : 'Unknown Product',
+                image: product ? product.image : 'image/product/f1.jpg'
+            };
+        }).map(item => 
+            `<div style="display: flex; align-items: center; gap: 8px; margin: 4px 0;">
+                <img src="${item.image}" alt="${item.name}" style="width: 30px; height: 30px; border-radius: 6px; object-fit: cover;" onerror="this.src='image/product/f1.jpg'">
+                <span style="font-size: 12px;">${item.name} (x${item.quantity})</span>
+            </div>`
+        ).join('');
+
+        return `
         <tr>
             <td data-label="REF"><strong>#${o.id}</strong></td>
             <td data-label="DATE">${o.date}</td>
             <td data-label="CLIENT">
                 <div>${o.userEmail}</div>
-                <div style="font-size:11px; color:#94a3b8;">${o.items.length} unique assets</div>
+                <div style="font-size:11px; color:#94a3b8;">${o.items.length} item(s)</div>
+            </td>
+            <td data-label="PRODUCTS">
+                <div style="max-height: 150px; overflow-y: auto;">
+                    ${productDetails}
+                </div>
             </td>
             <td data-label="TOTAL"><strong>${convertPrice(o.total)}</strong></td>
             <td data-label="STATUS"><span class="status-badge status-${o.status}">${o.status}</span></td>
@@ -1528,7 +1619,8 @@ function renderAdminOrders() {
                 </select>
             </td>
         </tr>
-    `).join('');
+    `;
+    }).join('');
 
     if (fullOrderTable) fullOrderTable.innerHTML = ordersHTML;
 
@@ -1734,10 +1826,11 @@ function saveProduct(e) {
     const image = document.getElementById('edit-image').value || 'image/product/f1.jpg';
     const isFlash = document.getElementById('edit-flash')?.checked || false;
     const oldPrice = parseInt(document.getElementById('edit-old-price')?.value) || 0;
+    const discountPercent = parseInt(document.getElementById('edit-discount')?.value) || 0;
 
     const productData = id ?
-        { ...allProducts.find(p => p.id == id), name, brand, price, cat, stock, description, image, isFlash, oldPrice } :
-        { id: allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0, isFlash, oldPrice };
+        { ...allProducts.find(p => p.id == id), name, brand, price, cat, stock, description, image, isFlash, oldPrice, discountPercent } :
+        { id: allProducts.length > 0 ? Math.max(...allProducts.map(p => p.id)) + 1 : 1, name, brand, price, cat, stock, description, image, rating: "5.0", reviewCount: 0, isFlash, oldPrice, discountPercent };
 
     if (id) {
         const idx = allProducts.findIndex(p => p.id == id);

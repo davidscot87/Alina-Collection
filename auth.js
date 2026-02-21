@@ -11,7 +11,7 @@ import {
 
 const googleProvider = new GoogleAuthProvider();
 
-// Bridge for script.js legacy logout
+// Bridge for script.js legacy logout - Returns promise for proper async handling
 window.firebaseSignOut = () => signOut(auth);
 
 // Initialize UI handlers for login page

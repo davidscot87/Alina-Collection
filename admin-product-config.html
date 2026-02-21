@@ -37,79 +37,96 @@
 
                     <div class="settings-section">
                         <h4 class="section-title">Product Details</h4>
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label>Product Name</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-tag"></i>
-                                    <input type="text" id="edit-name" placeholder="e.g. Silk Saree" required>
-                                </div>
-                            </div>
-                            <div class="input-group">
-                                <label>Brand Name</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-copyright"></i>
-                                    <input type="text" id="edit-brand" placeholder="e.g. Alina Boutique" required>
-                                </div>
+                        
+                        <!-- Product Name - Full Row -->
+                        <div class="input-group">
+                            <label>Product Name</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-tag"></i>
+                                <input type="text" id="edit-name" placeholder="e.g. Silk Saree" required>
                             </div>
                         </div>
 
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label>Sale Price (NPR)</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-tag"></i>
-                                    <input type="number" id="edit-price" placeholder="0" required>
-                                </div>
-                            </div>
-                            <div class="input-group" id="old-price-group" style="display: none;">
-                                <label>Original Price (Strike-through)</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-money-bill-wave"></i>
-                                    <input type="number" id="edit-old-price" placeholder="0">
-                                </div>
+                        <!-- Brand Name - Full Row -->
+                        <div class="input-group">
+                            <label>Brand Name</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-copyright"></i>
+                                <input type="text" id="edit-brand" placeholder="e.g. Alina Boutique" required>
                             </div>
                         </div>
-                        <div class="input-grid">
-                            <div class="input-group">
-                                <label>Initial Stock</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-boxes-stacked"></i>
-                                    <input type="number" id="edit-stock" placeholder="0" required>
-                                </div>
-                            </div>
 
-                            <div class="input-group">
-                                <label>Category</label>
-                                <div class="input-wrapper">
-                                    <i class="fa-solid fa-layer-group"></i>
-                                    <select id="edit-cat" required>
-                                        <option value="Tops">Tops & Shirts</option>
-                                        <option value="Bottoms">Pants & Bottoms</option>
-                                        <option value="Dresses">Dresses</option>
-                                        <option value="Outerwear">Outerwear</option>
-                                        <option value="Footwear">Footwear</option>
-                                        <option value="Accessories">Accessories</option>
-                                        <option value="Nepali Heritage">Nepali Heritage</option>
-                                    </select>
-                                </div>
+                        <!-- Sale Price - Full Row -->
+                        <div class="input-group">
+                            <label>Sale Price (NPR)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-tag"></i>
+                                <input type="number" id="edit-price" placeholder="0" required>
                             </div>
+                        </div>
 
-                            <div class="input-group">
-                                <label>Promotion Status</label>
-                                <div class="input-wrapper" style="background: transparent;">
-                                    <label class="switch-modern"
-                                        style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
-                                        <input type="checkbox" id="edit-flash" style="display: none;">
-                                        <div class="slider-round"
-                                            style="width: 50px; height: 26px; background: #e2e8f0; border-radius: 30px; position: relative; transition: .4s;">
-                                            <div class="slider-knob"
-                                                style="position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .4s;">
-                                            </div>
+                        <!-- Original Price - Full Row (Conditional) -->
+                        <div class="input-group" id="old-price-group" style="display: none;">
+                            <label>Original Price (Strike-through)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-money-bill-wave"></i>
+                                <input type="number" id="edit-old-price" placeholder="0">
+                            </div>
+                        </div>
+                        
+                        <!-- Discount Badge - Full Row -->
+                        <div class="input-group">
+                            <label>Discount Badge (Optional)</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-percent"></i>
+                                <input type="number" id="edit-discount" placeholder="0" min="0" max="99">
+                            </div>
+                            <small style="color: var(--dash-text-muted); font-size: 12px; margin-top: 5px; display: block;">
+                                Enter discount percentage (e.g., 20 for 20% OFF badge). Leave empty for no badge.
+                            </small>
+                        </div>
+                        
+                        <!-- Initial Stock - Full Row -->
+                        <div class="input-group">
+                            <label>Initial Stock</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-boxes-stacked"></i>
+                                <input type="number" id="edit-stock" placeholder="0" required>
+                            </div>
+                        </div>
+
+                        <!-- Category - Full Row -->
+                        <div class="input-group">
+                            <label>Category</label>
+                            <div class="input-wrapper">
+                                <i class="fa-solid fa-layer-group"></i>
+                                <select id="edit-cat" required>
+                                    <option value="Tops">Tops & Shirts</option>
+                                    <option value="Bottoms">Pants & Bottoms</option>
+                                    <option value="Dresses">Dresses</option>
+                                    <option value="Outerwear">Outerwear</option>
+                                    <option value="Footwear">Footwear</option>
+                                    <option value="Accessories">Accessories</option>
+                                    <option value="Nepali Heritage">Nepali Heritage</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Promotion Status - Full Row -->
+                        <div class="input-group">
+                            <label>Promotion Status</label>
+                            <div class="input-wrapper" style="background: transparent;">
+                                <label class="switch-modern"
+                                    style="display: flex; align-items: center; gap: 15px; cursor: pointer;">
+                                    <input type="checkbox" id="edit-flash" style="display: none;">
+                                    <div class="slider-round"
+                                        style="width: 50px; height: 26px; background: #e2e8f0; border-radius: 30px; position: relative; transition: .4s;">
+                                        <div class="slider-knob"
+                                            style="position: absolute; height: 20px; width: 20px; left: 3px; bottom: 3px; background: white; border-radius: 50%; transition: .4s;">
                                         </div>
-                                        <span style="font-size: 14px; font-weight: 700;">Flash Sale Item</span>
-                                    </label>
-                                </div>
+                                    </div>
+                                    <span style="font-size: 14px; font-weight: 700;">Flash Sale Item</span>
+                                </label>
                             </div>
                         </div>
 
@@ -201,6 +218,7 @@
                     document.getElementById('edit-brand').value = p.brand || "";
                     document.getElementById('edit-price').value = p.price;
                     document.getElementById('edit-old-price').value = p.oldPrice || "";
+                    document.getElementById('edit-discount').value = p.discountPercent || "";
                     document.getElementById('edit-cat').value = p.cat;
                     document.getElementById('edit-stock').value = p.stock;
                     document.getElementById('edit-desc').value = p.description || "";

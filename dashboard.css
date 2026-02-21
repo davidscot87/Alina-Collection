@@ -406,6 +406,8 @@ body.dark-mode .role-badge.role-user {
 .input-group {
     margin-bottom: 25px;
     flex: 1;
+    min-height: fit-content;
+    height: auto;
 }
 
 .input-group label {
@@ -414,6 +416,16 @@ body.dark-mode .role-badge.role-user {
     font-weight: 700;
     font-size: 13px;
     color: var(--dash-text);
+    line-height: 1.4;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.input-group small {
+    display: block;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .input-wrapper {
@@ -443,11 +455,17 @@ body.dark-mode .role-badge.role-user {
     font-weight: 500;
     transition: var(--transition);
     outline: none;
+    min-height: 52px;
+    height: auto;
+    line-height: 1.5;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .input-wrapper select {
     appearance: none;
     cursor: pointer;
+    height: 52px;
 }
 
 .input-wrapper input:focus,
@@ -1693,9 +1711,18 @@ body.dark-mode .track-input-group input {
         font-size: 9px;
     }
 
-    /* Table Responsiveness */
+    /* Table Responsiveness - Enhanced Mobile */
     .table-responsive {
         border: 0;
+        width: 100%;
+        overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
+        margin: 0 -15px;
+        padding: 0 15px;
+    }
+
+    table {
+        min-width: 100%;
     }
 
     table thead {
@@ -1708,32 +1735,102 @@ body.dark-mode .track-input-group input {
         border-radius: 15px;
         overflow: hidden;
         border: 1px solid var(--dash-border);
+        background: var(--dash-bg);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     table td {
-        display: block;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
         text-align: right;
-        padding-left: 50%;
+        padding: 15px 20px;
         position: relative;
         border-bottom: 1px solid var(--dash-border);
+        min-height: 50px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
 
     table td::before {
         content: attr(data-label);
-        position: absolute;
-        left: 20px;
-        width: 45%;
-        padding-right: 10px;
-        white-space: nowrap;
-        text-align: left;
         font-weight: 700;
         font-size: 11px;
         text-transform: uppercase;
         color: var(--dash-text-muted);
+        text-align: left;
+        flex: 0 0 40%;
+        padding-right: 15px;
     }
 
     table td:last-child {
         border-bottom: 0;
+    }
+
+    /* Action buttons in mobile tables */
+    table td .action-btns,
+    table td .btn-group {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        width: 100%;
+    }
+
+    table td .action-btns button,
+    table td .btn-group button {
+        flex: 1;
+        min-width: 80px;
+        padding: 8px 12px;
+        font-size: 12px;
+    }
+
+    /* Status badges in mobile tables */
+    table td .status-badge {
+        display: inline-block;
+        white-space: nowrap;
+    }
+
+    /* Image cells in mobile tables */
+    table td img {
+        max-width: 60px;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    /* Form Responsiveness - Tablet */
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 25px;
+    }
+
+    .form-actions-modern {
+        flex-wrap: wrap;
+        gap: 15px;
+    }
+
+    .form-actions-modern button {
+        min-width: 150px;
+    }
+
+    .product-image-config {
+        flex-direction: column !important;
+        align-items: center !important;
+    }
+
+    .image-preview-box {
+        width: 100% !important;
+        max-width: 300px !important;
+    }
+
+    .image-upload-actions {
+        width: 100%;
+        max-width: 500px;
+    }
+
+    /* Dashboard Container Padding */
+    .dashboard-container {
+        padding: 20px 15px;
     }
 
     .loyalty-content {
@@ -1834,6 +1931,228 @@ body.dark-mode .track-input-group input {
 }
 
 @media (max-width: 480px) {
+    /* Enhanced Mobile Table Responsiveness */
+    .table-responsive {
+        margin: 0 -10px;
+        padding: 0 10px;
+    }
+
+    table tr {
+        margin-bottom: 15px;
+        border-radius: 12px;
+    }
+
+    table td {
+        padding: 12px 15px;
+        font-size: 13px;
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 5px;
+    }
+
+    table td::before {
+        flex: none;
+        width: 100%;
+        padding-right: 0;
+        margin-bottom: 5px;
+        font-size: 10px;
+    }
+
+    table td .action-btns,
+    table td .btn-group {
+        width: 100%;
+        margin-top: 8px;
+    }
+
+    table td .action-btns button,
+    table td .btn-group button {
+        font-size: 11px;
+        padding: 8px 10px;
+    }
+
+    /* Compact dashboard cards */
+    .dash-card {
+        padding: 18px 15px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .dash-header-modern h3 {
+        font-size: 16px;
+    }
+
+    .dash-header-modern p {
+        font-size: 11px;
+    }
+
+    /* Form Mobile Optimization - Enhanced Spacing */
+    .input-grid {
+        grid-template-columns: 1fr;
+        gap: 18px;
+        margin-bottom: 25px;
+    }
+
+    .input-group {
+        margin-bottom: 18px;
+    }
+
+    .input-group label {
+        font-size: 12px;
+        margin-bottom: 10px;
+        display: block;
+        line-height: 1.4;
+    }
+
+    .input-group small {
+        display: block;
+        margin-top: 6px;
+        line-height: 1.5;
+    }
+
+    .input-wrapper {
+        margin-bottom: 0;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select {
+        font-size: 14px;
+        padding: 13px 15px 13px 42px;
+        line-height: 1.5;
+        border-radius: 12px;
+        min-height: 48px;
+        height: auto;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .input-wrapper select {
+        height: 48px;
+    }
+
+    .input-wrapper i {
+        left: 14px;
+        font-size: 14px;
+    }
+
+    textarea,
+    .textarea-modern {
+        font-size: 14px !important;
+        padding: 15px !important;
+        line-height: 1.6 !important;
+        min-height: 120px;
+        height: auto !important;
+        border-radius: 12px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        overflow-y: auto;
+    }
+
+    .form-actions-modern {
+        flex-direction: column;
+        gap: 12px;
+        margin-top: 30px;
+        padding-top: 25px;
+    }
+
+    .form-actions-modern button {
+        width: 100%;
+        padding: 14px 20px !important;
+        font-size: 14px;
+        border-radius: 12px;
+    }
+
+    /* Product Image Config Mobile - Better Spacing */
+    .product-image-config {
+        flex-direction: column !important;
+        gap: 25px !important;
+        margin-bottom: 25px !important;
+    }
+
+    .image-preview-box {
+        width: 100% !important;
+        max-width: 280px !important;
+        height: 320px !important;
+        margin: 0 auto !important;
+        border-radius: 16px;
+    }
+
+    .image-upload-actions {
+        width: 100%;
+    }
+
+    .image-upload-actions label {
+        margin-bottom: 8px;
+    }
+
+    .image-upload-actions p {
+        margin-bottom: 15px;
+        line-height: 1.6;
+    }
+
+    .image-upload-actions button {
+        margin-bottom: 20px;
+    }
+
+    /* Settings Section Mobile - Better Spacing */
+    .settings-section {
+        padding: 0;
+        margin-bottom: 25px;
+    }
+
+    .settings-section h4,
+    .section-title {
+        font-size: 15px;
+        margin-bottom: 18px;
+        line-height: 1.3;
+    }
+
+    /* Back Button Mobile */
+    .back-btn-container {
+        margin-bottom: 20px !important;
+        padding: 15px 10px 0 10px !important;
+    }
+
+    .admin-back-btn {
+        font-size: 13px;
+        padding: 10px 18px;
+    }
+
+    /* Section Header Mobile - Better Line Spacing */
+    .section-header-modern {
+        margin-bottom: 25px !important;
+        padding: 0 10px;
+    }
+
+    .section-header-modern h1 {
+        font-size: 22px;
+        line-height: 1.3;
+        margin-bottom: 8px;
+    }
+
+    .section-header-modern p {
+        font-size: 13px;
+        line-height: 1.5;
+    }
+
+    /* Switch/Toggle Mobile Spacing */
+    .switch-modern,
+    .switch-group {
+        padding: 15px;
+        margin-bottom: 18px;
+    }
+
+    .switch-label span {
+        font-size: 13px;
+        line-height: 1.4;
+    }
+
+    .switch-label p {
+        font-size: 11px;
+        line-height: 1.4;
+        margin-top: 4px;
+    }
+
+    /* Profile header mobile */
     .profile-header-card {
         padding: 20px 12px;
         flex-wrap: nowrap;
@@ -1969,6 +2288,56 @@ body.dark-mode .track-input-group input {
         font-size: 10px;
     }
 
+    /* Form Ultra-Compact */
+    .input-grid {
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        font-size: 11px;
+        margin-bottom: 6px;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select {
+        font-size: 13px;
+        padding: 10px 12px 10px 35px;
+    }
+
+    .input-wrapper i {
+        left: 10px;
+        font-size: 12px;
+    }
+
+    textarea {
+        font-size: 13px !important;
+        padding: 12px !important;
+    }
+
+    .form-actions-modern button {
+        padding: 12px 16px !important;
+        font-size: 13px;
+    }
+
+    .section-header-modern h1 {
+        font-size: 20px;
+    }
+
+    .section-header-modern p {
+        font-size: 12px;
+    }
+
+    .admin-back-btn {
+        font-size: 12px;
+        padding: 8px 14px;
+    }
+    }
+
     .view-link {
         font-size: 9px;
         padding: 5px 10px;
@@ -2074,7 +2443,7 @@ body.dark-mode .track-input-group input {
     }
 
     .dash-card {
-        padding: 12px 8px;
+        padding: 15px 10px;
         border-radius: 12px;
         margin-bottom: 15px;
     }
@@ -2143,6 +2512,149 @@ body.dark-mode .track-input-group input {
     /* Scroll indicator smaller */
     .mini-list::after {
         width: 25px;
+    }
+
+    /* Ultra-Compact Form Spacing for Small Screens */
+    .dashboard-container {
+        padding: 15px 8px;
+    }
+
+    .input-grid {
+        gap: 15px;
+        margin-bottom: 20px;
+    }
+
+    .input-group {
+        margin-bottom: 15px;
+    }
+
+    .input-group label {
+        font-size: 11px;
+        margin-bottom: 8px;
+        line-height: 1.4;
+    }
+
+    .input-group small {
+        font-size: 10px;
+        line-height: 1.5;
+        margin-top: 5px;
+    }
+
+    .input-wrapper input,
+    .input-wrapper select {
+        font-size: 13px;
+        padding: 11px 12px 11px 38px;
+        border-radius: 10px;
+        min-height: 44px;
+        height: auto;
+        line-height: 1.5;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+    }
+
+    .input-wrapper select {
+        height: 44px;
+    }
+
+    .input-wrapper i {
+        left: 12px;
+        font-size: 13px;
+    }
+
+    textarea,
+    .textarea-modern {
+        font-size: 13px !important;
+        padding: 12px !important;
+        line-height: 1.6 !important;
+        min-height: 110px;
+        height: auto !important;
+        border-radius: 10px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
+        overflow-y: auto;
+    }
+
+    .form-actions-modern {
+        gap: 10px;
+        margin-top: 25px;
+        padding-top: 20px;
+    }
+
+    .form-actions-modern button {
+        padding: 12px 18px !important;
+        font-size: 13px;
+        border-radius: 10px;
+    }
+
+    .product-image-config {
+        gap: 20px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .image-preview-box {
+        max-width: 240px !important;
+        height: 280px !important;
+        border-radius: 14px;
+    }
+
+    .image-upload-actions p {
+        font-size: 12px;
+        line-height: 1.5;
+        margin-bottom: 12px;
+    }
+
+    .image-upload-actions button {
+        font-size: 12px;
+        padding: 10px 18px;
+        margin-bottom: 15px;
+    }
+
+    .settings-section h4,
+    .section-title {
+        font-size: 14px;
+        margin-bottom: 15px;
+    }
+
+    .section-header-modern {
+        margin-bottom: 20px !important;
+        padding: 0 8px;
+    }
+
+    .section-header-modern h1 {
+        font-size: 20px;
+        line-height: 1.3;
+        margin-bottom: 6px;
+    }
+
+    .section-header-modern p {
+        font-size: 12px;
+        line-height: 1.5;
+    }
+
+    .back-btn-container {
+        padding: 12px 8px 0 8px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .admin-back-btn {
+        font-size: 12px;
+        padding: 9px 15px;
+    }
+
+    .switch-modern,
+    .switch-group {
+        padding: 12px;
+        margin-bottom: 15px;
+        border-radius: 10px;
+    }
+
+    .switch-label span {
+        font-size: 12px;
+    }
+
+    .switch-label p {
+        font-size: 10px;
+        margin-top: 3px;
     }
 }
 
@@ -2374,6 +2886,12 @@ body.dark-mode .track-input-group input {
     outline: none;
     transition: var(--transition);
     resize: vertical;
+    min-height: 150px;
+    height: auto;
+    line-height: 1.6;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    overflow-y: auto;
 }
 
 .textarea-modern:focus {
